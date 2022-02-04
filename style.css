@@ -1,0 +1,243 @@
+body {
+	margin: 0;
+	padding: 0;
+	text-align: center;
+	background: black;
+	color: white;
+	font-family: Montserrat,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;
+}
+
+#header_logo {
+	height: 96px;
+    margin: 48px 16px;
+}
+
+.container {
+	margin: 32px auto;
+	max-width: 960px;
+}
+
+.top_images.deskonly {
+	display: flex;
+    flex-wrap: wrap;
+}
+
+.top_images.mobonly {
+	padding: 24px;
+}
+
+.top_images.deskonly img {
+	flex-grow: 1;
+	margin: 12px;
+	width: calc(100% * (1/2) - 24px - 1px);
+	border-radius: 24px;
+}
+
+.top_images.mobonly img {
+	border-radius: 64px;
+	width: 100%;
+}
+
+.subcontainer {
+	background: #ffffff22;
+	border-radius: 24px;
+	margin-bottom: 12px;
+}
+
+.smallbox {
+	display: flex;
+	padding: 0px 24px;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 120%;
+}
+
+.mint_container {
+    padding: 24px;
+}
+
+#minted_totals, #p_mint_price, #project_name {
+	font-weight: bold;
+}
+
+#mint_dates {
+	margin: 24px 0;
+    border-radius: 24px;
+    background: #000000aa;
+}
+
+#mint_form {
+	display: flex;
+    flex-direction: column;
+}
+
+#nb_mint_minus:after {
+	content: "\e9a0";
+	font-family: "Icons Solid";
+}
+
+#nb_mint_plus:after {
+	content: "\e9b5";
+	font-family: "Icons Solid";
+}
+
+#nb_mint {
+	pointer-events: none;
+	width: calc(100% - (3*48px));
+    text-align: center;
+    font-weight: bold;
+    font-size: 120%;
+    margin: 0 48px;
+    color: white;
+    background: #ffffff22;
+    border: none;
+    border-radius: 24px;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+#mint_form_input {
+	display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+#nb_mint_minus, #nb_mint_plus {
+	cursor: pointer;
+    background: #ffffff22;
+    border-radius: 50%;
+    height: 48px;
+    width: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#Mint {
+	cursor: pointer;
+	font-weight: bold;
+	transition: transform .2s;
+	height: 48px;
+	border: none;
+    background: rgb(221, 90, 86);
+    color: white;
+    border-radius: 24px;
+    font-family: Montserrat,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji!important;
+}
+
+#web3_status {
+	cursor: pointer;
+	font-weight: bold;
+	transition: transform .2s;
+    padding: 0 24px;
+    display: inline-block;
+    max-width: 192px;
+    display: flex;
+    height: 48px;
+    justify-content: center;
+    align-items: center;
+    z-index: 3;
+	font-family: Montserrat,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji!important;
+}
+
+#web3_status, #web3_actions {
+	position: -webkit-sticky;
+    position: fixed;
+    top: 24px;
+    right: 12px;
+    border-radius: 24px;
+}
+
+#web3_actions {
+	padding: 48px 24px 24px;
+	min-width: 64px;
+	display: none;
+	text-align: left;
+}
+
+#web3_actions a {
+	color: white;
+}
+
+#web3_actions h2 {
+	font-weight: bold;
+    font-size: 100%;
+}
+
+#Mint:hover, #web3_status:hover, #nb_mint_plus:hover, #nb_mint_minus:hover {
+  transform: scale(1.03);
+}
+
+@media only screen and (max-device-width: 480px) {
+    .deskonly {
+    	display: none!important;
+    }
+    .subcontainer {
+		margin-bottom: 24px;
+		border-radius: 72px;
+	}
+	#header_logo {
+		height: 192px;
+	}
+	#web3_status {
+		max-width: 384px;
+
+	}
+	#web3_status, #Mint {
+		font-size: 200%;
+		height: 96px;
+		border-radius: 48px;
+	}
+	#Mint{
+		height: 144px;
+		border-radius: 72px;
+		margin-top: 32px
+	}
+	#web3_actions{
+		padding: 96px 24px 24px;
+		border-radius: 48px;
+		font-size: 200%;
+	}
+	.mint_container, .mint_dates {
+		font-size: 150%;
+	}
+	#nb_mint_minus, #nb_mint_plus {
+		height: 144px;
+	    width: 144px;
+	    border-radius: 72px;
+	}
+	#nb_mint {
+		width: calc(100% - (2*144px) - (2*48px));
+    	margin: 0 48px;
+    	border-radius: 72px;
+	}
+	.smallbox {
+		padding: 0px 72px;
+		font-size: 200%;
+	}
+	#mint_form_input {
+		margin-bottom: 24px;
+		font-size: 180%;
+	}
+	#mint_form p {
+		font-size: 200%;
+	    font-weight: bold;
+	    margin: 48px 0;
+	}
+}
+
+@media only screen and (min-device-width: 481px) {
+    .mobonly {
+    	display: none!important;
+    }
+}
+
+@font-face {
+	font-family: "Icons Solid";
+	src: url("Icons.ttf") format("truetype");
+}
+
