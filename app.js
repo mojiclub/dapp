@@ -109,6 +109,7 @@ async function mint(){
 $(document).ready(async function() {
 
     async function connect_wallet() {
+        // if(!window.ethereum){} handle this
         provider = new ethers.providers.Web3Provider(window.ethereum, "any");
         await sleep(20);
         if(provider._network.chainId!=CHAIN_ID){
@@ -200,7 +201,7 @@ $(document).ready(async function() {
     });
 
     // Check if metamask is installed
-    if(window.ethereum.isMetaMask) {
+    if(window.ethereum && window.ethereum.isMetaMask) {
         await connect_wallet();
     } else {
         provider = new ethers.providers.JsonRpcProvider(RPC);
