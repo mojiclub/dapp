@@ -11,7 +11,7 @@ const RPC_SCAN_URL = "https://ropsten.etherscan.io";
 // const RPC_SCAN_URL = "https://etherscan.io";
 
 
-const CONTRACT_ADDRESS = '0x3A190DfCCb58db5dAdBBDF8Afb8Ea91885f2834E';
+const CONTRACT_ADDRESS = '0x8aaabf1925222fe79e5905233e0a84a3e8beee69';
 const MINT_PRICE = 0.08;
 const MAX_MINT = 5;
 const MAX_SUPPLY = 10000;

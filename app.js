@@ -47,7 +47,7 @@ async function signer_balance_eth(){
 
 async function mint_price_bc(){
     var num = await contract.PRICE_ETH_();
-    return num.toNumber();
+    return parseFloat(ethers.utils.formatEther(num));
 }
 
 async function max_mint_bc(){
@@ -208,11 +208,11 @@ $(document).ready(async function() {
     contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, provider);
 
     // Pull informations from contract
-    const MINT_PRICE = 0.09;//await mint_price_bc();
-    const MAX_MINT = 5;//await max_mint_bc();
-    const GEN0_SUPPLY = 10000;//await gen0_supply_bc();
-    var NB_MINTED = 7;//await nb_minted_bc();
-    //var soldout = NB_MINTED >= GEN0_SUPPLY;
+    const MINT_PRICE = await mint_price_bc();
+    const MAX_MINT = await max_mint_bc();
+    const GEN0_SUPPLY = await gen0_supply_bc();
+    var NB_MINTED = await nb_minted_bc();
+    var soldout = NB_MINTED >= GEN0_SUPPLY;
 
     var rotate_imgs = 0;
     $('.top_images.mobonly img').attr('src',proj_top_images[rotate_imgs]);
@@ -248,10 +248,10 @@ $(document).ready(async function() {
     $('#mint_dates').css("color",proj_color);
 
     // Check if collection is sold out
-    //if(soldout){
+    if(soldout){
         // Disable button
         // Write soldout on it
-    //}
+    }
     $('#span_nb_minted').text(NB_MINTED);
 
     
