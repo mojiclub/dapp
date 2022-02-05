@@ -157,16 +157,7 @@ $("#web3_status").click(async function(){
     if(signer==''){
         await connect_wallet();
     } else {
-        var displaystate = $("#web3_actions").css('display');
-        if(displaystate == 'none') {
-            $("#web3_actions").toggle();
-            $("#web3_actions").css('opacity','inherit');
-            //setTimeout(function(){$("#web3_actions").toggle();},300);
-        } else {
-            //$("#web3_actions").toggle();
-            $("#web3_actions").css('opacity','0');
-            setTimeout(function(){$("#web3_actions").toggle();},300);
-        }
+        $("#web3_actions").toggle();
     }
 });
 
