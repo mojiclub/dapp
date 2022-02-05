@@ -7,13 +7,14 @@
     </head>
     <body>
         <header>
-            <!-- Change logo -->
+            <!-- Change logo here -->
             <img id="header_logo" src="https://anatomyscienceapeclub.com/_next/static/images/logo-banner-lg-m-700334b6cd4709f31aa8621eef0d13b0.png">
         </header>
-        <div id="web3_status" class="rounded"><p>CONNECT WALLET</p></div>
-        <div id="web3_actions" class="rounded"></div>
+        <div id="web3_status" class="rounded bg_accent"><p>CONNECT WALLET</p></div>
+        <div id="web3_actions" class="rounded bg_accent80"></div>
         <div class="container">
             <div class="top_images subcontainer deskonly rounded">
+                <!-- Change images here -->
                 <img class="rounded" src="https://anatomyscienceapeclub.com/_next/static/images/m1-frosted-5-d04ffc4c7aff5d32221a26dc24b065b1.jpg">
                 <img class="rounded" src="https://anatomyscienceapeclub.com/_next/static/images/m2-white-3-eec6462b14fa0396206d166586485bb2.jpg">
                 <img class="rounded" src="https://anatomyscienceapeclub.com/_next/static/images/m2-gold-1-5bb8ffe9155a5f697ead540621850c0c.jpg">
@@ -22,7 +23,7 @@
             <div class="top_images subcontainer mobonly rounded"><img class="rounded"></div>
             <div class="mint_container subcontainer rounded">
                 <p id="p_description"><span id="project_name"></span> <span id="project_description"></span></p>
-                <div id="mint_dates" class="rounded">
+                <div id="mint_dates" class="rounded border_accent">
                     <p id="wl_mint"></p>
                     <p id="public_mint"></p>
                     <p id="reveal_date"></p>
@@ -39,10 +40,10 @@
                     <p>Amount to mint</p>
                     <div id="mint_form_input">
                         <span id="nb_mint_minus" class="rounded"></span>
-                        <input type="number" id="nb_mint" name="nb_mint" value="1" min="1" class="rounded">
+                        <input type="number" id="nb_mint" name="nb_mint" value="1" min="1" class="rounded wallet_sensitive">
                         <span id="nb_mint_plus" class="rounded"></span>
                     </div>
-                    <button id="Mint" class="rounded">CONNECT WALLET</button>
+                    <button id="Mint" class="rounded bg_accent">CONNECT WALLET</button>
                     <p id="px"></p>
                 </div>
             </div>
@@ -52,6 +53,7 @@
         <script src="jquery-3.6.0.min.js"></script>
         <script src="ethers-5.2.umd.min.js"></script>
         <script src="project_constants.js"></script>
-        <script src="app.js"></script>
+        <script src="base.js"></script>
+        <script src="mint.js"></script>
     </body>
 </html>

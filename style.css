@@ -7,6 +7,20 @@ body {
 	font-family: Montserrat,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;
 }
 
+/* Accent color */
+.bg_accent {
+	background: #DD5A56;
+}
+.bg_accent80 {
+	background: #DD5A56AA;
+}
+.color_accent {
+	color: #DD5A56;
+}
+.border_accent {
+	border: 1px solid #DD5A56;
+}
+
 #header_logo {
 	max-height: 96px;
     max-width: 60%;

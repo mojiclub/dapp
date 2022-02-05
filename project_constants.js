@@ -69,9 +69,8 @@ var proj_public_mint = "Public mint : ";
 var proj_reveal_date = "Reveal : ";
 var date_format_options = {month: 'short', day: 'numeric', hour:'2-digit',minute:'2-digit', timeZone: 'UTC', timeZoneName:'short'};
 
-// Website accent colors
-var proj_color = "#DD5A56";
-var proj_color2 = "#DD5A56";
+// Website accent colors (set in style.css ~ at the top)
+//var proj_color = "#DD5A56";
 
 // Variables declaration
 var MINT_PRICE = 0.09;
