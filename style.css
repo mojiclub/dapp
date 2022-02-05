@@ -1,6 +1,6 @@
 body {
 	margin: 0;
-	padding: 0;
+	padding: 0 16px;
 	text-align: center;
 	background: black;
 	color: white;
@@ -28,8 +28,28 @@ body {
 }
 
 .container {
-	margin: 32px 16px;
+	margin: 32px auto;
 	max-width: 960px;
+}
+
+#menu {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+#menu a {
+	font-weight: bold;
+    margin: 4px;
+    width: 33%;
+    height: 32px;
+    padding: 12px;
+    display: flex;
+    background: #ffffff22;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-decoration: none;
 }
 
 .rounded {
@@ -197,6 +217,10 @@ input::-webkit-inner-spin-button {
     .deskonly {
     	display: none!important;
     }
+
+    #header_logo {
+	    margin: 96px 48px 16px;
+	}
 }
 
 @media only screen and (min-device-width: 481px) {
