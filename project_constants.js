@@ -11,10 +11,15 @@ const RPC_SCAN_URL = "https://ropsten.etherscan.io";
 // const RPC_SCAN_URL = "https://etherscan.io";
 const CONTRACT_ADDRESS = '0x24ed45fbd53346f9f4c8215f92dd7b694ad86914';
 
+// Tickets
+const CONTRACT_ADDRESS_TICKETS = '0x8f29190477d5680cf3d28d4e8b1903ab190bda4a';
+const ABI_TICKETS = ["function balanceOf(address) view returns (uint)"];
+
 // Ethers.js
 var provider = '';
 var signer = '';
 var contract = '';
+var tickets_contract = '';
 const ABI = [
   // Some details about the token
   "function name() view returns (string)",
@@ -68,3 +73,15 @@ var date_format_options = {month: 'short', day: 'numeric', hour:'2-digit',minute
 var proj_color = "#DD5A56";
 var proj_color2 = "#DD5A56";
 
+// Variables declaration
+var MINT_PRICE = 0.09;
+var MAX_MINT = 3;
+var GEN0_SUPPLY = 10;
+var WL_MINT_TIMESTAMP = 1644060900;
+var MINT_TIMESTAMP = WL_MINT_TIMESTAMP + 600;
+var REVEAL_TIMESTAMP = MINT_TIMESTAMP + 86400;
+
+var NB_MINTED;
+var gen0_soldout;
+var gen_number;
+var SALE_ACTIVE;
