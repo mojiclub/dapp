@@ -8,16 +8,20 @@
     <body>
         <header>
             <!-- Change logo here -->
-            <img id="header_logo" src="https://anatomyscienceapeclub.com/_next/static/images/logo-banner-lg-m-700334b6cd4709f31aa8621eef0d13b0.png">
+            <a href="/">
+                <img id="header_logo" src="https://anatomyscienceapeclub.com/_next/static/images/logo-banner-lg-m-700334b6cd4709f31aa8621eef0d13b0.png">
+            </a>
         </header>
         <div id="web3_status" class="rounded bg_accent"><p>CONNECT WALLET</p></div>
         <div id="web3_actions" class="rounded bg_accent80"></div>
         <div class="container">
             <div id="menu" class="subcontainer rounded">
                 <a href="/" class="rounded">HOME</a>
-                <a href="/index.html" class="rounded">MINT $MJC</a>
                 <a href="/claim.html" class="rounded">CLAIM $MJCC</a>
+                <a href="/whitepaper.html" class="rounded">WHITE PAPER</a>
             </div>
+        </div>
+        <div class="container">
             <div class="top_images subcontainer deskonly rounded">
                 <!-- Change images here -->
                 <img class="rounded" src="https://anatomyscienceapeclub.com/_next/static/images/m1-frosted-5-d04ffc4c7aff5d32221a26dc24b065b1.jpg">
@@ -49,14 +53,37 @@
                         <span id="nb_mint_plus" class="rounded"></span>
                     </div>
                     <button id="Mint" class="rounded bg_accent">CONNECT WALLET</button>
-                    <p id="px"></p>
+                    <p id="my_nft"></p>
+                    <!-- Here resides the hidden canvas we construct the NFT on. Adjust the size to the images size -->
+                    <div style="display: none;">
+                        <canvas id="myCanvas" height="300px" width="300px"></canvas>
+                    </div>
                 </div>
             </div>
+
+            <div class="nolatpadd subcontainer rounded">
+                <div class="title">
+                    <h2>INFINITE POSSIBILITIES</h2>
+                    <sep></sep>
+                </div>
+                <div class="marquee">
+                    <div class="marquee-content" id="marquee1"></div>
+                    <div class="marquee-content" id="marquee2"></div>
+                </div>
+                <p>Moji Club is the first NFT project to put the community <b>at the center</b>, thanks to <b>a unique custom mint system.</b>
+                    <br>
+                   Create your very own Avatar using our configurator from <b>hundreds of customization traits</b>, and get <b>the certification</b> that your Avatar belongs to you and you alone thanks to the <b>Ethereum blockchain</b>.
+                </p>
+            </div>
+                
         </div>
+
+        <div id="bottom_toast" class="rounded"><p>TOAST MESSAGE</p></div>
 
         <script src="https://cdn.ethers.io/lib/ethers-5.0.umd.min.js" type="text/javascript"></script>
         <script src="jquery-3.6.0.min.js"></script>
         <script src="ethers-5.2.umd.min.js"></script>
+        <script src="ipfs-http-client_56.0.0.js"></script>
         <script src="project_constants.js"></script>
         <script src="base.js"></script>
         <script src="mint.js"></script>

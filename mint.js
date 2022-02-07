@@ -33,29 +33,33 @@ $(document).ready(async function() {
             tx_options = {value: ethers.utils.parseEther(price_to_pay.toString())}
         }
         var can_mint = await balance_enough_to_mint();
-        if(!can_mint) {
+        if(!can_mint[0]) {
+            toast(can_mint[1]);
             return;
         }
 
         try {
             tx_id = await contract_signer.mint(nb_mint,tx_options);
             tx_pending = true;
-            var tx_link = '<p id="link_'+tx_id.hash+'"><span class="tx_status">⏳</span> : <a target="_blank" href="'+RPC_SCAN_URL+'/tx/'+tx_id.hash+'">'+tx_id.hash.substring(0,12)+'..'+tx_id.hash.substring(tx_id.hash.length-4,tx_id.hash.length)+'</a></p>';
+            var sub_tx = tx_id.hash.substring(0,12)+'..'+tx_id.hash.substring(tx_id.hash.length-4,tx_id.hash.length);
+            var tx_link = '<p id="link_'+tx_id.hash+'"><span class="tx_status">⏳</span> : <a target="_blank" href="'+RPC_SCAN_URL+'/tx/'+tx_id.hash+'">'+sub_tx+'</a></p>';
             $("#web3_actions h2").after(tx_link);
             sleep(250);
-            $("#web3_actions").toggle();
+            toast("⏳ "+sub_tx);
             tx_id.wait().then(async function(receipt) {
                 $('#link_'+tx_id.hash+' .tx_status').text('✅');
-                toast(tx_id.hash+' ✅');
+                toast("✅ "+sub_tx);
+                play_done();
                 tx_id = '';
                 tx_pending = false;
                 last_tx_recept = receipt;
+                load_wallet();
             });
 
         } catch (error) {
             if(error.code!=4001){
                 // TODO : Toast error.message
-                console.error(error);
+                toast("ERROR. PLEASE SCREENSHOT THE DEVELOPER CONSOLE AND CONTACT US");
             }
         }
     }
@@ -89,6 +93,16 @@ $(document).ready(async function() {
             if(nbtm>1){mint_txt+="S";}
             $('#Mint').text(mint_txt); 
         }
+        if(nbtm == 1) {
+            $('#nb_mint_minus').addClass('disabled');
+        } else {
+            $('#nb_mint_minus').removeClass('disabled');
+        }
+        if(nbtm == MAX_MINT) {
+            $('#nb_mint_plus').addClass('disabled');
+        } else {
+            $('#nb_mint_plus').removeClass('disabled');
+        }
     });
 
     $("#nb_mint_minus").click(function() {
@@ -116,15 +130,24 @@ $(document).ready(async function() {
 
     /* USER INTERFACE */
 
-    // Images on mobile
+    // Images on top(mobile)
     var rotate_imgs = 0;
     $('.top_images.mobonly img').attr('src',proj_top_images[rotate_imgs]);
     function rotate_imgs_f() {
         rotate_imgs++;
         $('.top_images.mobonly img').attr('src',proj_top_images[rotate_imgs%proj_top_images.length]);
     }
-
     setInterval(rotate_imgs_f, 1000);
+
+    // Images marquee
+    var html_marquee = '';
+    for(const _image of proj_top_images){
+        html_marquee += '<div class="marquee-item"><img src="'+_image+'"></div>';
+    }
+    $('.marquee-content').append(html_marquee);
+    $('.marquee-content').append(html_marquee);
+    $('.marquee-content').append(html_marquee);
+    $('.marquee-content').append(html_marquee);
 
     web3_init();
 
@@ -178,3 +201,27 @@ $(document).ready(async function() {
 
     $(".wallet_sensitive").trigger('walletchanged');
 });
+
+const loadImage = src =>
+  new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin="anonymous";
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+    img.src = src;
+  })  
+;
+
+async function drawImage(_images){
+    var c=document.getElementById("myCanvas");
+    var ctx=c.getContext("2d");
+
+    await Promise.all(_images.map(loadImage)).then(images => {
+      images.forEach((image, i) =>
+        ctx.drawImage(image, 0, 0)
+      );
+    });
+
+    var img = c.toDataURL("image/png");
+    $("#myCanvas").after('<img src="' + img + '" id="output_img" crossorigin="anonymous"/>');
+}

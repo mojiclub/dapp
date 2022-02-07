@@ -39,6 +39,7 @@ const ABI = [
   "function WL_MINT_TIMESTAMP() public view returns (uint256)",
   "function MINT_TIMESTAMP() public view returns (uint256)",
   "function REVEAL_TIMESTAMP() public view returns (uint256)",
+  "function holderTokens() public view returns (uint256[] memory)",
 
   // Ticket NFT claiming
   "function claimTickets() public",
@@ -61,7 +62,7 @@ for(elem of imgList) {proj_top_images.push(elem.src);}
 
 // Project name and description
 var proj_name = "Moji Club";
-var proj_description = "is a collection of unique personnalized humans with traits unique to you!. Mint yours to make it look like you !";
+var proj_description = "is a collection of unique personnalized avatars with traits <b>unique to you</b>. Mint yours and make it look like you!";
 
 // Listing date and details
 var proj_wl_mint = "Mint for WL users : ";
