@@ -184,20 +184,23 @@ $(document).ready(async function() {
     }
 
     $("#nb_mint").bind('keyup mouseup walletchanged',async function () {
+        if(!window.ethereum) {
+            return;
+        }
         $('#Main_btn').removeClass("disabled");
 
         if(gen1_soldout) {
             $('#mint_form').addClass("disabled");
-            $('#Main_btn').text("SOLD OUT");
+            $('#Main_btn p').text("SOLD OUT");
             return;
         }
 
         if(!SALE_ACTIVE) {
             $('#mint_form').addClass("disabled");
             if(wl_passed()){
-                $('#Main_btn').text("SALE DISABLED TEMPORARILY");
+                $('#Main_btn p').text("SALE DISABLED TEMPORARILY");
             } else {
-                $('#Main_btn').text("SALE NOT OPENED YET");
+                $('#Main_btn p').text("SALE NOT OPENED YET");
             }
             
             return;
@@ -208,7 +211,7 @@ $(document).ready(async function() {
         if(signer!=''){
             var can_mint = await balance_enough_to_mint();
             if(!can_mint[0]){
-                $('#Main_btn').text(can_mint[1]);
+                $('#Main_btn p').text(can_mint[1]);
                 $('#Main_btn').addClass("disabled");
                 return;
             }
@@ -222,7 +225,7 @@ $(document).ready(async function() {
             // mint_txt = "MINT "+nbtm+" GEN"+gen_number+" TOKEN";
             // if(nbtm>1){mint_txt+="S";}
             mint_txt = "COMPOSE MY AVATAR";
-            $('#Main_btn').text(mint_txt); 
+            $('#Main_btn p').text(mint_txt); 
         }
         if(nbtm == 1) {
             $('#nb_mint_minus').addClass('disabled');

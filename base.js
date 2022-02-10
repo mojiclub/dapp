@@ -10,21 +10,25 @@ function web3_init(){
 }
 
 if(!window.ethereum) {
-    document.getElementById("web3_status").style.display= 'none';
+    document.getElementById("web3_status").classList.add("disabled");
+    document.getElementById("web3_status").innerHTML = "<p>METAMASK NOT DETECTED</p>";
     // Get rid of mint button if browser isnt web3.
     if(document.getElementById("web3_status")){
-        document.getElementById("Main_btn").style.display= 'none';
+        document.getElementById("Main_btn").classList.add("disabled");
+        document.getElementById("Main_btn").innerHTML = "<p>METAMASK NOT DETECTED</p>";
     }
 } else {
-    web3_init();
     window.ethereum.on('accountsChanged', async function (accounts) {
         await load_wallet();
     });
 }
 
+web3_init();
+
 // Get the wallet balance in ETH
 var _signer_balance_eth = -1;
 async function signer_balance_eth(reset=false){
+    if(!window.ethereum) {_signer_balance_eth=0;return 0;}
     if(_signer_balance_eth==-1 || reset){
         var addr = await signer.getAddress();
         var bal = await provider.getBalance(addr);
@@ -36,6 +40,7 @@ async function signer_balance_eth(reset=false){
 
 var _signer_balance_tickets = -1;
 async function signer_balance_tickets(reset=false) {
+    if(!window.ethereum) {_signer_balance_tickets=0;return 0;}
     if(_signer_balance_tickets==-1 || reset){
         var addr = await signer.getAddress();
         var tickets_balance = await tickets_contract.balanceOf(addr);
@@ -46,6 +51,7 @@ async function signer_balance_tickets(reset=false) {
 
 var _signer_balance_nfts = -1;
 async function signer_balance_nfts(reset=false) {
+    if(!window.ethereum) {_signer_balance_nfts=0;return 0;}
     if(_signer_balance_nfts==-1 || reset){
         var addr = await signer.getAddress();
         var nfts_balance = await contract.balanceOf(addr);

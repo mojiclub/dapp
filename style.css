@@ -182,7 +182,7 @@ input::-webkit-inner-spin-button {
 	transition: transform .2s;
     padding: 0 24px;
     display: inline-block;
-    max-width: 192px;
+    max-width: 240px;
     display: flex;
     height: 48px;
     justify-content: center;
