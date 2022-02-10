@@ -4,12 +4,13 @@
         <link rel="stylesheet" href="style.css">
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+        <title>Home ~ Moji Club</title>
     </head>
     <body>
         <header>
             <!-- Change logo here -->
             <a href="/">
-                <img id="header_logo" src="https://anatomyscienceapeclub.com/_next/static/images/logo-banner-lg-m-700334b6cd4709f31aa8621eef0d13b0.png">
+                <img id="header_logo" src="logo.png">
             </a>
         </header>
         <div id="web3_status" class="rounded bg_accent"><p>CONNECT WALLET</p></div>
@@ -17,7 +18,7 @@
         <div class="container">
             <div id="menu" class="subcontainer rounded">
                 <a href="/dapp" class="rounded">HOME</a>
-                <a href="/dapp/claim.html" class="rounded">CLAIM $MJCC</a>
+                <a href="/dapp/claim.html" class="rounded gen1only">CLAIM $MJCC</a>
                 <a href="/dapp/whitepaper.html" class="rounded">WHITE PAPER</a>
             </div>
         </div>
@@ -35,7 +36,6 @@
                 <div id="mint_dates" class="rounded border_accent">
                     <p id="wl_mint"></p>
                     <p id="public_mint"></p>
-                    <p id="reveal_date"></p>
                 </div>
                 <div id="nb_minted" class="subcontainer smallbox rounded">
                     <p>Minted</p>
@@ -46,18 +46,29 @@
                     <p id="p_mint_price"></p>
                 </div>
                 <div id="mint_form">
+                    <div class="mint_amount_container">
                     <p>Amount to mint</p>
-                    <div id="mint_form_input">
-                        <span id="nb_mint_minus" class="rounded"></span>
-                        <input type="number" id="nb_mint" name="nb_mint" value="1" min="1" class="rounded wallet_sensitive">
-                        <span id="nb_mint_plus" class="rounded"></span>
+                        <div id="mint_form_input">
+                            <span id="nb_mint_minus" class="rounded"></span>
+                            <input type="number" id="nb_mint" name="nb_mint" value="1" min="1" class="rounded wallet_sensitive">
+                            <span id="nb_mint_plus" class="rounded"></span>
+                        </div>
                     </div>
-                    <button id="Mint" class="rounded bg_accent">CONNECT WALLET</button>
+                    <div id="nft_composer" class="rounded">
+                        <p id="composer_close">X</p>
+                        <h2>COMPOSE YOUR OWN AVATAR</h2>
+                        <!--<p>Now create an avatar with your image using the features available below and mint the associated NFT to generate your proof of ownership on the Ethereum blockchain !</p>-->
+                        <div id="composer_preview">
+                            <canvas class="rounded" id="preview_canvas" height="1000" width="1000"></canvas>
+                            <div id="composer_left">
+                                <div class="rounded" id="composer_traits_selector"></div>
+                                <div id="composer_confirm" class="rounded bg_accent btnn"><p>MINT MY AVATAR NOW</p></div>
+                            </div>
+                        </div>
+                    </div>
+                    <button id="Main_btn" class="rounded bg_accent btnn">CONNECT WALLET</button>
                     <p id="my_nft"></p>
                     <!-- Here resides the hidden canvas we construct the NFT on. Adjust the size to the images size -->
-                    <div style="display: none;">
-                        <canvas id="myCanvas" height="300px" width="300px"></canvas>
-                    </div>
                 </div>
             </div>
 
@@ -78,7 +89,7 @@
                 
         </div>
 
-        <div id="bottom_toast" class="rounded"><p>TOAST MESSAGE</p></div>
+        <div id="notification" class="rounded"><p>TOAST MESSAGE</p></div>
 
         <script src="https://cdn.ethers.io/lib/ethers-5.0.umd.min.js" type="text/javascript"></script>
         <script src="jquery-3.6.0.min.js"></script>

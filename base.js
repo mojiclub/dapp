@@ -3,9 +3,16 @@ var tx_id = '';
 var tx_pending = false;
 var last_tx_recept = '';
 
+function web3_init(){
+    provider = new ethers.providers.JsonRpcProvider(RPC);
+    contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, provider);
+    tickets_contract = new ethers.Contract(CONTRACT_ADDRESS_TICKETS, ABI_TICKETS, provider);
+}
+
 if(!window.ethereum) {
     document.getElementById("web3_status").style.display= 'none';
 } else {
+    web3_init();
     window.ethereum.on('accountsChanged', async function (accounts) {
         await load_wallet();
     });
@@ -73,6 +80,10 @@ async function max_mint_bc(){
     }    
 }
 
+function wl_passed() {
+    return new Date(WL_MINT_TIMESTAMP * 1000) <= new Date();
+}
+
 function wl_date_bc(){
     var wl_date = new Date(WL_MINT_TIMESTAMP * 1000);
     return wl_date.toLocaleString('en-US', date_format_options);
@@ -80,11 +91,6 @@ function wl_date_bc(){
 
 function mint_date_bc(){
     var wl_date = new Date(MINT_TIMESTAMP * 1000);
-    return wl_date.toLocaleString('en-US', date_format_options);
-}
-
-function reveal_date_bc(){
-    var wl_date = new Date(REVEAL_TIMESTAMP * 1000);
     return wl_date.toLocaleString('en-US', date_format_options);
 }
 
@@ -97,18 +103,12 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-function toast(msg, seconds=3) {
-    $('#bottom_toast p').text(msg);
-    $('#bottom_toast').show();
+function notify(msg, seconds=3) {
+    $('#notification p').text(msg);
+    $('#notification').css("right","12px");
     setTimeout(function() {
-        $('#bottom_toast').css('opacity','1');
-        setTimeout(function() {
-            $('#bottom_toast').css('opacity','0');
-            setTimeout(function() {
-                $('#bottom_toast').hide();
-            },300);
-        },seconds*1000);
-    },300);
+       $('#notification').css("right","-100vw"); 
+    },1000*seconds);
 }
 
 async function connect_wallet() {
@@ -137,8 +137,9 @@ async function load_wallet() {
         signer = provider.getSigner();
         addr = await signer.getAddress();
     } catch (error) {
-        $("web3_status p").text("CONNECT WALLET");
-        toast("Error connecting wallet. Please check your Metamask extension.");
+        $("#web3_status p").text("CONNECT WALLET");
+        signer = '';
+        notify("Error connecting wallet. Please check your Metamask extension.");
         return;
     }
 
@@ -203,12 +204,6 @@ function play_done() {
     audio.play();
 }
 
-function web3_init(){
-    provider = new ethers.providers.JsonRpcProvider(RPC);
-    contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, provider);
-    tickets_contract = new ethers.Contract(CONTRACT_ADDRESS_TICKETS, ABI_TICKETS, provider);
-}
-
 // IPFS
 const ipfs_node = IpfsHttpClient.create({
     host: 'ipfs.infura.io',
@@ -227,7 +222,6 @@ async function ipfs_add(Obj) {
 
 function dataURItoBlob(dataURI) {
     // convert base64 to raw binary data held in a string
-    // doesn't handle URLEncoded DataURIs - see SO answer #6850276 for code that does this
     var byteString = atob(dataURI.split(',')[1]);
 
     // separate out the mime component
@@ -249,5 +243,20 @@ $(document).ready(async function() {
     $('.mjcc_contract').attr('href',RPC_SCAN_URL+'/address/'+CONTRACT_ADDRESS_TICKETS);
     $('.GEN0_SUPPLY').text(GEN0_SUPPLY);
     $('.MINT_PRICE').text(MINT_PRICE);
+
+    // Gen0 / Gen1 UI changes
+    NB_MINTED = await nb_minted_bc();
+    $('#span_nb_minted').text(NB_MINTED);
+    gen0_soldout = NB_MINTED >= GEN0_SUPPLY;
+    gen1_soldout = NB_MINTED >= GEN0_SUPPLY+GEN1_SUPPLY;
+    gen_number = gen0_soldout ? 1 : 0;
+    if(!gen0_soldout) {
+        $('.gen1only').addClass('disabled');
+        $('#p_mint_price').text(MINT_PRICE + " Ξ");
+        $('#span_total_supply').text(GEN0_SUPPLY); 
+    } else {
+        $('#p_mint_price').text("1 $MJCC");
+        $('#span_total_supply').text(GEN0_SUPPLY+GEN1_SUPPLY);
+    }
 });
 

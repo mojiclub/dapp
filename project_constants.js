@@ -38,7 +38,6 @@ const ABI = [
   "function GEN0_Max_Id() public view returns (uint256)",
   "function WL_MINT_TIMESTAMP() public view returns (uint256)",
   "function MINT_TIMESTAMP() public view returns (uint256)",
-  "function REVEAL_TIMESTAMP() public view returns (uint256)",
   "function holderTokens() public view returns (uint256[] memory)",
 
   // Ticket NFT claiming
@@ -75,13 +74,14 @@ var date_format_options = {month: 'short', day: 'numeric', hour:'2-digit',minute
 
 // Variables declaration
 var MINT_PRICE = 0.09;
-var MAX_MINT = 3;
+var MAX_MINT = 1;
 var GEN0_SUPPLY = 10;
-var WL_MINT_TIMESTAMP = 1644060900;
+var GEN1_SUPPLY = 10;
+var WL_MINT_TIMESTAMP = 16414060900;
 var MINT_TIMESTAMP = WL_MINT_TIMESTAMP + 600;
-var REVEAL_TIMESTAMP = MINT_TIMESTAMP + 86400;
 
 var NB_MINTED;
 var gen0_soldout;
+var gen1_soldout;
 var gen_number;
 var SALE_ACTIVE;
