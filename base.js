@@ -11,6 +11,10 @@ function web3_init(){
 
 if(!window.ethereum) {
     document.getElementById("web3_status").style.display= 'none';
+    // Get rid of mint button if browser isnt web3.
+    if(document.getElementById("web3_status")){
+        document.getElementById("Main_btn").style.display= 'none';
+    }
 } else {
     web3_init();
     window.ethereum.on('accountsChanged', async function (accounts) {

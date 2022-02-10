@@ -60,7 +60,7 @@ var imgList = document.querySelectorAll('.top_images.deskonly img');
 for(elem of imgList) {proj_top_images.push(elem.src);}
 
 // Project name and description
-var proj_name = "Moji Club";
+var proj_name = "The Moji Club";
 var proj_description = "is a collection of unique personnalized avatars with traits <b>unique to you</b>. Mint yours and make it look like you!";
 
 // Listing date and details
