@@ -12,22 +12,22 @@ const dependendies_map = new Map();
 
 // Hair color requires hair cut // Please choose an haircut first
 for (let trait = 31; trait <= 38; trait++) {
-    dependendies_map.set(trait, [13,14,15,16,17,18,19,20,21,22,23,24]);
+    dependendies_map.set(trait, [12,13,14,15,16,17,18,19,20,21,22,23]);
 }
 
 // Beard color requires beard cut // Please choose a beard color first
 for (let trait = 39; trait <= 46; trait++) {
-    dependendies_map.set(trait, [25,26,27,28,29,30]);
+    dependendies_map.set(trait, [24,25,26,27,28,29]);
 }
 
 // Cravate / noeud requires costume // Please choose a costume jacket to add a tie or a bowtie
 for (let trait = 50; trait <= 55; trait++) {
-    dependendies_map.set(trait, [47,48,49]);
+    dependendies_map.set(trait, [46,47,48]);
 }
 
 // CC requires pocket in vest // Choose a shirt or a jacket with a pocket
 for (let trait = 79; trait <= 79; trait++) {
-    dependendies_map.set(trait, [47,48,49,63,64,65,66,67,68,69,70,71,72]);
+    dependendies_map.set(trait, [46,47,48,62,63,64,65,66,67,68,69,70,71]);
 }
 
 // Pendentif anywhere but not in costumes // Pendants are not available in jackets
@@ -36,48 +36,167 @@ for (let trait = 115; trait <= 117; trait++) {
 }
 
 traits_list_html = {
-    1:["Skin color","Light beige"],
-    2:["Skin color","Beige"],
-    3:["Skin color","Tanned beige"],
-    4:["Skin color","Half-breed ~ Light"],
-    5:["Skin color","Half-breed ~ Darker"],
-    6:["Skin color","Black"],
-    7:["Misc","Cigarette"],
-    8:["Misc","Marijuana joint"],
-    9:["Face","Bored"],
-    10:["Face","Greedy"],
-    11:["Face","Upset"],
-    12:["Haircut","Men haircut 1"],
-    13:["Haircut","Men haircut 2"],
-    14:["Haircut","Men haircut 3"],
-    15:["Haircut","Men haircut 4"],
-    16:["Haircut","Men haircut 5"],
-    17:["Haircut","Men haircut 6"],
-    18:["Haircut","Women haircut 1"],
-    19:["Haircut","Women haircut 2"],
-    20:["Haircut","Women haircut 3"],
-    21:["Haircut","Women haircut 4"],
-    22:["Haircut","Women haircut 5"],
-    22:["Haircut","Women haircut 6"]
+    1:["a) Skin color","Light beige"],
+    2:["a) Skin color","Beige"],
+    3:["a) Skin color","Tanned beige"],
+    4:["a) Skin color","Half-breed ~ Light"],
+    5:["a) Skin color","Half-breed ~ Darker"],
+    6:["a) Skin color","Black"],
+    7:["l) On mouth","Cigarette"],
+    8:["l) On mouth","Marijuana joint"],
+    9:["b) Face","Bored"],
+    10:["b) Face","Greedy"],
+    11:["b) Face","Upset"],
+    12:["c) Haircut","Men haircut 1"],
+    13:["c) Haircut","Men haircut 2"],
+    14:["c) Haircut","Men haircut 3"],
+    15:["c) Haircut","Men haircut 4"],
+    16:["c) Haircut","Men haircut 5"],
+    17:["c) Haircut","Men haircut 6"],
+    18:["c) Haircut","Women haircut 1"],
+    19:["c) Haircut","Women haircut 2"],
+    20:["c) Haircut","Women haircut 3"],
+    21:["c) Haircut","Women haircut 4"],
+    22:["c) Haircut","Women haircut 5"],
+    23:["c) Haircut","Women haircut 6"],
+    24:['e) Beard', 'Beardcut 1'],
+    25:['e) Beard', 'Beardcut 2'],
+    26:['e) Beard', 'Beardcut 3'],
+    27:['e) Beard', 'Beardcut 4'],
+    28:['e) Beard', 'Beardcut 5'],
+    29:['e) Beard', 'Beardcut 6'],
+    30:['d) Hair color', 'Hair Color 1'],
+    31:['d) Hair color', 'Hair Color 2'],
+    32:['d) Hair color', 'Hair Color 3'],
+    33:['d) Hair color', 'Hair Color 4'],
+    34:['d) Hair color', 'Hair Color 5'],
+    35:['d) Hair color', 'Hair Color 6'],
+    36:['d) Hair color', 'Hair Color 7'],
+    37:['d) Hair color', 'Hair Color 8'],
+    38:['f) Beard color', 'Beard Color 1'],
+    39:['f) Beard color', 'Beard Color 2'],
+    40:['f) Beard color', 'Beard Color 3'],
+    41:['f) Beard color', 'Beard Color 4'],
+    42:['f) Beard color', 'Beard Color 5'],
+    43:['f) Beard color', 'Beard Color 6'],
+    44:['f) Beard color', 'Beard Color 7'],
+    45:['f) Beard color', 'Beard Color 8'],
+    46:['g) Top clothing', 'Jacket ~ Black'],
+    47:['g) Top clothing', 'Jacket ~ Marine blue'],
+    48:['g) Top clothing', 'Jacket ~ Grey'],
+    49:['h) Jacket Elements', 'Tie 1'],
+    50:['h) Jacket Elements', 'Tie 2'],
+    51:['h) Jacket Elements', 'Tie 3'],
+    52:['h) Jacket Elements', 'Tiebow 1'],
+    53:['h) Jacket Elements', 'Tiebow 2'],
+    54:['h) Jacket Elements', 'Tiebow 3'],
+    55:['j) Hat', 'Dior hat 1'],
+    56:['j) Hat', 'Dior hat 2'],
+    57:['j) Hat', 'Dior hat 3'],
+    58:['g) Top clothing', 'Dior Jacket 1'],
+    59:['g) Top clothing', 'Dior Jacket 2'],
+    60:['g) Top clothing', 'Gucci Jacket 1'],
+    61:['g) Top clothing', 'Gucci Jacket 2'],
+    62:['g) Top clothing', 'Chemise 1'],
+    63:['g) Top clothing', 'Chemise 2'],
+    64:['g) Top clothing', 'Chemise 3'],
+    65:['g) Top clothing', 'Chemise 4'],
+    66:['g) Top clothing', 'Chemise 5'],
+    67:['g) Top clothing', 'Chemise 6'],
+    68:['g) Top clothing', 'Chemise 7'],
+    69:['g) Top clothing', 'Chemise 8'],
+    70:['g) Top clothing', 'Chemise 9'],
+    71:['g) Top clothing', 'Chemise 10'],
+    72:['i) On jacket pocket', 'Cryptocom Ruby card'],
+    73:['i) On jacket pocket', 'Cryptocom Jade Green card'],
+    74:['i) On jacket pocket', 'Cryptocom Royal Indigo card'],
+    75:['i) On jacket pocket', 'Cryptocom Frosted Rose Gold card'],
+    76:['i) On jacket pocket', 'Cryptocom Icy White card'],
+    77:['i) On jacket pocket', 'Cryptocom Obsidian card'],
+    78:['i) On jacket pocket', 'Binance card'],
+    79:['g) Top clothing', 'Tank Top 1'],
+    80:['g) Top clothing', 'Tank Top 2'],
+    81:['g) Top clothing', 'Tank Top 3'],
+    82:['g) Top clothing', 'Tank Top 4'],
+    83:['g) Top clothing', 'Tank Top 5'],
+    84:['g) Top clothing', 'Tank Top 6'],
+    85:['g) Top clothing', 'Tank Top 7'],
+    86:['g) Top clothing', 'Tank Top 8'],
+    87:['g) Top clothing', 'Tank Top 9'],
+    88:['g) Top clothing', 'Tank Top 10'],
+    89:['g) Top clothing', 'T-shirt 1'],
+    90:['g) Top clothing', 'T-shirt 2'],
+    91:['g) Top clothing', 'T-shirt 3'],
+    92:['g) Top clothing', 'T-shirt 4'],
+    93:['g) Top clothing', 'T-shirt 5'],
+    94:['g) Top clothing', 'T-shirt 6'],
+    95:['g) Top clothing', 'T-shirt 7'],
+    96:['g) Top clothing', 'T-shirt 8'],
+    97:['g) Top clothing', 'T-shirt 9'],
+    98:['g) Top clothing', 'T-shirt 10'],
+    99:['k) Glasses', 'Design 1'],
+    100:['k) Glasses', 'Design 1 ~ Solar'],
+    101:['k) Glasses', 'Design 2'],
+    102:['k) Glasses', 'Design 2 ~ Solar'],
+    103:['k) Glasses', 'Design 3'],
+    104:['k) Glasses', 'Design 3 ~ Solar'],
+    105:['k) Glasses', 'Design 4'],
+    106:['k) Glasses', 'Design 4 ~ Solar'],
+    107:['k) Glasses', 'Design 5'],
+    108:['k) Glasses', 'Design 5 ~ Solar'],
+    109:['k) Glasses', 'Design 6'],
+    110:['k) Glasses', 'Design 6 ~ Solar'],
+    111:['k) Glasses', 'Design 7'],
+    112:['k) Glasses', 'Design 7 ~ Solar'],
+    113:['k) Glasses', 'Design 8'],
+    114:['k) Glasses', 'Design 8 ~ Solar'],
+    115:['k) Glasses', 'Design 9'],
+    116:['k) Glasses', 'Design 9 ~ Solar'],
+    117:['k) Glasses', 'Design 10'],
+    118:['k) Glasses', 'Design 10 ~ Solar'],
+    119:['j) Hat', 'Cap 1'],
+    120:['j) Hat', 'Cap 2'],
+    121:['j) Hat', 'Cap 3'],
+    122:['j) Hat', 'Cap 4'],
+    123:['j) Hat', 'Cap 5'],
+    124:['m) Pendants', 'Bitcoin Pendant'],
+    125:['m) Pendants', 'Ethereum Pendant'],
+    126:['m) Pendants', 'Solana Pendant'],
+    127:['n) Misc', 'Airpods blancs'],
+    128:['n) Misc', 'Airpods noir mat'],
+    129:['l) On mouth', 'Gum bubble ~ Pale rose'],
+    130:['l) On mouth', 'Gum bubble ~ Pale blue'],
+    131:['l) On mouth', 'Gum bubble ~ Pale green'],
+    132:['l) On mouth', 'Gum bubble ~ Pale yellow'],
 }
+
+traits_list_html = new Map(Object.entries(traits_list_html));
+traits_list_html = new Map([...traits_list_html.entries()].sort((a, b) => {
+    if((a[1][0]+a[1][1]) > (b[1][0]+b[1][1])){
+        return 1;
+    } else {
+        return -1;
+    }
+}));
 
 function build_dialog_from_traits() {
     var last_categorie = '';
     var html_append = '';
-    for (let trait = 1; trait <= nb_traits; trait++) {
-        if(traits_list_html[trait]) {
-            var trait_categorie = traits_list_html[trait][0].replace(' ','-');
-            var trait_name = traits_list_html[trait][1].replace(' ','-').replace('~','-');
+    for (const [tr, trait_desc] of traits_list_html) {
+        trait = parseInt(tr);
+        if(trait_desc) {
+            var trait_categorie = trait_desc[0].replace(' ','-').replace(')','-');
+            var trait_name = trait_desc[1].replace(' ','-').replace('~','-');
             if(trait_categorie!=last_categorie){
                 last_categorie = trait_categorie;
                 if(html_append!=''){
                     html_append += '</div>'
                 }
-                html_append += '<h4 class="composer_categorie_title">'+trait_categorie+'</h4><div class="div_categorie_'+trait_categorie+'">';
+                html_append += '<h4 class="composer_categorie_title">'+trait_desc[0]+'</h4><div class="div_categorie_'+trait_categorie+'">';
             }
             var radio_id = trait_categorie+'_'+trait_name;
             var radio = '<div class="div_trait_'+trait+'"><input type="radio" name="'+trait_categorie+'" id="'+radio_id+'" data-trait="'+trait+'">';
-            var label = '<label for="'+radio_id+'">'+traits_list_html[trait][1]+'</label></div>';
+            var label = '<label for="'+radio_id+'">'+trait_desc[1]+'</label></div>';
             html_append += (radio+label);
         } else {
             break;
@@ -279,6 +398,11 @@ $(document).ready(async function() {
         var tknUrl = '';
         var tknTraits = ''
         await mint(tknUrl, tknTraits);
+    });
+
+    // When user chooses traits, this is triggered
+    $('#composer_traits_selector div div input[type="radio"]').click(function(){
+        console.log($(this).data('trait'));
     });
 
     // Breaks scrolling everywhere, disable for now 

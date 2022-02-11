@@ -407,7 +407,7 @@ div[class^="div_trait_"], div[class*="div_trait_"] {
 }
 
 .composer_categorie_title {
-	width: 50%;
+	text-transform: uppercase;
 }
 
 #composer_confirm {
