@@ -144,6 +144,7 @@ async function connect_wallet() {
 async function load_wallet() {
     var addr = '';
     try {
+        await provider.send("eth_requestAccounts", []);
         signer = provider.getSigner();
         addr = await signer.getAddress();
     } catch (error) {

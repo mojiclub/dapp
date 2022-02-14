@@ -406,6 +406,10 @@ div[class^="div_trait_"], div[class*="div_trait_"] {
     margin-left: 8px;
 }
 
+#composer_traits_selector sep {
+	
+}
+
 .composer_categorie_title {
 	text-transform: uppercase;
 }

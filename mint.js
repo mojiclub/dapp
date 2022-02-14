@@ -2,37 +2,33 @@
 var nb_traits = 123;
 var img_dataurl;
 var trait_enabled = [];
-for (let trait = 1; trait <= nb_traits; trait++) {
-    // Enable a few traits by default (skin color, bored face, men haircut 1, hair color 5, debardeur color 7)
-    trait_enabled.push([3,10,13,35,86].includes(trait));
+var default_traits = [3,9,10002,30,10003,38,10004,10005,10006,10007,10008,10009,10010];
+for (let trait = 0; trait <= nb_traits; trait++) {
+    // Enable a few traits by default (skin color, bored face, no haircut, hair color 1, no beard, beard color 1, no top, no jacket element, no hat, ...)
+    trait_enabled.push(default_traits.includes(trait));
 }
 
 // Dependendies
 const dependendies_map = new Map();
 
 // Hair color requires hair cut // Please choose an haircut first
-for (let trait = 31; trait <= 38; trait++) {
+for (let trait = 30; trait <= 37; trait++) {
     dependendies_map.set(trait, [12,13,14,15,16,17,18,19,20,21,22,23]);
 }
 
 // Beard color requires beard cut // Please choose a beard color first
-for (let trait = 39; trait <= 46; trait++) {
+for (let trait = 38; trait <= 45; trait++) {
     dependendies_map.set(trait, [24,25,26,27,28,29]);
 }
 
-// Cravate / noeud requires costume // Please choose a costume jacket to add a tie or a bowtie
-for (let trait = 50; trait <= 55; trait++) {
-    dependendies_map.set(trait, [46,47,48]);
+// Cravate / noeud requires costume or shirt // Choose a shirt or a jacket 
+for (let trait = 49; trait <= 54; trait++) {
+    dependendies_map.set(trait, [46,47,48,58,59,60,61,62,63,64,65,66,67,68,69,70,71]);
 }
 
 // CC requires pocket in vest // Choose a shirt or a jacket with a pocket
-for (let trait = 79; trait <= 79; trait++) {
-    dependendies_map.set(trait, [46,47,48,62,63,64,65,66,67,68,69,70,71]);
-}
-
-// Pendentif anywhere but not in costumes // Pendants are not available in jackets
-for (let trait = 115; trait <= 117; trait++) {
-    dependendies_map.set(trait, [59,60,61,62,63,64,65,66,67,68,69,70,71,72,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99]);
+for (let trait = 72; trait <= 78; trait++) {
+    dependendies_map.set(trait, [46,47,48,58,59,60,61,62,63,64,65,66,67,68,69,70,71]);
 }
 
 traits_list_html = {
@@ -42,11 +38,13 @@ traits_list_html = {
     4:["a) Skin color","Half-breed ~ Light"],
     5:["a) Skin color","Half-breed ~ Darker"],
     6:["a) Skin color","Black"],
+    10001:["l) On mouth","None"],
     7:["l) On mouth","Cigarette"],
     8:["l) On mouth","Marijuana joint"],
     9:["b) Face","Bored"],
     10:["b) Face","Greedy"],
     11:["b) Face","Upset"],
+    10002:["c) Haircut","None"],
     12:["c) Haircut","Men haircut 1"],
     13:["c) Haircut","Men haircut 2"],
     14:["c) Haircut","Men haircut 3"],
@@ -59,6 +57,7 @@ traits_list_html = {
     21:["c) Haircut","Women haircut 4"],
     22:["c) Haircut","Women haircut 5"],
     23:["c) Haircut","Women haircut 6"],
+    10003:["e) Beard","None"],
     24:['e) Beard', 'Beardcut 1'],
     25:['e) Beard', 'Beardcut 2'],
     26:['e) Beard', 'Beardcut 3'],
@@ -81,15 +80,18 @@ traits_list_html = {
     43:['f) Beard color', 'Beard Color 6'],
     44:['f) Beard color', 'Beard Color 7'],
     45:['f) Beard color', 'Beard Color 8'],
+    10004:['g) Top clothing', 'None'],
     46:['g) Top clothing', 'Jacket ~ Black'],
     47:['g) Top clothing', 'Jacket ~ Marine blue'],
     48:['g) Top clothing', 'Jacket ~ Grey'],
+    10005:['h) Jacket Elements', 'None'],
     49:['h) Jacket Elements', 'Tie 1'],
     50:['h) Jacket Elements', 'Tie 2'],
     51:['h) Jacket Elements', 'Tie 3'],
     52:['h) Jacket Elements', 'Tiebow 1'],
     53:['h) Jacket Elements', 'Tiebow 2'],
     54:['h) Jacket Elements', 'Tiebow 3'],
+    10006:['j) Hat', 'None'],
     55:['j) Hat', 'Dior hat 1'],
     56:['j) Hat', 'Dior hat 2'],
     57:['j) Hat', 'Dior hat 3'],
@@ -106,7 +108,8 @@ traits_list_html = {
     68:['g) Top clothing', 'Chemise 7'],
     69:['g) Top clothing', 'Chemise 8'],
     70:['g) Top clothing', 'Chemise 9'],
-    71:['g) Top clothing', 'Chemise 10'],
+    71:['g) Top clothing', 'Chemise a'],
+    10007:['i) On jacket pocket', 'None'],
     72:['i) On jacket pocket', 'Cryptocom Ruby card'],
     73:['i) On jacket pocket', 'Cryptocom Jade Green card'],
     74:['i) On jacket pocket', 'Cryptocom Royal Indigo card'],
@@ -123,7 +126,7 @@ traits_list_html = {
     85:['g) Top clothing', 'Tank Top 7'],
     86:['g) Top clothing', 'Tank Top 8'],
     87:['g) Top clothing', 'Tank Top 9'],
-    88:['g) Top clothing', 'Tank Top 10'],
+    88:['g) Top clothing', 'Tank Top a'],
     89:['g) Top clothing', 'T-shirt 1'],
     90:['g) Top clothing', 'T-shirt 2'],
     91:['g) Top clothing', 'T-shirt 3'],
@@ -133,7 +136,8 @@ traits_list_html = {
     95:['g) Top clothing', 'T-shirt 7'],
     96:['g) Top clothing', 'T-shirt 8'],
     97:['g) Top clothing', 'T-shirt 9'],
-    98:['g) Top clothing', 'T-shirt 10'],
+    98:['g) Top clothing', 'T-shirt a'],
+    10008:['k) Glasses', 'None'],
     99:['k) Glasses', 'Design 1'],
     100:['k) Glasses', 'Design 1 ~ Solar'],
     101:['k) Glasses', 'Design 2'],
@@ -152,16 +156,18 @@ traits_list_html = {
     114:['k) Glasses', 'Design 8 ~ Solar'],
     115:['k) Glasses', 'Design 9'],
     116:['k) Glasses', 'Design 9 ~ Solar'],
-    117:['k) Glasses', 'Design 10'],
-    118:['k) Glasses', 'Design 10 ~ Solar'],
+    117:['k) Glasses', 'Design a'],
+    118:['k) Glasses', 'Design a ~ Solar'],
     119:['j) Hat', 'Cap 1'],
     120:['j) Hat', 'Cap 2'],
     121:['j) Hat', 'Cap 3'],
     122:['j) Hat', 'Cap 4'],
     123:['j) Hat', 'Cap 5'],
+    10009:['m) Pendants', 'None'],
     124:['m) Pendants', 'Bitcoin Pendant'],
     125:['m) Pendants', 'Ethereum Pendant'],
     126:['m) Pendants', 'Solana Pendant'],
+    10010:['n) Misc', 'None'],
     127:['n) Misc', 'Airpods blancs'],
     128:['n) Misc', 'Airpods noir mat'],
     129:['l) On mouth', 'Gum bubble ~ Pale rose'],
@@ -173,7 +179,11 @@ traits_list_html = {
 traits_list_html = new Map(Object.entries(traits_list_html));
 traits_list_html = new Map([...traits_list_html.entries()].sort((a, b) => {
     if((a[1][0]+a[1][1]) > (b[1][0]+b[1][1])){
-        return 1;
+        if(a[1][0]==b[1][0] && a[1][1]=="None") {
+            return -1;   
+        } else {
+            return 1;
+        }
     } else {
         return -1;
     }
@@ -185,18 +195,19 @@ function build_dialog_from_traits() {
     for (const [tr, trait_desc] of traits_list_html) {
         trait = parseInt(tr);
         if(trait_desc) {
-            var trait_categorie = trait_desc[0].replace(' ','-').replace(')','-');
-            var trait_name = trait_desc[1].replace(' ','-').replace('~','-');
+            var trait_categorie = trait_desc[0].replace(' ','-').replace(')','-').replace(' ','-');
+            var trait_categorie_letter = trait_desc[0].split(')')[0];
+            var trait_name = trait_desc[1].replace(' ','-').replace('~','-').replace(' ','-');
             if(trait_categorie!=last_categorie){
                 last_categorie = trait_categorie;
                 if(html_append!=''){
                     html_append += '</div>'
                 }
-                html_append += '<h4 class="composer_categorie_title">'+trait_desc[0]+'</h4><div class="div_categorie_'+trait_categorie+'">';
+                html_append += '<div class="div_categorie_'+trait_categorie_letter+' rounded"><h4 id="composer_categorie_title_'+trait_categorie_letter+'" class="composer_categorie_title">'+trait_desc[0]+'</h4>';
             }
             var radio_id = trait_categorie+'_'+trait_name;
             var radio = '<div class="div_trait_'+trait+'"><input type="radio" name="'+trait_categorie+'" id="'+radio_id+'" data-trait="'+trait+'">';
-            var label = '<label for="'+radio_id+'">'+trait_desc[1]+'</label></div>';
+            var label = '<label for="'+radio_id+'" data-trait="'+trait+'">'+trait_desc[1]+'</label></div>';
             html_append += (radio+label);
         } else {
             break;
@@ -205,28 +216,24 @@ function build_dialog_from_traits() {
     $('#composer_traits_selector').append(html_append+'</div>');
 }
 
-function update_dependendies(trait=-1) {
-    for (const [trait, dependencies] of dependendies_map) {
-        var at_least_one_enabled = false;
-        if(trait == -1) {
-            for (const dependency of dependencies) {
-                if(trait_enabled[dependency]){
-                    at_least_one_enabled = true;
+function update_dependencies() {
+    $('#composer_traits_selector div div *').removeClass('disabled');
+    let dep_keys = Array.from(dependendies_map.keys());
+    for (let trait = 0; trait < trait_enabled.length; trait++) {
+        if(dep_keys.includes(trait)) {
+            var flag = false;
+            for(const dep of dependendies_map.get(trait)){
+                if(trait_enabled[dep]) {
+                    flag = true;
                     break;
                 }
             }
-        } else {
-            at_least_one_enabled = dependencies.includes(trait);
-        }
-        
-        if(at_least_one_enabled) {
-            // Leave this element enabled to choose by the user
-        } else {
-            // Disable this element from being selected by the user
+            if(!flag) {
+                $('*[data-trait="'+trait+'"]').addClass('disabled');
+            }
         }
     }
 }
-
 
 $(document).ready(async function() {
 
@@ -400,11 +407,6 @@ $(document).ready(async function() {
         await mint(tknUrl, tknTraits);
     });
 
-    // When user chooses traits, this is triggered
-    $('#composer_traits_selector div div input[type="radio"]').click(function(){
-        console.log($(this).data('trait'));
-    });
-
     // Breaks scrolling everywhere, disable for now 
     //$("#nft_composer").bind('touchmove wheel',function (e) {e.stopPropagation();e.preventDefault();});
 
@@ -467,7 +469,37 @@ $(document).ready(async function() {
 
     $(".wallet_sensitive").trigger('walletchanged');
 
+    // NFT composer 
     build_dialog_from_traits();
+
+    // Select all default_traits
+    for (let trait = 0; trait < default_traits.length; trait++) {
+        $('input[data-trait="'+default_traits[trait]+'"]').click();
+    }
+
+    // When user chooses traits, this is triggered
+    $('#composer_traits_selector div div input[type="radio"]').change(function(){
+        var changed_name = $(this).attr('name');
+        
+        // Keep trace of enabled / disabled traits
+        $('#composer_traits_selector div div input[type="radio"]').each(function( index ) {
+            trait_enabled[$(this).data('trait')] = $(this).is(':checked');
+        });
+
+        // Update disabled traits based on new enabled/disabled trait
+        update_dependencies();
+
+        // Now remove disabled elements from enabled traits to keep only traits that should appear on the NFT, at any moment.
+        $('#composer_traits_selector div div input[type="radio"]').each(function( index ) {
+            trait_enabled[$(this).data('trait')] = $(this).is(':checked') && !$(this).hasClass("disabled");
+        });
+
+        // TODO :
+        // Build NFT based on things enabled in "trait_enabled"
+    });
+
+    update_dependencies();
+    $('#composer_traits_selector div div input[type="radio"]').eq(0).trigger("change");
 });
 
 const loadImage = src =>
