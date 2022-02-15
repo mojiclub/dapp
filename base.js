@@ -138,7 +138,7 @@ async function connect_wallet() {
                 infuraId: "9935c9ea2ade4bd5abb50042d79dea17",
                 rpc: {CHAIN_ID: RPC}
             });
-            var a '';
+            var a = '';
             try {
                 a = await wc_provider.enable();
             } catch(error2) {
