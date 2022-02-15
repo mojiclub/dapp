@@ -129,10 +129,10 @@ function notify(msg, seconds=3) {
 async function connect_wallet() {
     wc_provider = '';
     provider = '';
-    if(window.ethereum.isMetaMask) {
+    if(false && window.ethereum.isMetaMask) {
         provider = new ethers.providers.Web3Provider(window.ethereum, "any");
     } else {
-        if(window.ethereum.isTrust) {
+        if(true || window.ethereum.isTrust) {
             wc_provider = new WalletConnectProvider.default(
             {
                 infuraId: "9935c9ea2ade4bd5abb50042d79dea17",
@@ -140,9 +140,10 @@ async function connect_wallet() {
             });
             var a = '';
             try {
-                a = await wc_provider.enable();
+                $('#p_description').text(navigator.userAgent);
+                a = await wc_provider.triggerConnect();
             } catch(error2) {
-                console.log('fine');
+                console.log(error2);
             }
             
             if(a.length>0) {
