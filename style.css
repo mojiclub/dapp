@@ -403,11 +403,7 @@ div[class^="div_trait_"], div[class*="div_trait_"] {
 }
 
 .composer_categorie_title, #composer_traits_selector div {
-    margin-left: 8px;
-}
-
-#composer_traits_selector sep {
-	
+    margin-left: 12px;
 }
 
 .composer_categorie_title {
@@ -416,6 +412,36 @@ div[class^="div_trait_"], div[class*="div_trait_"] {
 
 #composer_confirm {
 	width: max-content;
+}
+
+.accordion {
+	cursor: pointer;
+}
+
+.accordion:after {
+    content: '\02795';
+    font-size: 13px;
+    color: white;
+    float: right;
+    margin-right: 12px;
+    background-color: white;
+    border-radius: 12px;
+    height: 24px;
+    width: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.accordion.active:after {
+	content: "\2796";
+}
+
+.accordion_panel {
+	overflow: hidden;
+	max-height: 0;
+	opacity: 0;
+	transition: max-height 0.2s ease-out, overflow 0.2s ease-out, opacity 0.2s ease-out;
 }
 
 .btnn {

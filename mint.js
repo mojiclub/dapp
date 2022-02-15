@@ -2,7 +2,7 @@
 var nb_traits = 123;
 var img_dataurl;
 var trait_enabled = [];
-var default_traits = [3,9,10002,30,10003,38,10004,10005,10006,10007,10008,10009,10010];
+var default_traits = [3,10001,9,10002,30,10003,38,10004,10005,10006,10007,10008,10009,10010];
 for (let trait = 0; trait <= nb_traits; trait++) {
     // Enable a few traits by default (skin color, bored face, no haircut, hair color 1, no beard, beard color 1, no top, no jacket element, no hat, ...)
     trait_enabled.push(default_traits.includes(trait));
@@ -168,8 +168,8 @@ traits_list_html = {
     125:['m) Pendants', 'Ethereum Pendant'],
     126:['m) Pendants', 'Solana Pendant'],
     10010:['n) Misc', 'None'],
-    127:['n) Misc', 'Airpods blancs'],
-    128:['n) Misc', 'Airpods noir mat'],
+    127:['n) Misc', 'Airpods ~ White'],
+    128:['n) Misc', 'Airpods ~ Mate black'],
     129:['l) On mouth', 'Gum bubble ~ Pale rose'],
     130:['l) On mouth', 'Gum bubble ~ Pale blue'],
     131:['l) On mouth', 'Gum bubble ~ Pale green'],
@@ -203,7 +203,7 @@ function build_dialog_from_traits() {
                 if(html_append!=''){
                     html_append += '</div>'
                 }
-                html_append += '<div class="div_categorie_'+trait_categorie_letter+' rounded"><h4 id="composer_categorie_title_'+trait_categorie_letter+'" class="composer_categorie_title">'+trait_desc[0]+'</h4>';
+                html_append += '<h4 id="composer_categorie_title_'+trait_categorie_letter+'" class="composer_categorie_title accordion">'+trait_desc[0]+'</h4><div class="div_categorie_'+trait_categorie_letter+' rounded accordion_panel">';
             }
             var radio_id = trait_categorie+'_'+trait_name;
             var radio = '<div class="div_trait_'+trait+'"><input type="radio" name="'+trait_categorie+'" id="'+radio_id+'" data-trait="'+trait+'">';
@@ -500,6 +500,34 @@ $(document).ready(async function() {
 
     update_dependencies();
     $('#composer_traits_selector div div input[type="radio"]').eq(0).trigger("change");
+
+    // Accordions JS
+    var accordions = document.getElementsByClassName("accordion");
+    var i;
+    var last_acc = accordions[accordions.length-1].textContent;
+
+    for (i = 0; i < accordions.length; i++) {
+      accordions[i].addEventListener("click", function() {
+        /* Toggle between adding and removing the "active" class,
+        to highlight the button that controls the panel */
+        this.classList.toggle("active");
+
+        /* Toggle between hiding and showing the active panel */
+        var panel = this.nextElementSibling;
+        if (panel.style.maxHeight && panel.style.maxHeight!="1px") {
+          panel.style.maxHeight = "1px";
+          panel.style.opacity = "0";
+          setTimeout(function(){panel.style.overflow = "hidden";},200);          
+        } else {
+          panel.style.maxHeight = panel.scrollHeight + "px";
+          panel.style.opacity = "1";
+          panel.style.overflow = "visible";
+          if(this.textContent == last_acc){
+            document.getElementById("composer_traits_selector").scrollBy({top:panel.scrollHeight,left:0,behavior:"smooth"});
+          }
+        }
+      });
+    }
 });
 
 const loadImage = src =>

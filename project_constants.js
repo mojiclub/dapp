@@ -16,6 +16,7 @@ const CONTRACT_ADDRESS_TICKETS = '0x8f29190477d5680cf3d28d4e8b1903ab190bda4a';
 const ABI_TICKETS = ["function balanceOf(address) view returns (uint)"];
 
 // Ethers.js
+var wc_provider = '';
 var provider = '';
 var signer = '';
 var contract = '';

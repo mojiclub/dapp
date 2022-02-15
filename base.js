@@ -3,7 +3,12 @@ var tx_id = '';
 var tx_pending = false;
 var last_tx_recept = '';
 
+// Start / reset web3 state 
 function web3_init(){
+    wc_provider = '';
+    signer = '';
+    var web3_btn = document.querySelector("#web3_status p");
+    web3_btn.innerText = "CONNECT WALLET";
     provider = new ethers.providers.JsonRpcProvider(RPC);
     contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, provider);
     tickets_contract = new ethers.Contract(CONTRACT_ADDRESS_TICKETS, ABI_TICKETS, provider);
@@ -122,7 +127,42 @@ function notify(msg, seconds=3) {
 }
 
 async function connect_wallet() {
-    provider = new ethers.providers.Web3Provider(window.ethereum, "any");
+    wc_provider = '';
+    provider = '';
+    if(window.ethereum.isMetaMask) {
+        provider = new ethers.providers.Web3Provider(window.ethereum, "any");
+    } else {
+        if(window.ethereum.isTrust) {
+            wc_provider = new WalletConnectProvider.default(
+            {
+                infuraId: "9935c9ea2ade4bd5abb50042d79dea17",
+                rpc: {CHAIN_ID: RPC}
+            });
+            var a '';
+            try {
+                a = await wc_provider.enable();
+            } catch(error2) {
+                console.log('fine');
+            }
+            
+            if(a.length>0) {
+                wc_provider.on("disconnect", (number, reason) => {
+                    notify("WalletConnect: "+reason);
+                    web3_init();
+                });
+                provider = new ethers.providers.Web3Provider(wc_provider);
+            } else {
+                web3_init();
+                return;
+            }
+        }
+    }
+    if(provider =='') {
+        // Failed
+        notify("Error connecting wallet. Please check your Web3 Wallet extension.");
+        return;
+    }
+    
     // Weird enough, _network stays undefined for a few ms. We'll wait..
     while(!provider._network){
         await sleep(10);
@@ -148,9 +188,8 @@ async function load_wallet() {
         signer = provider.getSigner();
         addr = await signer.getAddress();
     } catch (error) {
-        $("#web3_status p").text("CONNECT WALLET");
-        signer = '';
-        notify("Error connecting wallet. Please check your Metamask extension.");
+        web3_init();
+        notify("Error connecting wallet. Please check your Web3 Wallet extension.");
         return;
     }
 
@@ -162,7 +201,7 @@ async function load_wallet() {
     $(".wallet_sensitive").trigger('walletchanged');
     addr_a = addr.substring(0,7);
     addr_b = addr.substring(addr.length-7,addr.length);
-    $("#web3_status").text(addr_a+"..."+addr_b);
+    $("#web3_status p").text(addr_a+"..."+addr_b);
     await populate_web3_actions();
 
     // Show NFT count at the bottom of the NFT
