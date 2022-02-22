@@ -3,16 +3,16 @@
 // ----------------------------
 
 // Chain ID and RPC
-const RPC = "https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161" // ROPSTEN Testnet
-const CHAIN_ID = 3; // ROPSTEN Testnet
+var RPC = "https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161" // ROPSTEN Testnet
+var CHAIN_ID = 3; // ROPSTEN Testnet
 const RPC_SCAN_URL = "https://ropsten.etherscan.io";
-// const RPC = "https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161" // ETH Mainnet
-// const CHAIN_ID = 1; // ETH Mainnet
+//const RPC = "https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161" // ETH Mainnet
+//const CHAIN_ID = 1; // ETH Mainnet
 // const RPC_SCAN_URL = "https://etherscan.io";
-const CONTRACT_ADDRESS = '0x24ed45fbd53346f9f4c8215f92dd7b694ad86914';
+const CONTRACT_ADDRESS = '0xbBb4D7E04612Ff9F4ff262Fbd7346600e0BeF959';
 
 // Tickets
-const CONTRACT_ADDRESS_TICKETS = '0x8f29190477d5680cf3d28d4e8b1903ab190bda4a';
+const CONTRACT_ADDRESS_TICKETS = '0xcc86E13b2F72a640faA67bB6f82d7F8a709B12E3';
 const ABI_TICKETS = ["function balanceOf(address) view returns (uint)"];
 
 // Ethers.js
@@ -46,7 +46,7 @@ const ABI = [
 
   // Sale
   "function SaleIsActive() public view returns (bool)",
-  "function mint(uint numberOfTokens) payable",
+  "function mint(string[3] memory _msgs, bytes32[9] memory _hashs_r_s, uint8[3] memory _v) public payable",
 
   // Only for owner, remove later
   "function withdraw()",
@@ -68,7 +68,7 @@ var proj_description = "is a collection of unique personnalized avatars with tra
 var proj_wl_mint = "Mint for WL users : ";
 var proj_public_mint = "Public mint : ";
 var proj_reveal_date = "Reveal : ";
-var date_format_options = {month: 'short', day: 'numeric', hour:'2-digit',minute:'2-digit', timeZone: 'UTC', timeZoneName:'short'};
+var date_format_options = {year: "numeric", month: 'short', day: 'numeric', hour:'2-digit',minute:'2-digit', timeZone: 'UTC', timeZoneName:'short'};
 
 // Website accent colors (set in style.css ~ at the top)
 //var proj_color = "#DD5A56";
@@ -78,7 +78,7 @@ var MINT_PRICE = 0.09;
 var MAX_MINT = 1;
 var GEN0_SUPPLY = 10000;
 var GEN1_SUPPLY = 40000;
-var WL_MINT_TIMESTAMP = 16414060900;
+var WL_MINT_TIMESTAMP = 1645437000; // lundi 21 février 2022 10:50:00 GMT+01:00
 var MINT_TIMESTAMP = WL_MINT_TIMESTAMP + 600;
 
 var NB_MINTED;

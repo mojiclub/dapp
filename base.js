@@ -1,3 +1,7 @@
+// Cookies-js declaration
+JS_COOKIES = require('js-cookie')
+var web3_session;
+
 // Store last TX information
 var tx_id = '';
 var tx_pending = false;
@@ -9,22 +13,46 @@ function web3_init(){
     signer = '';
     var web3_btn = document.querySelector("#web3_status p");
     web3_btn.innerText = "CONNECT WALLET";
+    document.getElementById('logout').style.display = 'none';
+    document.getElementById('Main_btn').classList.add('disabled');
+    
     provider = new ethers.providers.JsonRpcProvider(RPC);
     contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, provider);
     tickets_contract = new ethers.Contract(CONTRACT_ADDRESS_TICKETS, ABI_TICKETS, provider);
 }
 
-if(!window.ethereum) {
+function isMobile() {
+    if(navigator.userAgentData) {
+        return navigator.userAgentData.mobile;
+    }
+    return false;
+}
+
+if(!window.ethereum) {/*
     document.getElementById("web3_status").classList.add("disabled");
     document.getElementById("web3_status").innerHTML = "<p>METAMASK NOT DETECTED</p>";
     // Get rid of mint button if browser isnt web3.
     if(document.getElementById("web3_status")){
         document.getElementById("Main_btn").classList.add("disabled");
         document.getElementById("Main_btn").innerHTML = "<p>METAMASK NOT DETECTED</p>";
-    }
+    }*/
 } else {
     window.ethereum.on('accountsChanged', async function (accounts) {
         await load_wallet();
+    });
+
+    window.ethereum.on("chainChanged", async function (number) {
+        BAD_CHAIN = number!='0x'+CHAIN_ID.toString(16);
+        if(BAD_CHAIN) {
+            web3_init();
+            $(".wallet_sensitive").trigger('walletchanged');
+            var web3_btn = document.querySelector("#web3_status p");
+            web3_btn.innerText = "SWITCH TO ETHEREUM";
+            document.getElementById('logout').style.display = 'none';
+        } else {
+            await load_wallet();
+        }
+      console.log(number);
     });
 }
 
@@ -33,7 +61,7 @@ web3_init();
 // Get the wallet balance in ETH
 var _signer_balance_eth = -1;
 async function signer_balance_eth(reset=false){
-    if(!window.ethereum) {_signer_balance_eth=0;return 0;}
+    if(signer=='') {_signer_balance_eth=0;return 0;}
     if(_signer_balance_eth==-1 || reset){
         var addr = await signer.getAddress();
         var bal = await provider.getBalance(addr);
@@ -45,7 +73,7 @@ async function signer_balance_eth(reset=false){
 
 var _signer_balance_tickets = -1;
 async function signer_balance_tickets(reset=false) {
-    if(!window.ethereum) {_signer_balance_tickets=0;return 0;}
+    if(signer=='') {_signer_balance_tickets=0;return 0;}
     if(_signer_balance_tickets==-1 || reset){
         var addr = await signer.getAddress();
         var tickets_balance = await tickets_contract.balanceOf(addr);
@@ -56,7 +84,7 @@ async function signer_balance_tickets(reset=false) {
 
 var _signer_balance_nfts = -1;
 async function signer_balance_nfts(reset=false) {
-    if(!window.ethereum) {_signer_balance_nfts=0;return 0;}
+    if(signer=='') {_signer_balance_nfts=0;return 0;}
     if(_signer_balance_nfts==-1 || reset){
         var addr = await signer.getAddress();
         var nfts_balance = await contract.balanceOf(addr);
@@ -105,8 +133,8 @@ function wl_date_bc(){
 }
 
 function mint_date_bc(){
-    var wl_date = new Date(MINT_TIMESTAMP * 1000);
-    return wl_date.toLocaleString('en-US', date_format_options);
+    var mint_date = new Date(MINT_TIMESTAMP * 1000);
+    return mint_date.toLocaleString('en-US', date_format_options);
 }
 
 async function SaleIsActive(){
@@ -129,37 +157,36 @@ function notify(msg, seconds=3) {
 async function connect_wallet() {
     wc_provider = '';
     provider = '';
-    if(false && window.ethereum.isMetaMask) {
+    if(window.ethereum && window.ethereum.isMetaMask) {
         provider = new ethers.providers.Web3Provider(window.ethereum, "any");
+        JS_COOKIES.set('web3_session','metamask');
     } else {
-        if(true || window.ethereum.isTrust) {
-            wc_provider = new WalletConnectProvider.default(
-            {
-                infuraId: "9935c9ea2ade4bd5abb50042d79dea17",
-                rpc: {CHAIN_ID: RPC}
-            });
-            var a = '';
-            try {
-                $('#p_description').text(navigator.userAgent);
-                a = await wc_provider.triggerConnect();
-            } catch(error2) {
-                console.log(error2);
-            }
-            
-            if(a.length>0) {
-                wc_provider.on("disconnect", (number, reason) => {
-                    notify("WalletConnect: "+reason);
-                    web3_init();
-                });
-                provider = new ethers.providers.Web3Provider(wc_provider);
-            } else {
+        wc_provider = new WalletConnectProvider.default(
+        {
+            infuraId: "9aa3d95b3bc440fa88ea12eaa4456161",
+            rpc: {CHAIN_ID: RPC},
+            chainId:CHAIN_ID
+        });
+        var a = '';
+        try {
+            a = await wc_provider.enable();
+        } catch(error) { }
+        
+        if(a.length>0) {
+            wc_provider.on("disconnect", (number, reason) => {
+                notify("WalletConnect: "+reason);
                 web3_init();
-                return;
-            }
+            });
+            provider = new ethers.providers.Web3Provider(wc_provider);
+            JS_COOKIES.set('web3_session','trust');
+        } else {
+            web3_init();
+            return;
         }
     }
-    if(provider =='') {
+    if(provider == '') {
         // Failed
+        console.log("provider == ''");
         notify("Error connecting wallet. Please check your Web3 Wallet extension.");
         return;
     }
@@ -168,16 +195,13 @@ async function connect_wallet() {
     while(!provider._network){
         await sleep(10);
     }
-    if(provider._network.chainId != CHAIN_ID){
+    if(provider._network.chainId != CHAIN_ID && window.ethereum && wc_provider == ''){
         await ethereum.request({
             method: 'wallet_switchEthereumChain',
             params: [{ chainId: '0x'+CHAIN_ID.toString(16) }],
         });
-        provider = new ethers.providers.Web3Provider(window.ethereum, "any");
-        // Weird enough, _network stays undefined for a few ms. We'll wait..
-        while(!provider._network){
-            await sleep(10);
-        }
+        await connect_wallet();
+        return;
     }
     await load_wallet();
 }
@@ -185,12 +209,15 @@ async function connect_wallet() {
 async function load_wallet() {
     var addr = '';
     try {
-        await provider.send("eth_requestAccounts", []);
+        if(wc_provider==''){
+            await provider.send("eth_requestAccounts", []);
+        }
         signer = provider.getSigner();
         addr = await signer.getAddress();
     } catch (error) {
         web3_init();
         notify("Error connecting wallet. Please check your Web3 Wallet extension.");
+        console.log(error);
         return;
     }
 
@@ -203,12 +230,14 @@ async function load_wallet() {
     addr_a = addr.substring(0,7);
     addr_b = addr.substring(addr.length-7,addr.length);
     $("#web3_status p").text(addr_a+"..."+addr_b);
+    document.getElementById('logout').style.display = 'block';
     await populate_web3_actions();
 
     // Show NFT count at the bottom of the NFT
     if($('#my_nft').length>0) {
         var nfts = await signer_balance_nfts();
         $('#my_nft').text('My minted NFTs: '+nfts);
+        $('#my_nft').show();
     }
 }
 
@@ -246,8 +275,20 @@ $("#web3_status").click(async function(){
         await connect_wallet();
         $("#web3_status").css("pointer-events","inherit");
     } else {
-        $("#web3_actions").toggle();
+        if($('#web3_actions').css('display')=='none') {
+            $("#web3_actions").fadeIn(250);
+        } else {
+            $("#web3_actions").fadeOut(250);
+        }
+        
     }
+});
+
+$("#logout").click(async function(event){
+    web3_init();
+    $(".wallet_sensitive").trigger('walletchanged');
+    event.preventDefault();
+    event.stopPropagation();
 });
 
 function play_done() {
@@ -287,7 +328,21 @@ function dataURItoBlob(dataURI) {
     return new Blob([ab], {type: mimeString});
 }
 
+async function determineGen() {
+    NB_MINTED = await nb_minted_bc();
+    $('#span_nb_minted').text(NB_MINTED);
+    gen0_soldout = NB_MINTED >= GEN0_SUPPLY;
+    gen1_soldout = NB_MINTED >= GEN0_SUPPLY+GEN1_SUPPLY;
+    gen_number = gen0_soldout ? 1 : 0;
+}
+
 $(document).ready(async function() {
+
+    web3_session = JS_COOKIES.get('web3_session');
+    if(web3_session) {
+        $("#web3_status").trigger('click');
+    }
+
     $('.mjc_contract').text(CONTRACT_ADDRESS);
     $('.mjc_contract').attr('href',RPC_SCAN_URL+'/address/'+CONTRACT_ADDRESS);
     $('.mjcc_contract').text(CONTRACT_ADDRESS_TICKETS);
@@ -296,11 +351,7 @@ $(document).ready(async function() {
     $('.MINT_PRICE').text(MINT_PRICE);
 
     // Gen0 / Gen1 UI changes
-    NB_MINTED = await nb_minted_bc();
-    $('#span_nb_minted').text(NB_MINTED);
-    gen0_soldout = NB_MINTED >= GEN0_SUPPLY;
-    gen1_soldout = NB_MINTED >= GEN0_SUPPLY+GEN1_SUPPLY;
-    gen_number = gen0_soldout ? 1 : 0;
+    await determineGen();
     if(!gen0_soldout) {
         $('.gen1only').addClass('disabled');
         $('#p_mint_price').text(MINT_PRICE + " Ξ");

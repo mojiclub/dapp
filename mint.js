@@ -1,11 +1,16 @@
 // NFT composer variables
-var nb_traits = 123;
+var nb_traits = 132;
 var img_dataurl;
-var trait_enabled = [];
-var default_traits = [3,10001,9,10002,30,10003,38,10004,10005,10006,10007,10008,10009,10010];
+var traits_enabled_bools = [];
+var traits_enabled_ints = [];
+var _traits_enabled_hash = '';
+var default_traits = [3,9,30,38,10001,10002,10003,10004,10005,10006,10007,10008,10009,10010];
 for (let trait = 0; trait <= nb_traits; trait++) {
-    // Enable a few traits by default (skin color, bored face, no haircut, hair color 1, no beard, beard color 1, no top, no jacket element, no hat, ...)
-    trait_enabled.push(default_traits.includes(trait));
+    // Enable a few traits by default (skin color, bored face, hair/beard color)
+    traits_enabled_bools.push(default_traits.includes(trait));
+    if(default_traits.includes(trait)){
+        traits_enabled_ints.push(trait)
+    }
 }
 
 // Dependendies
@@ -29,151 +34,6 @@ for (let trait = 49; trait <= 54; trait++) {
 // CC requires pocket in vest // Choose a shirt or a jacket with a pocket
 for (let trait = 72; trait <= 78; trait++) {
     dependendies_map.set(trait, [46,47,48,58,59,60,61,62,63,64,65,66,67,68,69,70,71]);
-}
-
-traits_list_html = {
-    1:["a) Skin color","Light beige"],
-    2:["a) Skin color","Beige"],
-    3:["a) Skin color","Tanned beige"],
-    4:["a) Skin color","Half-breed ~ Light"],
-    5:["a) Skin color","Half-breed ~ Darker"],
-    6:["a) Skin color","Black"],
-    10001:["l) On mouth","None"],
-    7:["l) On mouth","Cigarette"],
-    8:["l) On mouth","Marijuana joint"],
-    9:["b) Face","Bored"],
-    10:["b) Face","Greedy"],
-    11:["b) Face","Upset"],
-    10002:["c) Haircut","None"],
-    12:["c) Haircut","Men haircut 1"],
-    13:["c) Haircut","Men haircut 2"],
-    14:["c) Haircut","Men haircut 3"],
-    15:["c) Haircut","Men haircut 4"],
-    16:["c) Haircut","Men haircut 5"],
-    17:["c) Haircut","Men haircut 6"],
-    18:["c) Haircut","Women haircut 1"],
-    19:["c) Haircut","Women haircut 2"],
-    20:["c) Haircut","Women haircut 3"],
-    21:["c) Haircut","Women haircut 4"],
-    22:["c) Haircut","Women haircut 5"],
-    23:["c) Haircut","Women haircut 6"],
-    10003:["e) Beard","None"],
-    24:['e) Beard', 'Beardcut 1'],
-    25:['e) Beard', 'Beardcut 2'],
-    26:['e) Beard', 'Beardcut 3'],
-    27:['e) Beard', 'Beardcut 4'],
-    28:['e) Beard', 'Beardcut 5'],
-    29:['e) Beard', 'Beardcut 6'],
-    30:['d) Hair color', 'Hair Color 1'],
-    31:['d) Hair color', 'Hair Color 2'],
-    32:['d) Hair color', 'Hair Color 3'],
-    33:['d) Hair color', 'Hair Color 4'],
-    34:['d) Hair color', 'Hair Color 5'],
-    35:['d) Hair color', 'Hair Color 6'],
-    36:['d) Hair color', 'Hair Color 7'],
-    37:['d) Hair color', 'Hair Color 8'],
-    38:['f) Beard color', 'Beard Color 1'],
-    39:['f) Beard color', 'Beard Color 2'],
-    40:['f) Beard color', 'Beard Color 3'],
-    41:['f) Beard color', 'Beard Color 4'],
-    42:['f) Beard color', 'Beard Color 5'],
-    43:['f) Beard color', 'Beard Color 6'],
-    44:['f) Beard color', 'Beard Color 7'],
-    45:['f) Beard color', 'Beard Color 8'],
-    10004:['g) Top clothing', 'None'],
-    46:['g) Top clothing', 'Jacket ~ Black'],
-    47:['g) Top clothing', 'Jacket ~ Marine blue'],
-    48:['g) Top clothing', 'Jacket ~ Grey'],
-    10005:['h) Jacket Elements', 'None'],
-    49:['h) Jacket Elements', 'Tie 1'],
-    50:['h) Jacket Elements', 'Tie 2'],
-    51:['h) Jacket Elements', 'Tie 3'],
-    52:['h) Jacket Elements', 'Tiebow 1'],
-    53:['h) Jacket Elements', 'Tiebow 2'],
-    54:['h) Jacket Elements', 'Tiebow 3'],
-    10006:['j) Hat', 'None'],
-    55:['j) Hat', 'Dior hat 1'],
-    56:['j) Hat', 'Dior hat 2'],
-    57:['j) Hat', 'Dior hat 3'],
-    58:['g) Top clothing', 'Dior Jacket 1'],
-    59:['g) Top clothing', 'Dior Jacket 2'],
-    60:['g) Top clothing', 'Gucci Jacket 1'],
-    61:['g) Top clothing', 'Gucci Jacket 2'],
-    62:['g) Top clothing', 'Chemise 1'],
-    63:['g) Top clothing', 'Chemise 2'],
-    64:['g) Top clothing', 'Chemise 3'],
-    65:['g) Top clothing', 'Chemise 4'],
-    66:['g) Top clothing', 'Chemise 5'],
-    67:['g) Top clothing', 'Chemise 6'],
-    68:['g) Top clothing', 'Chemise 7'],
-    69:['g) Top clothing', 'Chemise 8'],
-    70:['g) Top clothing', 'Chemise 9'],
-    71:['g) Top clothing', 'Chemise a'],
-    10007:['i) On jacket pocket', 'None'],
-    72:['i) On jacket pocket', 'Cryptocom Ruby card'],
-    73:['i) On jacket pocket', 'Cryptocom Jade Green card'],
-    74:['i) On jacket pocket', 'Cryptocom Royal Indigo card'],
-    75:['i) On jacket pocket', 'Cryptocom Frosted Rose Gold card'],
-    76:['i) On jacket pocket', 'Cryptocom Icy White card'],
-    77:['i) On jacket pocket', 'Cryptocom Obsidian card'],
-    78:['i) On jacket pocket', 'Binance card'],
-    79:['g) Top clothing', 'Tank Top 1'],
-    80:['g) Top clothing', 'Tank Top 2'],
-    81:['g) Top clothing', 'Tank Top 3'],
-    82:['g) Top clothing', 'Tank Top 4'],
-    83:['g) Top clothing', 'Tank Top 5'],
-    84:['g) Top clothing', 'Tank Top 6'],
-    85:['g) Top clothing', 'Tank Top 7'],
-    86:['g) Top clothing', 'Tank Top 8'],
-    87:['g) Top clothing', 'Tank Top 9'],
-    88:['g) Top clothing', 'Tank Top a'],
-    89:['g) Top clothing', 'T-shirt 1'],
-    90:['g) Top clothing', 'T-shirt 2'],
-    91:['g) Top clothing', 'T-shirt 3'],
-    92:['g) Top clothing', 'T-shirt 4'],
-    93:['g) Top clothing', 'T-shirt 5'],
-    94:['g) Top clothing', 'T-shirt 6'],
-    95:['g) Top clothing', 'T-shirt 7'],
-    96:['g) Top clothing', 'T-shirt 8'],
-    97:['g) Top clothing', 'T-shirt 9'],
-    98:['g) Top clothing', 'T-shirt a'],
-    10008:['k) Glasses', 'None'],
-    99:['k) Glasses', 'Design 1'],
-    100:['k) Glasses', 'Design 1 ~ Solar'],
-    101:['k) Glasses', 'Design 2'],
-    102:['k) Glasses', 'Design 2 ~ Solar'],
-    103:['k) Glasses', 'Design 3'],
-    104:['k) Glasses', 'Design 3 ~ Solar'],
-    105:['k) Glasses', 'Design 4'],
-    106:['k) Glasses', 'Design 4 ~ Solar'],
-    107:['k) Glasses', 'Design 5'],
-    108:['k) Glasses', 'Design 5 ~ Solar'],
-    109:['k) Glasses', 'Design 6'],
-    110:['k) Glasses', 'Design 6 ~ Solar'],
-    111:['k) Glasses', 'Design 7'],
-    112:['k) Glasses', 'Design 7 ~ Solar'],
-    113:['k) Glasses', 'Design 8'],
-    114:['k) Glasses', 'Design 8 ~ Solar'],
-    115:['k) Glasses', 'Design 9'],
-    116:['k) Glasses', 'Design 9 ~ Solar'],
-    117:['k) Glasses', 'Design a'],
-    118:['k) Glasses', 'Design a ~ Solar'],
-    119:['j) Hat', 'Cap 1'],
-    120:['j) Hat', 'Cap 2'],
-    121:['j) Hat', 'Cap 3'],
-    122:['j) Hat', 'Cap 4'],
-    123:['j) Hat', 'Cap 5'],
-    10009:['m) Pendants', 'None'],
-    124:['m) Pendants', 'Bitcoin Pendant'],
-    125:['m) Pendants', 'Ethereum Pendant'],
-    126:['m) Pendants', 'Solana Pendant'],
-    10010:['n) Misc', 'None'],
-    127:['n) Misc', 'Airpods ~ White'],
-    128:['n) Misc', 'Airpods ~ Mate black'],
-    129:['l) On mouth', 'Gum bubble ~ Pale rose'],
-    130:['l) On mouth', 'Gum bubble ~ Pale blue'],
-    131:['l) On mouth', 'Gum bubble ~ Pale green'],
-    132:['l) On mouth', 'Gum bubble ~ Pale yellow'],
 }
 
 traits_list_html = new Map(Object.entries(traits_list_html));
@@ -216,23 +76,134 @@ function build_dialog_from_traits() {
     $('#composer_traits_selector').append(html_append+'</div>');
 }
 
+function traits_enabled_hash() {
+    var bi = '';
+    for (let trait = 1; trait <= nb_traits; trait++) {
+        if(traits_enabled_bools[trait]){
+            bi+=1;
+        } else {
+            bi+=0;
+        }
+    }
+    let num = BigInt('0b' + bi);
+    _traits_enabled_hash = num.toString(36);
+}
+
+var _verify_traits;
+function verifyTraits() {
+    $('#composer_confirm').removeClass('disabled');
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", 'https://www.dekefake.duckdns.org:62192/verify/'+_traits_enabled_hash, true);
+    xhr.setRequestHeader('Accept', 'application/json');
+    xhr.addEventListener('load', function () {
+        _verify_traits = JSON.parse(JSON.parse(this.responseText));
+
+        if(!_verify_traits['valid']) {
+            $('#composer_confirm').addClass('disabled');
+        }
+    });
+    xhr.send();
+}
+
+_soldout_traits = []
+function HideSoldOutTraits(reset=true) {
+    if(reset || _soldout_traits.length==0) {
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", 'https://www.dekefake.duckdns.org:62192/soldout_traits', true);
+        xhr.setRequestHeader('Accept', 'application/json');
+        xhr.addEventListener('load', function () {
+            _soldout_traits = JSON.parse(JSON.parse(this.responseText));
+            for(const _trait of _soldout_traits){
+                $('.div_trait_'+_trait).addClass('disabled soldout');
+            }
+        });
+        xhr.send();
+    } else {
+        for(const _trait of _soldout_traits){
+            $('.div_trait_'+_trait).addClass('disabled soldout');
+        }
+    }
+    
+}
+
+adf = 0;
+function getImagesFromTraits() {
+    // Just so theres some preview. Remove later
+    aad = [
+        "https://anatomyscienceapeclub.com/_next/static/images/m1-glow-3-91761278e95e18a3e4166ffe1203c44e.jpg",
+        "https://anatomyscienceapeclub.com/_next/static/images/m1-frosted-5-d04ffc4c7aff5d32221a26dc24b065b1.jpg",
+        "https://anatomyscienceapeclub.com/_next/static/images/m2-white-3-eec6462b14fa0396206d166586485bb2.jpg",
+        "https://anatomyscienceapeclub.com/_next/static/images/m2-gold-1-5bb8ffe9155a5f697ead540621850c0c.jpg",
+        "https://anatomyscienceapeclub.com/_next/static/images/m1-white-3-a537e3fd09f323f6a58370ff1914f1ef.jpg",
+        "https://anatomyscienceapeclub.com/_next/static/images/m2-lava-1-be741908bdaa95bd41ba8c9d4ae59922.jpg",
+        "https://anatomyscienceapeclub.com/_next/static/images/m2-white-9-983075ed2dd5158b67e87f2199371c07.jpg",
+        "https://anatomyscienceapeclub.com/_next/static/images/m2-frosted-4-6d67a2eaece7ae75e91f36f1e3e7663e.jpg"
+    ];
+    adf++;
+    //return [aad[adf%aad.length]];
+
+    // TODO : Get image for each trait in traits_enabled_ints
+
+    var traits_img_root = 'traits_components/';
+    var traits_img_extension = '.png';
+
+    var skin_color = traits_enabled_ints.filter(t => traits_list_html.get(''+t)[0].includes('a) Skin color'))[0];
+    var face = traits_enabled_ints.filter(t => traits_list_html.get(''+t)[0].includes('b) Face'))[0];
+    var face_img = [traits_img_root+face+"_"+skin_color+traits_img_extension,traits_list_html.get(''+skin_color)[2]];
+
+    var hair_color = traits_enabled_ints.filter(t => traits_list_html.get(''+t)[0].includes('Hair color'))[0];
+    var haircut = traits_enabled_ints.filter(t => traits_list_html.get(''+t)[0].includes('Haircut'))[0];
+    var hair_img = [traits_img_root+haircut+"_"+hair_color+traits_img_extension,traits_list_html.get(''+hair_color)[2]];
+
+    var beard_color = traits_enabled_ints.filter(t => traits_list_html.get(''+t)[0].includes('Beard color'))[0];
+    var beardcut = traits_enabled_ints.filter(t => traits_list_html.get(''+t)[0].includes('e) Beard'))[0];
+    var beard_img = [traits_img_root+beardcut+"_"+beard_color+traits_img_extension,traits_list_html.get(''+beard_color)[2]];
+
+    var has_hair = haircut != 10002;
+    var has_beard = beardcut != 10003;
+    var has_hat = traits_enabled_ints.filter(t => traits_list_html.get(''+t)[0].includes('j) Hat'))[0] != 10006;
+    
+    var traits_enabled_int_img = traits_enabled_ints.filter(t => ![skin_color, face, hair_color, haircut, beard_color, beardcut].includes(t) && t<10000);
+
+    var traits_enabled_for_img = traits_enabled_int_img.map(t => [traits_img_root+t+traits_img_extension,traits_list_html.get(''+t)[2]]);
+
+    traits_enabled_for_img.push([traits_img_root+'bg1'+traits_img_extension,0]);
+    traits_enabled_for_img.push(face_img);
+
+    if(has_hat){
+        traits_enabled_for_img.push([traits_img_root+'hat_bg'+traits_img_extension,3]);
+    }
+
+    if(has_hair) {
+        traits_enabled_for_img.push(hair_img);
+    }
+    if(has_beard) {
+        traits_enabled_for_img.push(beard_img);
+    }
+
+    traits_enabled_for_img = traits_enabled_for_img.sort(function(a,b){return a[1]<b[1]?-1:1;});
+
+    return traits_enabled_for_img.map(t => t[0]);
+}
+
 function update_dependencies() {
-    $('#composer_traits_selector div div *').removeClass('disabled');
+    $('#composer_traits_selector div div:not(.soldout)').removeClass('disabled');
     let dep_keys = Array.from(dependendies_map.keys());
-    for (let trait = 0; trait < trait_enabled.length; trait++) {
+    for (let trait = 0; trait < traits_enabled_bools.length; trait++) {
         if(dep_keys.includes(trait)) {
             var flag = false;
             for(const dep of dependendies_map.get(trait)){
-                if(trait_enabled[dep]) {
+                if(traits_enabled_bools[dep]) {
                     flag = true;
                     break;
                 }
             }
             if(!flag) {
-                $('*[data-trait="'+trait+'"]').addClass('disabled');
+                $('.div_trait_'+trait).addClass('disabled');
             }
         }
     }
+    HideSoldOutTraits();
 }
 
 $(document).ready(async function() {
@@ -259,7 +230,9 @@ $(document).ready(async function() {
     }
 
     // Mint tokens
-    async function mint(_tknUrl, _tknTraits){
+    async function mint(tab1,tab2,tab3){
+        await determineGen();
+
         if(gen1_soldout) {
             notify("SOLD OUT");
             return;
@@ -281,14 +254,14 @@ $(document).ready(async function() {
         }
 
         try {
-            //tx_id = await contract_signer.mint(nb_mint,tx_options); // Version with multiple NFTs to mint
-            tx_id = await contract_signer.mint(_tknUrl, _tknTraits,tx_options);
+            tx_id = await contract_signer.mint(tab1,tab2,tab3,tx_options);
             tx_pending = true;
             var sub_tx = tx_id.hash.substring(0,12)+'..'+tx_id.hash.substring(tx_id.hash.length-4,tx_id.hash.length);
             var tx_link = '<p id="link_'+tx_id.hash+'"><span class="tx_status">⏳</span> : <a target="_blank" href="'+RPC_SCAN_URL+'/tx/'+tx_id.hash+'">'+sub_tx+'</a></p>';
             $("#web3_actions h2").after(tx_link);
             sleep(250);
             notify("⏳ "+sub_tx);
+            $('#composer_close').click();
             tx_id.wait().then(async function(receipt) {
                 $('#link_'+tx_id.hash+' .tx_status').text('✅');
                 notify("✅ "+sub_tx);
@@ -301,8 +274,8 @@ $(document).ready(async function() {
 
         } catch (error) {
             if(error.code!=4001){
-                // TODO : Toast error.message
                 notify("ERROR. PLEASE SCREENSHOT THE DEVELOPER CONSOLE AND CONTACT US");
+                console.log(error.message);
             } else {
                 notify(error.message);
             }
@@ -310,10 +283,15 @@ $(document).ready(async function() {
     }
 
     $("#nb_mint").bind('keyup mouseup walletchanged',async function () {
-        if(!window.ethereum) {
+        if(provider=='' || !provider.provider) {
+            $('#my_nft').hide();
+            $('#Main_btn').addClass("disabled");
             return;
         }
         $('#Main_btn').removeClass("disabled");
+
+        NB_MINTED = await nb_minted_bc();
+        $('#span_nb_minted').text(NB_MINTED);
 
         if(gen1_soldout) {
             $('#mint_form').addClass("disabled");
@@ -388,27 +366,50 @@ $(document).ready(async function() {
                 return;
             }
 
-            // Just so theres some preview. Remove later
-            drawImage(["https://anatomyscienceapeclub.com/_next/static/images/m1-glow-3-91761278e95e18a3e4166ffe1203c44e.jpg"])
+            await drawPreview(getImagesFromTraits());
 
-            $('#nft_composer').fadeIn(100);
+            $('#nft_composer').fadeIn(250);
             // await mint();
         }
     });
 
     $('#composer_close').click(function() {
-        $('#nft_composer').fadeOut(100);
+        $('#nft_composer').fadeOut(250);
     });
 
     $('#composer_confirm').click(async function() {
-        // TODO : save NFT choice, push result to IPFS, and call mint
-        var tknUrl = '';
-        var tknTraits = ''
-        await mint(tknUrl, tknTraits);
-    });
 
-    // Breaks scrolling everywhere, disable for now 
-    //$("#nft_composer").bind('touchmove wheel',function (e) {e.stopPropagation();e.preventDefault();});
+        // Get the image (data:image/png;base64) from preview canvas    
+        var dataUrl = await drawPreview(getImagesFromTraits());
+
+        // Convert it to a blob
+        dataUrl = dataURItoBlob(dataUrl);
+
+        // Then, push it to the IPFS
+        var ipfs_img = await ipfs_add(dataUrl);
+
+        // Get the token Json file from API
+        var _token_data;
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", 'https://www.dekefake.duckdns.org:62192/get_mint_json/'+_traits_enabled_hash+'_'+ipfs_img, true);
+        xhr.setRequestHeader('Accept', 'application/json');
+        xhr.addEventListener('load', async function () {
+            // And then push it to the IPFS
+            _token_data = JSON.parse(JSON.parse(this.responseText));
+            console.log(_token_data);
+            if(_token_data['valid']){
+                var base36_specs = _verify_traits['base36'];
+                var token_specs = _token_data['token_json'];
+                var traits_specs = _token_data['traits_enabled'];
+                await mint(
+                    [base36_specs[0], token_specs[0], traits_specs[0]],
+                    [base36_specs[1],base36_specs[3],base36_specs[4],token_specs[1],token_specs[3],token_specs[4],traits_specs[1],traits_specs[3],traits_specs[4]],
+                    [base36_specs[2],token_specs[2],traits_specs[2]]
+                );
+            }
+        });
+        xhr.send();
+    });
 
     /* USER INTERFACE */
 
@@ -467,6 +468,42 @@ $(document).ready(async function() {
         $('#public_mint').text(proj_public_mint + d_proj_public_mint);
     }
 
+    // Countdown
+    if(WL_MINT_TIMESTAMP>0 && $('.countdown').length>0 ){
+        var mint_date = new Date(MINT_TIMESTAMP * 1000);
+        var now = new Date();
+        var seconds = parseInt((mint_date-now)/1000);
+        var shown = seconds>0;
+        setInterval(function(){
+            var days = parseInt(seconds/(3600*24));
+            if(days<10) {
+                days = "0"+days;
+            }
+            var hours = parseInt((seconds/3600)%24);
+            if(hours<10) {
+                hours = "0"+hours;
+            }
+            var minutes = parseInt((seconds/60)%60);
+            if(minutes<10) {
+                minutes = "0"+minutes;
+            }
+            var secs = seconds % 60;
+            if(secs<10) {
+                secs = "0"+secs;
+            }
+            $('.countdown').text(days+":"+hours+":"+minutes+":"+secs);
+            seconds--;
+            if(seconds==0) {
+                location.reload();
+            }
+            if(shown) {
+                $('.countdown_container, #mint_dates').show();
+                shown = false;
+            }
+        }, 1000);
+        
+    }
+
     $(".wallet_sensitive").trigger('walletchanged');
 
     // NFT composer 
@@ -483,7 +520,18 @@ $(document).ready(async function() {
         
         // Keep trace of enabled / disabled traits
         $('#composer_traits_selector div div input[type="radio"]').each(function( index ) {
-            trait_enabled[$(this).data('trait')] = $(this).is(':checked');
+            var bool = $(this).is(':checked')
+            var trait_id = $(this).data('trait');
+            traits_enabled_bools[trait_id] = bool;
+            if(bool && traits_enabled_ints.indexOf(trait_id)==-1) {
+                traits_enabled_ints.push(trait_id)
+            }
+            if(!bool) {
+                var index = traits_enabled_ints.indexOf(trait_id);
+                if (index != -1) {
+                  traits_enabled_ints.splice(index, 1);
+                }
+            }
         });
 
         // Update disabled traits based on new enabled/disabled trait
@@ -491,11 +539,28 @@ $(document).ready(async function() {
 
         // Now remove disabled elements from enabled traits to keep only traits that should appear on the NFT, at any moment.
         $('#composer_traits_selector div div input[type="radio"]').each(function( index ) {
-            trait_enabled[$(this).data('trait')] = $(this).is(':checked') && !$(this).hasClass("disabled");
+            var bool = $(this).is(':checked') && !$(this).hasClass("disabled");
+            var trait_id = $(this).data('trait');
+            traits_enabled_bools[trait_id] = bool;
+            if(bool && traits_enabled_ints.indexOf(trait_id)==-1) {
+                traits_enabled_ints.push(trait_id)
+            }
+            if(!bool) {
+                var index = traits_enabled_ints.indexOf(trait_id);
+                if (index != -1) {
+                  traits_enabled_ints.splice(index, 1);
+                }
+            }
         });
 
-        // TODO :
-        // Build NFT based on things enabled in "trait_enabled"
+        // Generate traits base36 hash after radios and vars updates
+        traits_enabled_hash();
+
+        // Verify and disable radios if traits are unavailable
+        verifyTraits();
+
+        // Now that everythings updated, we draw the preview
+        drawPreview(getImagesFromTraits());
     });
 
     update_dependencies();
@@ -537,10 +602,9 @@ const loadImage = src =>
     img.onload = () => resolve(img);
     img.onerror = reject;
     img.src = src;
-  })  
-;
+  });
 
-async function drawImage(_images){
+async function drawPreview(_images){
     var c = document.getElementById("preview_canvas");
     var ctx = c.getContext("2d");
     ctx.clearRect( 0, 0, c.width, c.height);
@@ -551,5 +615,5 @@ async function drawImage(_images){
       );
     });
 
-    img_dataurl = c.toDataURL("image/png");
+    return c.toDataURL("image/png");
 }

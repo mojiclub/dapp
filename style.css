@@ -32,7 +32,7 @@ body {
 }
 
 .container {
-	margin: 32px auto;
+	margin: 32px 8px;
 	max-width: 1400px;
 }
 p {
@@ -102,7 +102,7 @@ p {
     font-size: 120%;
 }
 
-#minted_totals, #p_mint_price, #project_name {
+#nb_minted, #mint_price, #project_name {
 	font-weight: bold;
 }
 
@@ -110,10 +110,20 @@ p {
 	margin: 24px 0;
 	padding: 8px;
     background: #000000aa;
+    display: none;
 }
 
 #mint_dates p {
     margin: 0;
+    font-style: italic;
+}
+
+#mint_dates h2 {
+    font-weight: bold;
+}
+
+.countdown_container {
+	display: none;
 }
 
 #mint_form {
@@ -205,6 +215,18 @@ input::-webkit-inner-spin-button {
 	text-align: left;
 }
 
+#logout {
+	display: none;
+    height: 1.4em;
+    margin-left: 8px;
+    background: #00000033;
+    border-radius: 50%;
+}
+
+#my_nft {
+	display: none;
+}
+
 a {
 	color: white;
 }
@@ -214,11 +236,11 @@ a {
     font-size: 100%;
 }
 
-#Main_btn, #web3_status, #nb_mint_plus, #nb_mint_minus, #menu a {
+#Main_btn, #web3_status, #nb_mint_plus, #nb_mint_minus, #menu a, #composer_confirm, .btnn {
 	transition: background-color 0.2s ease, color 0.3s ease
 }
 
-#Main_btn:hover, #web3_status:hover, #nb_mint_plus:hover, #nb_mint_minus:hover, #menu a:hover {
+#Main_btn:hover, #web3_status:hover, #nb_mint_plus:hover, #nb_mint_minus:hover, #menu a:hover, #composer_confirm:hover, .btnn:hover {
   color: black;
   background: white;
 }
@@ -343,7 +365,7 @@ p.roadmap_num {
 #nft_composer {
 	display: none;
 	position: fixed;
-    background: black;
+    backdrop-filter: blur(24px);
     left: 0;
     right: 0;
     top: 0;
@@ -392,6 +414,7 @@ p.roadmap_num {
     border: 1px solid #333333;
     text-align: left;
     margin-bottom: 12px;
+	background: rgba(var(--main-color),0.1);
 }
 
 input[type="radio"] {
@@ -412,6 +435,12 @@ div[class^="div_trait_"], div[class*="div_trait_"] {
 
 #composer_confirm {
 	width: max-content;
+}
+
+.disabled.soldout:after {
+	content: 'Sold out';
+	float: right;
+	margin-right: 12px;
 }
 
 .accordion {
@@ -507,6 +536,9 @@ div[class^="div_trait_"], div[class*="div_trait_"] {
 	}
 	#composer_traits_selector {
 		height: 300px;
+	}
+	#mint_dates p {
+	    font-size: 80%;
 	}
 }
 

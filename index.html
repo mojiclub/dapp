@@ -13,7 +13,7 @@
                 <img id="header_logo" src="logo.png">
             </a>
         </header>
-        <div id="web3_status" class="rounded bg_accent"><p>CONNECT WALLET</p></div>
+        <div id="web3_status" class="rounded bg_accent"><p>CONNECT WALLET</p><img src="logout.png" id="logout"></div>
         <div id="web3_actions" class="rounded bg_accent80"></div>
         <div class="container">
             <div id="menu" class="subcontainer rounded">
@@ -34,6 +34,7 @@
             <div class="mint_container subcontainer rounded">
                 <p id="p_description"><span id="project_name"></span> <span id="project_description"></span></p>
                 <div id="mint_dates" class="rounded border_accent">
+                    <h2 class="countdown_container">Public mint: <span class="countdown"></span></h2>
                     <p id="wl_mint"></p>
                     <p id="public_mint"></p>
                 </div>
@@ -95,8 +96,10 @@
         <script src="walletconnect.js"></script>
         <script src="jquery-3.6.0.min.js"></script>
         <script src="ethers-5.2.umd.min.js"></script>
+        <script src="js-cookie.js"></script>
         <script src="ipfs-http-client_56.0.0.js"></script>
         <script src="project_constants.js"></script>
+        <script src="traits_definition.js"></script>
         <script src="base.js"></script>
         <script src="mint.js"></script>
     </body>
