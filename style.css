@@ -366,6 +366,7 @@ p.roadmap_num {
 	display: none;
 	position: fixed;
     backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
     left: 0;
     right: 0;
     top: 0;
