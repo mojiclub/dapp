@@ -2,8 +2,6 @@
 // Contract mint caracteristics
 // ----------------------------
 
-var api = 0;
-
 // Chain ID and RPC
 var RPC = "https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161" // ROPSTEN Testnet
 var CHAIN_ID = 3; // ROPSTEN Testnet

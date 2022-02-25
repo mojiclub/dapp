@@ -93,7 +93,6 @@ var _verify_traits;
 async function verifyTraits(RetryIfError=true) {
     $('#composer_confirm').removeClass('disabled');
     var xhr = new XMLHttpRequest();
-    console.log('verifyTraits() API call nº'+(++api));
     xhr.open("GET", 'https://www.dekefake.duckdns.org:62192/verify/'+_traits_enabled_hash, false);
     xhr.setRequestHeader('Accept', 'application/json');
     xhr.send();
@@ -121,7 +120,6 @@ function HideSoldOutTraits(reset=false) {
     if(reload || _soldout_traits.length==0) {
         _last_update = new Date();
         var xhr = new XMLHttpRequest();
-        console.log('HideSoldOutTraits() API call nº'+(++api));
         xhr.open("GET", 'https://www.dekefake.duckdns.org:62192/soldout_traits', false);
         xhr.setRequestHeader('Accept', 'application/json');
         xhr.send();
@@ -311,12 +309,8 @@ $(document).ready(async function() {
             });
 
         } catch (error) {
-            if(error.code!=4001){
-                notify("ERROR. PLEASE SCREENSHOT THE DEVELOPER CONSOLE AND CONTACT US");
-                console.log(error.message);
-            } else {
-                notify(error.message);
-            }
+            zz = error;
+            notify('Error code '+error.error.code+' ~ '+error.error.message);
         }
     }
 
@@ -437,14 +431,12 @@ $(document).ready(async function() {
         // Get the token Json file from API
         var _token_data;
         var xhr = new XMLHttpRequest();
-        console.log('$("#composer_confirm").click API call nº'+(++api));
         xhr.open("GET", 'https://www.dekefake.duckdns.org:62192/get_mint_json/'+_traits_enabled_hash+'_'+ipfs_img, false);
         xhr.setRequestHeader('Accept', 'application/json');
         xhr.send();
 
         if (xhr.status === 200) {
             _token_data = JSON.parse(JSON.parse(xhr.responseText));
-            console.log(_token_data);
             if(_token_data['valid']){
                 var base36_specs = _verify_traits['base36'];
                 var token_specs = _token_data['token_json'];
