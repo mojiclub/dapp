@@ -2,6 +2,8 @@
 // Contract mint caracteristics
 // ----------------------------
 
+var api = 0;
+
 // Chain ID and RPC
 var RPC = "https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161" // ROPSTEN Testnet
 var CHAIN_ID = 3; // ROPSTEN Testnet
@@ -46,7 +48,7 @@ const ABI = [
 
   // Sale
   "function SaleIsActive() public view returns (bool)",
-  "function mint(string[3] memory _msgs, bytes32[9] memory _hashs_r_s, uint8[3] memory _v) public payable",
+  "function mint(string[3] memory _msgs, bytes32[9] memory _hashs_r_s, uint8[3] memory _v, bytes32[] calldata _proof) public payable",
 
   // Only for owner, remove later
   "function withdraw()",

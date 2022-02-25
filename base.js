@@ -14,7 +14,7 @@ function web3_init(){
     var web3_btn = document.querySelector("#web3_status p");
     web3_btn.innerText = "CONNECT WALLET";
     document.getElementById('logout').style.display = 'none';
-    document.getElementById('Main_btn').classList.add('disabled');
+    document.getElementById('composer_confirm').classList.add('disabled');
     
     provider = new ethers.providers.JsonRpcProvider(RPC);
     contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, provider);
@@ -285,6 +285,9 @@ $("#web3_status").click(async function(){
 });
 
 $("#logout").click(async function(event){
+    if($('#web3_actions').css('display')!='none') {
+        $("#web3_actions").fadeOut(250);
+    }
     web3_init();
     $(".wallet_sensitive").trigger('walletchanged');
     event.preventDefault();

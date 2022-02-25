@@ -90,34 +90,56 @@ function traits_enabled_hash() {
 }
 
 var _verify_traits;
-function verifyTraits() {
+async function verifyTraits(RetryIfError=true) {
     $('#composer_confirm').removeClass('disabled');
     var xhr = new XMLHttpRequest();
-    xhr.open("GET", 'https://www.dekefake.duckdns.org:62192/verify/'+_traits_enabled_hash, true);
+    console.log('verifyTraits() API call nº'+(++api));
+    xhr.open("GET", 'https://www.dekefake.duckdns.org:62192/verify/'+_traits_enabled_hash, false);
     xhr.setRequestHeader('Accept', 'application/json');
-    xhr.addEventListener('load', function () {
-        _verify_traits = JSON.parse(JSON.parse(this.responseText));
-
+    xhr.send();
+    if(xhr.status ===  200) {
+        _verify_traits = JSON.parse(JSON.parse(xhr.responseText));
         if(!_verify_traits['valid']) {
             $('#composer_confirm').addClass('disabled');
         }
-    });
-    xhr.send();
+    } else {
+        if(RetryIfError){
+            console.log("verifyTraits() Error : ", xhr.statusText);
+            await sleep(1000);
+            await verifyTraits(false);
+        }
+    }
+    
+    return true;
 }
 
-_soldout_traits = []
-function HideSoldOutTraits(reset=true) {
-    if(reset || _soldout_traits.length==0) {
+var _soldout_traits = []
+var _cooldown_seconds = 30;
+var _last_update = new Date(1); // 1 Jan 1970
+function HideSoldOutTraits(reset=false) {
+    var reload = (new Date() - _last_update)/1000>_cooldown_seconds || reset;
+    if(reload || _soldout_traits.length==0) {
+        _last_update = new Date();
         var xhr = new XMLHttpRequest();
-        xhr.open("GET", 'https://www.dekefake.duckdns.org:62192/soldout_traits', true);
+        console.log('HideSoldOutTraits() API call nº'+(++api));
+        xhr.open("GET", 'https://www.dekefake.duckdns.org:62192/soldout_traits', false);
         xhr.setRequestHeader('Accept', 'application/json');
-        xhr.addEventListener('load', function () {
-            _soldout_traits = JSON.parse(JSON.parse(this.responseText));
+        xhr.send();
+        
+        if(xhr.status === 200) {
+            _soldout_traits = JSON.parse(JSON.parse(xhr.responseText));
             for(const _trait of _soldout_traits){
                 $('.div_trait_'+_trait).addClass('disabled soldout');
             }
+        } else {
+            console.log("HideSoldOutTraits() Error : ", xhr.statusText);
+        }
+
+        /*
+        xhr.addEventListener('load', function () {
+            
         });
-        xhr.send();
+        xhr.send();*/
     } else {
         for(const _trait of _soldout_traits){
             $('.div_trait_'+_trait).addClass('disabled soldout');
@@ -203,7 +225,21 @@ function update_dependencies() {
             }
         }
     }
-    HideSoldOutTraits();
+}
+
+function RemoveTrashScrolls(e){
+    var n1 = e.target != document.getElementById('nft_composer');
+    var n2 = e.target != document.getElementById('preview_canvas');
+    var n3 = e.target != document.getElementById('composer_confirm');
+    var n4 = e.target != document.getElementById('composer_preview');
+    var n5 = e.target != document.getElementById('composer_left');
+    var n6 = e.target.tagName != 'H2' &&  e.target.tagName != 'P';
+    if(n1 && n2 && n3 && n4 && n5 && n6){
+        console.log(e.target);
+    } else {
+        e.preventDefault();
+    }
+    e.stopPropagation();
 }
 
 $(document).ready(async function() {
@@ -253,8 +289,10 @@ $(document).ready(async function() {
             return;
         }
 
+        var _addr = await signer.getAddress()
+
         try {
-            tx_id = await contract_signer.mint(tab1,tab2,tab3,tx_options);
+            tx_id = await contract_signer.mint(tab1,tab2,tab3,merkle_proof(_addr),tx_options);
             tx_pending = true;
             var sub_tx = tx_id.hash.substring(0,12)+'..'+tx_id.hash.substring(tx_id.hash.length-4,tx_id.hash.length);
             var tx_link = '<p id="link_'+tx_id.hash+'"><span class="tx_status">⏳</span> : <a target="_blank" href="'+RPC_SCAN_URL+'/tx/'+tx_id.hash+'">'+sub_tx+'</a></p>';
@@ -285,10 +323,11 @@ $(document).ready(async function() {
     $("#nb_mint").bind('keyup mouseup walletchanged',async function () {
         if(provider=='' || !provider.provider) {
             $('#my_nft').hide();
-            $('#Main_btn').addClass("disabled");
+            $('#composer_confirm').removeClass("disabled");
+            $('#composer_confirm p').text("CONNECT WALLET");
             return;
         }
-        $('#Main_btn').removeClass("disabled");
+
 
         NB_MINTED = await nb_minted_bc();
         $('#span_nb_minted').text(NB_MINTED);
@@ -297,6 +336,9 @@ $(document).ready(async function() {
             $('#mint_form').addClass("disabled");
             $('#Main_btn p').text("SOLD OUT");
             return;
+        } else {
+            $('#composer_confirm').removeClass("disabled");
+            $('#composer_confirm p').text("MINT MY AVATAR NOW");
         }
 
         if(!SALE_ACTIVE) {
@@ -315,8 +357,8 @@ $(document).ready(async function() {
         if(signer!=''){
             var can_mint = await balance_enough_to_mint();
             if(!can_mint[0]){
-                $('#Main_btn p').text(can_mint[1]);
-                $('#Main_btn').addClass("disabled");
+                $('#composer_confirm p').text(can_mint[1]);
+                $('#composer_confirm').addClass("disabled");
                 return;
             }
         }
@@ -358,26 +400,30 @@ $(document).ready(async function() {
     });
 
     $("#Main_btn").click(async function() {
-        if(signer==''){
-            $("#web3_status").trigger("click");
-        } else {
-            if(gen1_soldout) {
-                notify("SOLD OUT");
-                return;
-            }
-
-            await drawPreview(getImagesFromTraits());
-
-            $('#nft_composer').fadeIn(250);
-            // await mint();
+        if(gen1_soldout) {
+            notify("SOLD OUT");
+            return;
         }
+
+        drawPreview(getImagesFromTraits());
+
+        $('#nft_composer').fadeIn(250);
+        $('body').css('overflow','hidden');
+        //$('#nft_composer').bind('mousewheel wheel onwheel touchmove DOMMouseScroll keydown', RemoveTrashScrolls);
     });
 
     $('#composer_close').click(function() {
         $('#nft_composer').fadeOut(250);
+        $('body').css('overflow','auto');
+        //$('#nft_composer').unbind('mousewheel wheel onwheel touchmove DOMMouseScroll keydown');
     });
 
     $('#composer_confirm').click(async function() {
+
+        if(signer==''){
+            $("#web3_status").trigger("click");
+            return;
+        }
 
         // Get the image (data:image/png;base64) from preview canvas    
         var dataUrl = await drawPreview(getImagesFromTraits());
@@ -391,11 +437,13 @@ $(document).ready(async function() {
         // Get the token Json file from API
         var _token_data;
         var xhr = new XMLHttpRequest();
-        xhr.open("GET", 'https://www.dekefake.duckdns.org:62192/get_mint_json/'+_traits_enabled_hash+'_'+ipfs_img, true);
+        console.log('$("#composer_confirm").click API call nº'+(++api));
+        xhr.open("GET", 'https://www.dekefake.duckdns.org:62192/get_mint_json/'+_traits_enabled_hash+'_'+ipfs_img, false);
         xhr.setRequestHeader('Accept', 'application/json');
-        xhr.addEventListener('load', async function () {
-            // And then push it to the IPFS
-            _token_data = JSON.parse(JSON.parse(this.responseText));
+        xhr.send();
+
+        if (xhr.status === 200) {
+            _token_data = JSON.parse(JSON.parse(xhr.responseText));
             console.log(_token_data);
             if(_token_data['valid']){
                 var base36_specs = _verify_traits['base36'];
@@ -407,8 +455,9 @@ $(document).ready(async function() {
                     [base36_specs[2],token_specs[2],traits_specs[2]]
                 );
             }
-        });
-        xhr.send();
+        } else {
+            console.log("$('#composer_confirm').click Error : ", xhr.statusText);
+        }      
     });
 
     /* USER INTERFACE */
@@ -515,8 +564,11 @@ $(document).ready(async function() {
     }
 
     // When user chooses traits, this is triggered
-    $('#composer_traits_selector div div input[type="radio"]').change(function(){
+    $('#composer_traits_selector div div input[type="radio"]').change(async function(){
         var changed_name = $(this).attr('name');
+
+        // If new traits are sold out, disable them
+        HideSoldOutTraits();
         
         // Keep trace of enabled / disabled traits
         $('#composer_traits_selector div div input[type="radio"]').each(function( index ) {
@@ -537,7 +589,7 @@ $(document).ready(async function() {
         // Update disabled traits based on new enabled/disabled trait
         update_dependencies();
 
-        // Now remove disabled elements from enabled traits to keep only traits that should appear on the NFT, at any moment.
+        // Now update the traits lists, taking into account dependencies updates
         $('#composer_traits_selector div div input[type="radio"]').each(function( index ) {
             var bool = $(this).is(':checked') && !$(this).hasClass("disabled");
             var trait_id = $(this).data('trait');
@@ -557,7 +609,7 @@ $(document).ready(async function() {
         traits_enabled_hash();
 
         // Verify and disable radios if traits are unavailable
-        verifyTraits();
+        await verifyTraits();
 
         // Now that everythings updated, we draw the preview
         drawPreview(getImagesFromTraits());
@@ -604,8 +656,15 @@ const loadImage = src =>
     img.src = src;
   });
 
+var _canvas_list = ["preview_canvas","preview_canvas2"];
+var _id_canvas = 0;
 async function drawPreview(_images){
-    var c = document.getElementById("preview_canvas");
+    var _canvas_id = _canvas_list[_id_canvas%2];
+    var _other_canvas = _canvas_list[(_id_canvas+1)%2];
+
+    $('#canvas_div .loader_wrapper').fadeIn(150);
+
+    var c = document.getElementById(_canvas_id);
     var ctx = c.getContext("2d");
     ctx.clearRect( 0, 0, c.width, c.height);
 
@@ -614,6 +673,12 @@ async function drawPreview(_images){
         ctx.drawImage(image, 0, 0, c.width, c.height)
       );
     });
+
+    await $('#'+_canvas_id).fadeIn(function() {
+        $('#'+_other_canvas).fadeOut(150);
+        $('#canvas_div .loader_wrapper').fadeOut(150);
+    });
+    _id_canvas++;
 
     return c.toDataURL("image/png");
 }

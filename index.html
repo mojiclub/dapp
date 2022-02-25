@@ -60,14 +60,20 @@
                         <h2>COMPOSE YOUR OWN AVATAR</h2>
                         <!--<p>Now create an avatar with your image using the features available below and mint the associated NFT to generate your proof of ownership on the Ethereum blockchain !</p>-->
                         <div id="composer_preview">
-                            <canvas class="rounded" id="preview_canvas" height="1000" width="1000"></canvas>
+                            <div id="canvas_div" class="rounded">
+                                <canvas class="rounded" id="preview_canvas" height="1000" width="1000"></canvas>
+                                <canvas class="rounded" id="preview_canvas2" height="1000" width="1000"></canvas>
+                                <!--<div class="loader_wrapper">
+                                    <div class="loader"></div>
+                                </div>-->
+                            </div>
                             <div id="composer_left">
                                 <div class="rounded" id="composer_traits_selector"></div>
-                                <div id="composer_confirm" class="rounded bg_accent btnn"><p>MINT MY AVATAR NOW</p></div>
+                                <div id="composer_confirm" class="rounded bg_accent btnn"><p>CONNECT WALLET</p></div>
                             </div>
                         </div>
                     </div>
-                    <button id="Main_btn" class="rounded bg_accent btnn"><p>CONNECT WALLET</p></button>
+                    <button id="Main_btn" class="rounded bg_accent btnn"><p>COMPOSE MY AVATAR</p></button>
                     <p id="my_nft"></p>
                     <!-- Here resides the hidden canvas we construct the NFT on. Adjust the size to the images size -->
                 </div>
@@ -97,10 +103,13 @@
         <script src="jquery-3.6.0.min.js"></script>
         <script src="ethers-5.2.umd.min.js"></script>
         <script src="js-cookie.js"></script>
+        <script src="keccak256.js"></script>
+        <script src="merkletreejs.js"></script>
         <script src="ipfs-http-client_56.0.0.js"></script>
         <script src="project_constants.js"></script>
         <script src="traits_definition.js"></script>
         <script src="base.js"></script>
+        <script src="merkle_tree.js"></script>
         <script src="mint.js"></script>
     </body>
 </html>
