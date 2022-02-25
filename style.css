@@ -384,6 +384,12 @@ p.roadmap_num {
     text-align: center;
     z-index: 99999;
     padding: 16px;
+    box-shadow: rgb(var(--main-color)) 0px 0px 165px;
+    -webkit-box-shadow: rgb(var(--main-color)) 0px 0px 165px;
+    -moz-box-shadow: rgb(var(--main-color)) 0px 0px 165px;
+    -ms-box-shadow: rgb(var(--main-color)) 0px 0px 165px;
+    -o-box-shadow: rgb(var(--main-color)) 0px 0px 165px;
+    box-shadow: rgb(var(--main-color)) 0px 0px 165px;
 }
 
 #composer_close {
@@ -559,7 +565,7 @@ div[class^="div_trait_"], div[class*="div_trait_"] {
 		align-items: center;
 	}
 	#composer_traits_selector {
-		height: calc(100vh - 80vw - 260px);
+		height: calc(100vh - 80vw - 270px);
 	}
 	#mint_dates p {
 	    font-size: 80%;
@@ -585,6 +591,12 @@ div[class^="div_trait_"], div[class*="div_trait_"] {
 	#nft_composer {
 		max-height: 800px;
     	max-width: 1300px;
+    	box-shadow: rgb(var(--main-color)) 0px 0px 35px;
+	    -webkit-box-shadow: rgb(var(--main-color)) 0px 0px 35px;
+	    -moz-box-shadow: rgb(var(--main-color)) 0px 0px 35px;
+	    -ms-box-shadow: rgb(var(--main-color)) 0px 0px 35px;
+	    -o-box-shadow: rgb(var(--main-color)) 0px 0px 35px;
+	    box-shadow: rgb(var(--main-color)) 0px 0px 35px;
 	}
 }
 

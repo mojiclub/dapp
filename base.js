@@ -14,7 +14,8 @@ function web3_init(){
     var web3_btn = document.querySelector("#web3_status p");
     web3_btn.innerText = "CONNECT WALLET";
     document.getElementById('logout').style.display = 'none';
-    document.getElementById('composer_confirm').classList.add('disabled');
+    var composer_btn = document.querySelector("#composer_confirm p");
+    composer_btn.innerText = "CONNECT WALLET";
     
     provider = new ethers.providers.JsonRpcProvider(RPC);
     contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, provider);

@@ -164,7 +164,7 @@ function getImagesFromTraits() {
 
     // TODO : Get image for each trait in traits_enabled_ints
 
-    var traits_img_root = 'traits_components/';
+    var traits_img_root = '/traits_components/';
     var traits_img_extension = '.png';
 
     var skin_color = traits_enabled_ints.filter(t => traits_list_html.get(''+t)[0].includes('a) Skin color'))[0];
