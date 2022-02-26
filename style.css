@@ -382,6 +382,11 @@ p.roadmap_num {
     border: 2px solid rgba(var(--main-color),30%);
 }
 
+#composer_title {
+	font-family: Moji, var(--main-fonts);
+    margin-bottom: 8px;
+}
+
 #composer_close {
     position: absolute;
     top: 16px;
@@ -465,7 +470,7 @@ div[class^="div_trait_"], div[class*="div_trait_"] {
 }
 
 .disabled.soldout:after {
-	content: 'Sold out';
+	content: 'Sold out ❌';
 	float: right;
 	margin-right: 12px;
 }
@@ -566,7 +571,7 @@ div[class^="div_trait_"], div[class*="div_trait_"] {
 		align-items: center;
 	}
 	#composer_traits_selector {
-		height: calc(100vh - 80vw - 270px);
+		height: calc(100vh - 80vw - 250px);
 	}
 	#mint_dates p {
 	    font-size: 80%;
