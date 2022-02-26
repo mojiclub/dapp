@@ -268,6 +268,9 @@ $(document).ready(async function() {
     _mob_img_overlay.css('height',_mob_img_overlay.css('width'));
 
     async function ChangeMobImage() {
+        // Set height = width (square) 
+        var _mob_img_overlay = $('.top_images .overlays_wrapper');
+        _mob_img_overlay.css('height',_mob_img_overlay.css('width'));
         $('.top_images .overlays_wrapper > img').eq(rotate_imgs%proj_top_images.length).fadeOut(seconds_change*750);
         $('.top_images .overlays_wrapper > img').eq((rotate_imgs+1)%proj_top_images.length).fadeIn(seconds_change*750);
         rotate_imgs++;

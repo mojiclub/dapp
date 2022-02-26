@@ -379,6 +379,7 @@ p.roadmap_num {
     -ms-box-shadow: rgb(var(--main-color)) 0px 0px 165px;
     -o-box-shadow: rgb(var(--main-color)) 0px 0px 165px;
     box-shadow: rgb(var(--main-color)) 0px 0px 165px;
+    border: 2px solid rgba(var(--main-color),30%);
 }
 
 #composer_close {
@@ -459,7 +460,8 @@ div[class^="div_trait_"], div[class*="div_trait_"] {
 }
 
 #composer_confirm {
-	width: max-content;
+	width: 100%;
+	padding: 0;
 }
 
 .disabled.soldout:after {
