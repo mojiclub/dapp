@@ -1,150 +1,5 @@
 // NFT composer variables
-var nb_traits = 132;
 var img_dataurl;
-var traits_enabled_bools = [];
-var traits_enabled_ints = [];
-var _traits_enabled_hash = '';
-var default_traits = [3,9,30,38,10001,10002,10003,10004,10005,10006,10007,10008,10009,10010];
-for (let trait = 0; trait <= nb_traits; trait++) {
-    // Enable a few traits by default (skin color, bored face, hair/beard color)
-    traits_enabled_bools.push(default_traits.includes(trait));
-    if(default_traits.includes(trait)){
-        traits_enabled_ints.push(trait)
-    }
-}
-
-// Dependendies
-const dependendies_map = new Map();
-
-// Hair color requires hair cut // Please choose an haircut first
-for (let trait = 30; trait <= 37; trait++) {
-    dependendies_map.set(trait, [12,13,14,15,16,17,18,19,20,21,22,23]);
-}
-
-// Beard color requires beard cut // Please choose a beard color first
-for (let trait = 38; trait <= 45; trait++) {
-    dependendies_map.set(trait, [24,25,26,27,28,29]);
-}
-
-// Cravate / noeud requires costume or shirt // Choose a shirt or a jacket 
-for (let trait = 49; trait <= 54; trait++) {
-    dependendies_map.set(trait, [46,47,48,58,59,60,61,62,63,64,65,66,67,68,69,70,71]);
-}
-
-// CC requires pocket in vest // Choose a shirt or a jacket with a pocket
-for (let trait = 72; trait <= 78; trait++) {
-    dependendies_map.set(trait, [46,47,48,58,59,60,61,62,63,64,65,66,67,68,69,70,71]);
-}
-
-traits_list_html = new Map(Object.entries(traits_list_html));
-traits_list_html = new Map([...traits_list_html.entries()].sort((a, b) => {
-    if((a[1][0]+a[1][1]) > (b[1][0]+b[1][1])){
-        if(a[1][0]==b[1][0] && a[1][1]=="None") {
-            return -1;   
-        } else {
-            return 1;
-        }
-    } else {
-        return -1;
-    }
-}));
-
-function build_dialog_from_traits() {
-    var last_categorie = '';
-    var html_append = '';
-    for (const [tr, trait_desc] of traits_list_html) {
-        trait = parseInt(tr);
-        if(trait_desc) {
-            var trait_categorie = trait_desc[0].replace(' ','-').replace(')','-').replace(' ','-');
-            var trait_categorie_letter = trait_desc[0].split(')')[0];
-            var trait_name = trait_desc[1].replace(' ','-').replace('~','-').replace(' ','-');
-            if(trait_categorie!=last_categorie){
-                last_categorie = trait_categorie;
-                if(html_append!=''){
-                    html_append += '</div>'
-                }
-                html_append += '<h4 id="composer_categorie_title_'+trait_categorie_letter+'" class="composer_categorie_title accordion">'+trait_desc[0]+'</h4><div class="div_categorie_'+trait_categorie_letter+' rounded accordion_panel">';
-            }
-            var radio_id = trait_categorie+'_'+trait_name;
-            var radio = '<div class="div_trait_'+trait+'"><input type="radio" name="'+trait_categorie+'" id="'+radio_id+'" data-trait="'+trait+'">';
-            var label = '<label for="'+radio_id+'" data-trait="'+trait+'">'+trait_desc[1]+'</label></div>';
-            html_append += (radio+label);
-        } else {
-            break;
-        }
-    }
-    $('#composer_traits_selector').append(html_append+'</div>');
-}
-
-function traits_enabled_hash() {
-    var bi = '';
-    for (let trait = 1; trait <= nb_traits; trait++) {
-        if(traits_enabled_bools[trait]){
-            bi+=1;
-        } else {
-            bi+=0;
-        }
-    }
-    let num = BigInt('0b' + bi);
-    _traits_enabled_hash = num.toString(36);
-}
-
-var _verify_traits;
-async function verifyTraits(RetryIfError=true) {
-    $('#composer_confirm').removeClass('disabled');
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", 'https://www.dekefake.duckdns.org:62192/verify/'+_traits_enabled_hash, false);
-    xhr.setRequestHeader('Accept', 'application/json');
-    xhr.send();
-    if(xhr.status ===  200) {
-        _verify_traits = JSON.parse(JSON.parse(xhr.responseText));
-        if(!_verify_traits['valid']) {
-            $('#composer_confirm').addClass('disabled');
-        }
-    } else {
-        if(RetryIfError){
-            console.log("verifyTraits() Error : ", xhr.statusText);
-            await sleep(1000);
-            await verifyTraits(false);
-        }
-    }
-    
-    return true;
-}
-
-var _soldout_traits = []
-var _cooldown_seconds = 30;
-var _last_update = new Date(1); // 1 Jan 1970
-function HideSoldOutTraits(reset=false) {
-    var reload = (new Date() - _last_update)/1000>_cooldown_seconds || reset;
-    if(reload || _soldout_traits.length==0) {
-        _last_update = new Date();
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", 'https://www.dekefake.duckdns.org:62192/soldout_traits', false);
-        xhr.setRequestHeader('Accept', 'application/json');
-        xhr.send();
-        
-        if(xhr.status === 200) {
-            _soldout_traits = JSON.parse(JSON.parse(xhr.responseText));
-            for(const _trait of _soldout_traits){
-                $('.div_trait_'+_trait).addClass('disabled soldout');
-            }
-        } else {
-            console.log("HideSoldOutTraits() Error : ", xhr.statusText);
-        }
-
-        /*
-        xhr.addEventListener('load', function () {
-            
-        });
-        xhr.send();*/
-    } else {
-        for(const _trait of _soldout_traits){
-            $('.div_trait_'+_trait).addClass('disabled soldout');
-        }
-    }
-    
-}
 
 adf = 0;
 function getImagesFromTraits() {
@@ -160,69 +15,14 @@ function getImagesFromTraits() {
         "https://anatomyscienceapeclub.com/_next/static/images/m2-frosted-4-6d67a2eaece7ae75e91f36f1e3e7663e.jpg"
     ];
     adf++;
-    //return [aad[adf%aad.length]];
+    return [aad[adf%aad.length]];
 
     // TODO : Get image for each trait in traits_enabled_ints
 
     var traits_img_root = '/traits_components/';
     var traits_img_extension = '.png';
 
-    var skin_color = traits_enabled_ints.filter(t => traits_list_html.get(''+t)[0].includes('a) Skin color'))[0];
-    var face = traits_enabled_ints.filter(t => traits_list_html.get(''+t)[0].includes('b) Face'))[0];
-    var face_img = [traits_img_root+face+"_"+skin_color+traits_img_extension,traits_list_html.get(''+skin_color)[2]];
-
-    var hair_color = traits_enabled_ints.filter(t => traits_list_html.get(''+t)[0].includes('Hair color'))[0];
-    var haircut = traits_enabled_ints.filter(t => traits_list_html.get(''+t)[0].includes('Haircut'))[0];
-    var hair_img = [traits_img_root+haircut+"_"+hair_color+traits_img_extension,traits_list_html.get(''+hair_color)[2]];
-
-    var beard_color = traits_enabled_ints.filter(t => traits_list_html.get(''+t)[0].includes('Beard color'))[0];
-    var beardcut = traits_enabled_ints.filter(t => traits_list_html.get(''+t)[0].includes('e) Beard'))[0];
-    var beard_img = [traits_img_root+beardcut+"_"+beard_color+traits_img_extension,traits_list_html.get(''+beard_color)[2]];
-
-    var has_hair = haircut != 10002;
-    var has_beard = beardcut != 10003;
-    var has_hat = traits_enabled_ints.filter(t => traits_list_html.get(''+t)[0].includes('j) Hat'))[0] != 10006;
-    
-    var traits_enabled_int_img = traits_enabled_ints.filter(t => ![skin_color, face, hair_color, haircut, beard_color, beardcut].includes(t) && t<10000);
-
-    var traits_enabled_for_img = traits_enabled_int_img.map(t => [traits_img_root+t+traits_img_extension,traits_list_html.get(''+t)[2]]);
-
-    traits_enabled_for_img.push([traits_img_root+'bg1'+traits_img_extension,0]);
-    traits_enabled_for_img.push(face_img);
-
-    if(has_hat){
-        traits_enabled_for_img.push([traits_img_root+'hat_bg'+traits_img_extension,3]);
-    }
-
-    if(has_hair) {
-        traits_enabled_for_img.push(hair_img);
-    }
-    if(has_beard) {
-        traits_enabled_for_img.push(beard_img);
-    }
-
-    traits_enabled_for_img = traits_enabled_for_img.sort(function(a,b){return a[1]<b[1]?-1:1;});
-
-    return traits_enabled_for_img.map(t => t[0]);
-}
-
-function update_dependencies() {
-    $('#composer_traits_selector div div:not(.soldout)').removeClass('disabled');
-    let dep_keys = Array.from(dependendies_map.keys());
-    for (let trait = 0; trait < traits_enabled_bools.length; trait++) {
-        if(dep_keys.includes(trait)) {
-            var flag = false;
-            for(const dep of dependendies_map.get(trait)){
-                if(traits_enabled_bools[dep]) {
-                    flag = true;
-                    break;
-                }
-            }
-            if(!flag) {
-                $('.div_trait_'+trait).addClass('disabled');
-            }
-        }
-    }
+    var _enabled_traits = _get_enabled_traits_ids();
 }
 
 function RemoveTrashScrolls(e){
@@ -431,7 +231,7 @@ $(document).ready(async function() {
         // Get the token Json file from API
         var _token_data;
         var xhr = new XMLHttpRequest();
-        xhr.open("GET", 'https://www.dekefake.duckdns.org:62192/get_mint_json/'+_traits_enabled_hash+'_'+ipfs_img, false);
+        xhr.open("GET", 'https://www.dekefake.duckdns.org:62192/get_mint_json/'+traits_enabled_hash()+'_'+ipfs_img, false);
         xhr.setRequestHeader('Accept', 'application/json');
         xhr.send();
 
@@ -455,13 +255,23 @@ $(document).ready(async function() {
     /* USER INTERFACE */
 
     // Images on top(mobile)
+    $('.top_images .overlays_wrapper > img').each(function( index ) {
+        $( this ).attr('src',proj_top_images[index]);
+    });
+
     var rotate_imgs = 0;
-    $('.top_images.mobonly img').attr('src',proj_top_images[rotate_imgs]);
-    function rotate_imgs_f() {
+    var seconds_change = 1.2;
+    setInterval(ChangeMobImage,seconds_change*1000);
+
+    // Set height = width (square) 
+    var _mob_img_overlay = $('.top_images .overlays_wrapper');
+    _mob_img_overlay.css('height',_mob_img_overlay.css('width'));
+
+    async function ChangeMobImage() {
+        $('.top_images .overlays_wrapper > img').eq(rotate_imgs%proj_top_images.length).fadeOut(seconds_change*750);
+        $('.top_images .overlays_wrapper > img').eq((rotate_imgs+1)%proj_top_images.length).fadeIn(seconds_change*750);
         rotate_imgs++;
-        $('.top_images.mobonly img').attr('src',proj_top_images[rotate_imgs%proj_top_images.length]);
     }
-    setInterval(rotate_imgs_f, 1000);
 
     // Images marquee
     var html_marquee = '';
@@ -546,97 +356,6 @@ $(document).ready(async function() {
     }
 
     $(".wallet_sensitive").trigger('walletchanged');
-
-    // NFT composer 
-    build_dialog_from_traits();
-
-    // Select all default_traits
-    for (let trait = 0; trait < default_traits.length; trait++) {
-        $('input[data-trait="'+default_traits[trait]+'"]').click();
-    }
-
-    // When user chooses traits, this is triggered
-    $('#composer_traits_selector div div input[type="radio"]').change(async function(){
-        var changed_name = $(this).attr('name');
-
-        // If new traits are sold out, disable them
-        HideSoldOutTraits();
-        
-        // Keep trace of enabled / disabled traits
-        $('#composer_traits_selector div div input[type="radio"]').each(function( index ) {
-            var bool = $(this).is(':checked')
-            var trait_id = $(this).data('trait');
-            traits_enabled_bools[trait_id] = bool;
-            if(bool && traits_enabled_ints.indexOf(trait_id)==-1) {
-                traits_enabled_ints.push(trait_id)
-            }
-            if(!bool) {
-                var index = traits_enabled_ints.indexOf(trait_id);
-                if (index != -1) {
-                  traits_enabled_ints.splice(index, 1);
-                }
-            }
-        });
-
-        // Update disabled traits based on new enabled/disabled trait
-        update_dependencies();
-
-        // Now update the traits lists, taking into account dependencies updates
-        $('#composer_traits_selector div div input[type="radio"]').each(function( index ) {
-            var bool = $(this).is(':checked') && !$(this).hasClass("disabled");
-            var trait_id = $(this).data('trait');
-            traits_enabled_bools[trait_id] = bool;
-            if(bool && traits_enabled_ints.indexOf(trait_id)==-1) {
-                traits_enabled_ints.push(trait_id)
-            }
-            if(!bool) {
-                var index = traits_enabled_ints.indexOf(trait_id);
-                if (index != -1) {
-                  traits_enabled_ints.splice(index, 1);
-                }
-            }
-        });
-
-        // Generate traits base36 hash after radios and vars updates
-        traits_enabled_hash();
-
-        // Verify and disable radios if traits are unavailable
-        await verifyTraits();
-
-        // Now that everythings updated, we draw the preview
-        drawPreview(getImagesFromTraits());
-    });
-
-    update_dependencies();
-    $('#composer_traits_selector div div input[type="radio"]').eq(0).trigger("change");
-
-    // Accordions JS
-    var accordions = document.getElementsByClassName("accordion");
-    var i;
-    var last_acc = accordions[accordions.length-1].textContent;
-
-    for (i = 0; i < accordions.length; i++) {
-      accordions[i].addEventListener("click", function() {
-        /* Toggle between adding and removing the "active" class,
-        to highlight the button that controls the panel */
-        this.classList.toggle("active");
-
-        /* Toggle between hiding and showing the active panel */
-        var panel = this.nextElementSibling;
-        if (panel.style.maxHeight && panel.style.maxHeight!="1px") {
-          panel.style.maxHeight = "1px";
-          panel.style.opacity = "0";
-          setTimeout(function(){panel.style.overflow = "hidden";},200);          
-        } else {
-          panel.style.maxHeight = panel.scrollHeight + "px";
-          panel.style.opacity = "1";
-          panel.style.overflow = "visible";
-          if(this.textContent == last_acc){
-            document.getElementById("composer_traits_selector").scrollBy({top:panel.scrollHeight,left:0,behavior:"smooth"});
-          }
-        }
-      });
-    }
 });
 
 const loadImage = src =>

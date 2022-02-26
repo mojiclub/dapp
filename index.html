@@ -8,18 +8,15 @@
     </head>
     <body>
         <header>
-            <!-- Change logo here -->
-            <a href="/">
-                <img id="header_logo" src="logo.png">
-            </a>
+            <img id="header_logo" src="logo.png">
         </header>
-        <div id="web3_status" class="rounded bg_accent"><p>CONNECT WALLET</p><img src="logout.png" id="logout"></div>
+        <div id="web3_status" class="rounded btnn"><p>CONNECT WALLET</p><img src="logout.png" id="logout"></div>
         <div id="web3_actions" class="rounded bg_accent80"></div>
         <div class="container">
             <div id="menu" class="subcontainer rounded">
                 <a href="/dapp" class="rounded">HOME</a>
-                <a href="/dapp/claim.html" class="rounded gen1only">CLAIM $MJCC</a>
-                <a href="/dapp/whitepaper.html" class="rounded">WHITE PAPER</a>
+                <a href="/dapp/claim.html" class="rounded gen1only">CLAIM</a>
+                <a href="/dapp/whitepaper.html" class="rounded">LITEPAPER</a>
             </div>
         </div>
         <div class="container">
@@ -30,7 +27,11 @@
                 <img class="rounded" src="https://anatomyscienceapeclub.com/_next/static/images/m2-gold-1-5bb8ffe9155a5f697ead540621850c0c.jpg">
                 <img class="rounded" src="https://anatomyscienceapeclub.com/_next/static/images/m1-glow-3-91761278e95e18a3e4166ffe1203c44e.jpg">
             </div>
-            <div class="top_images subcontainer mobonly rounded"><img class="rounded"></div>
+            <div class="top_images subcontainer mobonly rounded">
+                <div class="overlays_wrapper">
+                    <img class="rounded"><img class="rounded"><img class="rounded"><img class="rounded">
+                </div>
+            </div>
             <div class="mint_container subcontainer rounded">
                 <p id="p_description"><span id="project_name"></span> <span id="project_description"></span></p>
                 <div id="mint_dates" class="rounded border_accent">
@@ -60,7 +61,7 @@
                         <h2>COMPOSE YOUR OWN AVATAR</h2>
                         <!--<p>Now create an avatar with your image using the features available below and mint the associated NFT to generate your proof of ownership on the Ethereum blockchain !</p>-->
                         <div id="composer_preview">
-                            <div id="canvas_div" class="rounded">
+                            <div id="canvas_div" class="rounded overlays_wrapper">
                                 <canvas class="rounded" id="preview_canvas" height="1000" width="1000"></canvas>
                                 <canvas class="rounded" id="preview_canvas2" height="1000" width="1000"></canvas>
                                 <div class="loader_wrapper">
@@ -69,11 +70,11 @@
                             </div>
                             <div id="composer_left">
                                 <div class="rounded" id="composer_traits_selector"></div>
-                                <div id="composer_confirm" class="rounded bg_accent btnn"><p>CONNECT WALLET</p></div>
+                                <div id="composer_confirm" class="rounded btnn"><p>CONNECT WALLET</p></div>
                             </div>
                         </div>
                     </div>
-                    <button id="Main_btn" class="rounded bg_accent btnn"><p>COMPOSE MY AVATAR</p></button>
+                    <button id="Main_btn" class="rounded btnn"><p>COMPOSE MY AVATAR</p></button>
                     <p id="my_nft"></p>
                     <!-- Here resides the hidden canvas we construct the NFT on. Adjust the size to the images size -->
                 </div>

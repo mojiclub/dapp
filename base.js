@@ -124,6 +124,11 @@ async function max_mint_bc(){
     }    
 }
 
+async function token_minted_already(_token_hash) {
+    // TODO : Create solidity function and bind here
+    return false;
+} 
+
 function wl_passed() {
     return new Date(WL_MINT_TIMESTAMP * 1000) <= new Date();
 }
@@ -148,7 +153,7 @@ function sleep(ms) {
 }
 
 function notify(msg, seconds=3) {
-    $('#notification p').text(msg);
+    $('#notification p').html(msg);
     $('#notification').css("right","12px");
     setTimeout(function() {
        $('#notification').css("right","-100vw"); 
