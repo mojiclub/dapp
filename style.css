@@ -3,6 +3,10 @@
   --main-fonts: Montserrat,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;
 }
 
+html {
+	scroll-behavior: smooth;
+}
+
 body {
 	margin: 0;
 	padding: 0 16px;
@@ -10,6 +14,29 @@ body {
 	background: black;
 	color: white;
 	font-family: var(--main-fonts);
+}
+
+::-webkit-scrollbar {
+  width: 24px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #00000000;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: rgb(var(--main-color));
+  border: 8px solid #00000000;
+  border-radius: 12px;
+  background-clip: padding-box;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: white; 
+  background-clip: padding-box;
 }
 
 .bg_accent80 {
@@ -46,6 +73,7 @@ p {
 
 .overlays_wrapper {
 	position: relative;
+	transform: translateZ(0);
 }
 .overlays_wrapper > * {
 	position: absolute;
@@ -110,6 +138,10 @@ p {
 
 #nb_minted, #mint_price, #project_name {
 	font-weight: bold;
+}
+
+.mint_amount_container {
+	display: none;
 }
 
 #mint_dates {
@@ -255,6 +287,7 @@ a {
 
 .marquee {
 	overflow: hidden;
+	transform: translateZ(0);
 }
 
 .marquee-item {
@@ -382,12 +415,16 @@ p.roadmap_num {
     border: 2px solid rgba(var(--main-color),30%);
 }
 
+#nft_composer * {
+	transform: translateZ(0);
+}
+
 #composer_title {
 	font-family: Moji, var(--main-fonts);
     margin-bottom: 8px;
 }
 
-#composer_close {
+#composer_close_div {
     position: absolute;
     top: 16px;
     margin: 0;
@@ -398,12 +435,22 @@ p.roadmap_num {
     border-radius: 50%;
     height: 36px;
     width: 36px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     font-weight: bold;
     font-size: 150%;
     cursor: pointer;
+    transition: filter 0.2s ease;
+}
+
+#composer_close {
+	display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    height: 36px;
+}
+
+#composer_close_div:hover {
+	filter: invert(1);
 }
 
 #composer_preview {
@@ -424,7 +471,7 @@ p.roadmap_num {
 	display: flex;
     flex-direction: column;
     align-items: center;
-} 
+}
 
 #composer_left, #canvas_div {
 	margin: 8px;
@@ -449,7 +496,7 @@ p.roadmap_num {
 }
 
 input[type="radio"] {
-    filter: hue-rotate(127deg);
+    accent-color: black;
 }
 
 div[class^="div_trait_"], div[class*="div_trait_"] {
@@ -477,12 +524,12 @@ div[class^="div_trait_"], div[class*="div_trait_"] {
 
 .accordion {
 	cursor: pointer;
+	transition: color 0.2s ease;
 }
 
 .accordion:after {
     content: '\02795';
     font-size: 13px;
-    color: white;
     float: right;
     margin-right: 12px;
     background-color: white;
@@ -491,11 +538,25 @@ div[class^="div_trait_"], div[class*="div_trait_"] {
     width: 24px;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: center;   
+    transition: background-color 0.2s ease;
 }
 
+/*
+.accordion:hover {
+	color: rgb(var(--main-color));
+}
+
+.accordion:hover:after {
+	background-color: rgb(var(--main-color));
+}
+*/
 .accordion.active:after {
 	content: "\2796";
+}
+
+.accordion.disabled:after {
+	display: none;
 }
 
 .accordion_panel {
@@ -524,6 +585,15 @@ div[class^="div_trait_"], div[class*="div_trait_"] {
 }
 
 @media only screen and (max-device-width: 480px) {
+	::-webkit-scrollbar {
+	  width: 6px;
+	}
+
+	::-webkit-scrollbar-thumb {
+	  border-radius: 3px;
+	  border-width: 1px;
+	}
+
     .deskonly {
     	display: none!important;
     }
@@ -576,6 +646,10 @@ div[class^="div_trait_"], div[class*="div_trait_"] {
 	#mint_dates p {
 	    font-size: 80%;
 	}
+
+	#nb_minted p, #mint_price p {
+	    margin: 12px 0;
+	}
 }
 
 @media only screen and (min-device-width: 481px) {
@@ -587,6 +661,7 @@ div[class^="div_trait_"], div[class*="div_trait_"] {
 		display: flex;
 	    justify-content: space-between;
 	    flex-wrap: wrap;
+	    align-items: center;
     }
     .top_images.deskonly, .mint_container {
     	width: 45%;

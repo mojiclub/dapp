@@ -97,7 +97,7 @@ $(document).ready(async function() {
             $("#web3_actions h2").after(tx_link);
             sleep(250);
             notify("⏳ "+sub_tx);
-            $('#composer_close').click();
+            $('#composer_close_div').click();
             tx_id.wait().then(async function(receipt) {
                 $('#link_'+tx_id.hash+' .tx_status').text('✅');
                 notify("✅ "+sub_tx);
@@ -206,7 +206,7 @@ $(document).ready(async function() {
         //$('#nft_composer').bind('mousewheel wheel onwheel touchmove DOMMouseScroll keydown', RemoveTrashScrolls);
     });
 
-    $('#composer_close').click(function() {
+    $('#composer_close_div').click(function() {
         $('#nft_composer').fadeOut(250);
         $('body').css('overflow','auto');
         //$('#nft_composer').unbind('mousewheel wheel onwheel touchmove DOMMouseScroll keydown');
@@ -299,8 +299,8 @@ $(document).ready(async function() {
         //MINT_TIMESTAMP = MINT_TIMESTAMP.toNumber();
     }
     // If the MAX_MINT is 1 NFT, hide the number input
-    if(MAX_MINT==1){
-        $('.mint_amount_container').hide();
+    if(MAX_MINT>1){
+        $('.mint_amount_container').show();
     }
     $("#nb_mint").attr("max",MAX_MINT);
     

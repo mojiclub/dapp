@@ -1,5 +1,5 @@
 // NFT composer variables
-var nb_traits = 132;
+var nb_traits = 141;
 
 traits_lst = {
     1:["Skin Color","Light beige"],

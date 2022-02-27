@@ -1,3 +1,27 @@
+// Set a random color each time website is loaded
+var _colors = [
+  '154, 220, 255',
+  '255, 178, 166',
+  '255, 138, 174',
+  '21, 114, 161',
+  '154, 208, 236',
+  '227, 190, 198',
+  '198, 213, 126',
+  '213, 126, 126',
+  '162, 205, 205',
+  '89, 2, 236',
+  '224, 77, 176',
+  '210, 39, 121',
+  '97, 40, 151',
+  '12, 30, 127',
+  '14, 145, 140',
+  '150, 206, 180',
+  '0, 161, 157',
+  '224, 93, 93'
+];
+document.documentElement.style.setProperty('--main-color', _colors[Math.floor(Math.random()*_colors.length)]);
+
+
 // ----------------------------
 // Contract mint caracteristics
 // ----------------------------
@@ -69,9 +93,6 @@ var proj_wl_mint = "Mint for WL users : ";
 var proj_public_mint = "Public mint : ";
 var proj_reveal_date = "Reveal : ";
 var date_format_options = {year: "numeric", month: 'short', day: 'numeric', hour:'2-digit',minute:'2-digit', timeZone: 'UTC', timeZoneName:'short'};
-
-// Website accent colors (set in style.css ~ at the top)
-//var proj_color = "#DD5A56";
 
 // Variables declaration
 var MINT_PRICE = 0.09;
