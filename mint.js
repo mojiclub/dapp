@@ -17,12 +17,12 @@ function getImagesFromTraits() {
     adf++;
     return [aad[adf%aad.length]];
 
-    // TODO : Get image for each trait in traits_enabled_ints
-
     var traits_img_root = '/traits_components/';
     var traits_img_extension = '.png';
 
     var _enabled_traits = _get_enabled_traits_ids();
+
+    // TODO : Get image for each trait in _enabled_traits to generate real preview
 }
 
 function RemoveTrashScrolls(e){
@@ -38,6 +38,15 @@ function RemoveTrashScrolls(e){
         e.preventDefault();
     }
     e.stopPropagation();
+}
+
+// Triggered when new block has been mined.
+// We need to check if new things have changed in the contract
+// Overrides newBlock() from base.js
+async function newBlock(){
+    await determineGen();
+    HideSoldOutTraits(true);
+    get_minted_tokens();
 }
 
 $(document).ready(async function() {
@@ -193,13 +202,23 @@ $(document).ready(async function() {
         $("#nb_mint").trigger("keyup");
     });
 
+    // Load NFT composer on mint container hover to avoid delay on button click
+    // Avoids loading and using API ressources in mobile and in basic browsing behaviors
+    var _nft_composer_loaded = false;
+    $(".mint_container").hover(async function() {
+        if(!_nft_composer_loaded) {
+            _nft_composer_loaded = true;
+            new_user_config(false,true);
+        }
+    });
+
     $("#Main_btn").click(async function() {
         if(gen1_soldout) {
             notify("SOLD OUT");
             return;
         }
 
-        drawPreview(getImagesFromTraits());
+        $(".mint_container").trigger('hover');
 
         $('#nft_composer').fadeIn(250);
         $('body').css('overflow','hidden');
@@ -233,7 +252,7 @@ $(document).ready(async function() {
         var xhr = new XMLHttpRequest();
         xhr.open("GET", 'https://www.dekefake.duckdns.org:62192/get_mint_json/'+traits_enabled_hash()+'_'+ipfs_img, false);
         xhr.setRequestHeader('Accept', 'application/json');
-        xhr.send();
+        xhr.send();console.log('API '+(++_n_api));
 
         if (xhr.status === 200) {
             _token_data = JSON.parse(JSON.parse(xhr.responseText));
@@ -361,38 +380,3 @@ $(document).ready(async function() {
     $(".wallet_sensitive").trigger('walletchanged');
 });
 
-const loadImage = src =>
-  new Promise((resolve, reject) => {
-    const img = new Image();
-    img.crossOrigin="anonymous";
-    img.onload = () => resolve(img);
-    img.onerror = reject;
-    img.src = src;
-  });
-
-var _canvas_list = ["preview_canvas","preview_canvas2"];
-var _id_canvas = 0;
-async function drawPreview(_images){
-    var _canvas_id = _canvas_list[_id_canvas%2];
-    var _other_canvas = _canvas_list[(_id_canvas+1)%2];
-
-    $('#canvas_div .loader_wrapper').fadeIn(150);
-
-    var c = document.getElementById(_canvas_id);
-    var ctx = c.getContext("2d");
-    ctx.clearRect( 0, 0, c.width, c.height);
-
-    await Promise.all(_images.map(loadImage)).then(images => {
-      images.forEach((image, i) =>
-        ctx.drawImage(image, 0, 0, c.width, c.height)
-      );
-    });
-
-    await $('#'+_canvas_id).fadeIn(function() {
-        $('#'+_other_canvas).fadeOut(150);
-        $('#canvas_div .loader_wrapper').fadeOut(150);
-    });
-    _id_canvas++;
-
-    return c.toDataURL("image/png");
-}

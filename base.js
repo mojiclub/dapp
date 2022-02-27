@@ -8,7 +8,7 @@ var tx_pending = false;
 var last_tx_recept = '';
 
 // Start / reset web3 state 
-function web3_init(){
+async function web3_init(){
     wc_provider = '';
     signer = '';
     var web3_btn = document.querySelector("#web3_status p");
@@ -20,6 +20,8 @@ function web3_init(){
     provider = new ethers.providers.JsonRpcProvider(RPC);
     contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, provider);
     tickets_contract = new ethers.Contract(CONTRACT_ADDRESS_TICKETS, ABI_TICKETS, provider);
+    CURRENT_BLOCK = await provider.getBlockNumber();
+    setInterval(lastBlock,2000); // Check if new block has been mined every 2 seconds
 }
 
 function isMobile() {
@@ -45,7 +47,7 @@ if(!window.ethereum) {/*
     window.ethereum.on("chainChanged", async function (number) {
         BAD_CHAIN = number!='0x'+CHAIN_ID.toString(16);
         if(BAD_CHAIN) {
-            web3_init();
+            await web3_init();
             $(".wallet_sensitive").trigger('walletchanged');
             var web3_btn = document.querySelector("#web3_status p");
             web3_btn.innerText = "SWITCH TO ETHEREUM";
@@ -124,10 +126,28 @@ async function max_mint_bc(){
     }    
 }
 
-async function token_minted_already(_token_hash) {
+async function lastBlock(){
+    _block = await provider.getBlockNumber();
+    if(_block!=CURRENT_BLOCK) {
+        newBlock();
+        CURRENT_BLOCK = _block;
+    }
+}
+
+// Triggered when new block has been mined.
+// We need to check if new things have changed in the contract
+async function newBlock(){
+    // Does nothing. Override it in specific JS file
+}
+
+var _minted_tokens = [];
+async function get_minted_tokens() {
     // TODO : Create solidity function and bind here
-    return false;
-} 
+}
+
+function is_minted(_token_hash) {
+    return _minted_tokens.includes(_token_hash);
+}
 
 function wl_passed() {
     return new Date(WL_MINT_TIMESTAMP * 1000) <= new Date();
@@ -165,6 +185,8 @@ async function connect_wallet() {
     provider = '';
     if(window.ethereum && window.ethereum.isMetaMask) {
         provider = new ethers.providers.Web3Provider(window.ethereum, "any");
+        CURRENT_BLOCK = await provider.getBlockNumber();
+        setInterval(lastBlock,2000);  // Check if new block has been mined every 2 seconds
         JS_COOKIES.set('web3_session','metamask');
     } else {
         wc_provider = new WalletConnectProvider.default(
@@ -184,9 +206,11 @@ async function connect_wallet() {
                 web3_init();
             });
             provider = new ethers.providers.Web3Provider(wc_provider);
+            CURRENT_BLOCK = await provider.getBlockNumber();
+            setInterval(lastBlock,2000); // Check if new block has been mined every 2 seconds
             JS_COOKIES.set('web3_session','trust');
         } else {
-            web3_init();
+            await web3_init();
             return;
         }
     }
@@ -294,7 +318,7 @@ $("#logout").click(async function(event){
     if($('#web3_actions').css('display')!='none') {
         $("#web3_actions").fadeOut(250);
     }
-    web3_init();
+    await web3_init();
     $(".wallet_sensitive").trigger('walletchanged');
     event.preventDefault();
     event.stopPropagation();
@@ -337,12 +361,24 @@ function dataURItoBlob(dataURI) {
     return new Blob([ab], {type: mimeString});
 }
 
+// Determines current gen by getting number of minted NFTs.
+// Updates UI accordignly
 async function determineGen() {
     NB_MINTED = await nb_minted_bc();
     $('#span_nb_minted').text(NB_MINTED);
     gen0_soldout = NB_MINTED >= GEN0_SUPPLY;
     gen1_soldout = NB_MINTED >= GEN0_SUPPLY+GEN1_SUPPLY;
     gen_number = gen0_soldout ? 1 : 0;
+
+    if(!gen0_soldout) {
+        $('.gen1only').addClass('disabled');
+        $('#p_mint_price').text(MINT_PRICE + " Ξ");
+        $('#span_total_supply').text(GEN0_SUPPLY); 
+    } else {
+        $('#p_mint_price').text("1 $MJCC");
+        $('#span_total_supply').text(GEN0_SUPPLY+GEN1_SUPPLY);
+    }
+    $(".wallet_sensitive").trigger('walletchanged');
 }
 
 $(document).ready(async function() {
@@ -361,13 +397,5 @@ $(document).ready(async function() {
 
     // Gen0 / Gen1 UI changes
     await determineGen();
-    if(!gen0_soldout) {
-        $('.gen1only').addClass('disabled');
-        $('#p_mint_price').text(MINT_PRICE + " Ξ");
-        $('#span_total_supply').text(GEN0_SUPPLY); 
-    } else {
-        $('#p_mint_price').text("1 $MJCC");
-        $('#span_total_supply').text(GEN0_SUPPLY+GEN1_SUPPLY);
-    }
 });
 

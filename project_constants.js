@@ -21,6 +21,7 @@ var _colors = [
 ];
 document.documentElement.style.setProperty('--main-color', _colors[Math.floor(Math.random()*_colors.length)]);
 
+var _n_api = 0;
 
 // ----------------------------
 // Contract mint caracteristics
@@ -78,6 +79,7 @@ const ABI = [
   // An event triggered whenever anyone transfers to someone else
   "event Transfer(address indexed from, address indexed to, uint amount)"
 ];
+var CURRENT_BLOCK;
 
 // NFT images on top.
 var proj_top_images = [];

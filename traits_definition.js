@@ -330,7 +330,7 @@ function HideSoldOutTraits(reset=false) {
         var xhr = new XMLHttpRequest();
         xhr.open("GET", 'https://www.dekefake.duckdns.org:62192/soldout_traits', false);
         xhr.setRequestHeader('Accept', 'application/json');
-        xhr.send();
+        xhr.send();console.log('API '+(++_n_api));
         
         if(xhr.status === 200) {
             _soldout_traits = JSON.parse(JSON.parse(xhr.responseText));
@@ -351,10 +351,11 @@ function HideSoldOutTraits(reset=false) {
 var _verify_traits;
 async function verifyTraits(RetryIfError=true) {
     var _tkn_hash = traits_enabled_hash();
-    var token_minted = await token_minted_already(traits_enabled_hash(_tkn_hash));
+    var token_minted = is_minted(traits_enabled_hash(_tkn_hash));
     if(token_minted){
         $('#composer_confirm').addClass('disabled');
-        $('#composer_confirm p').text('AVATAR UNAVAILABLE');
+        $('#composer_confirm p').text('SAME AVATAR MINTED ALREADY');
+        return;
     } else {
         $('#composer_confirm p').text('MINT MY AVATAR NOW');
         $('#composer_confirm').removeClass('disabled');
@@ -363,18 +364,22 @@ async function verifyTraits(RetryIfError=true) {
     var xhr = new XMLHttpRequest();
     xhr.open("GET", 'https://www.dekefake.duckdns.org:62192/verify/'+_tkn_hash, false);
     xhr.setRequestHeader('Accept', 'application/json');
-    xhr.send();
+    xhr.send();console.log('API '+(++_n_api));
     if(xhr.status ===  200) {
         _verify_traits = JSON.parse(JSON.parse(xhr.responseText));
         if(!_verify_traits['valid']) {
             $('#composer_confirm').addClass('disabled');
-            $('#composer_confirm p').text('AVATAR UNAVAILABLE');
+            $('#composer_confirm p').text('AVATAR HAS SOLD OUT TRAITS');
+            // Hide sold out traits (happens if a trait became unavailable while user was already on website)
+            for(const _tr of _verify_traits['unavailable_traits']) {
+                $('.div_trait_'+_trait).addClass('disabled soldout');
+            }
         }
     } else {
         if(RetryIfError){
             console.log("verifyTraits() Error : ", xhr.statusText);
             await sleep(1000);
-            await verifyTraits(false);
+            verifyTraits(false);
         }
     }
 }
@@ -409,7 +414,65 @@ function update_dependencies() {
 
     // No jacket -> No jacket elements
     _disable_categorie_by_condition(!_wears_jacket(),'Jacket Elements');
+}
 
+const loadImage = src =>
+  new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin="anonymous";
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+    img.src = src;
+  });
+
+// Draws preview on a canvas based on a list of traits images. Returns the result as JPEG dataurl
+var _canvas_list = ["preview_canvas","preview_canvas2"];
+var _id_canvas = 0;
+async function drawPreview(_images){
+    var _canvas_id = _canvas_list[_id_canvas%2];
+    var _other_canvas = _canvas_list[(_id_canvas+1)%2];
+
+    $('#canvas_div .loader_wrapper').fadeIn(150);
+
+    var c = document.getElementById(_canvas_id);
+    var ctx = c.getContext("2d");
+    ctx.clearRect( 0, 0, c.width, c.height);
+
+    await Promise.all(_images.map(loadImage)).then(images => {
+      images.forEach((image, i) =>
+        ctx.drawImage(image, 0, 0, c.width, c.height)
+      );
+    });
+
+    await $('#'+_canvas_id).fadeIn(function() {
+        $('#'+_other_canvas).fadeOut(150);
+        $('#canvas_div .loader_wrapper').fadeOut(150);
+    });
+    _id_canvas++;
+
+    // return c.toDataURL("image/png");
+    return c.toDataURL("image/jpeg");
+}
+
+// Called when user has selected new traits and on website load.
+// We need to update a bunch of things to make sure the underlying nft is mintable.
+async function new_user_config(_verify=true, _hide=false) {
+    // Draw NFT based on selected traits
+    drawPreview(getImagesFromTraits());
+
+    if(_verify){
+        // Verify and disable traits that are newly unavailable
+        verifyTraits();
+    }
+    
+    if(_hide){
+        // Disable traits that are sold out
+        HideSoldOutTraits();
+    }
+
+    // Update enable/disable categories based on traits currently active
+    // Example : Disable hair color if no haircut is selected
+    update_dependencies();
 }
 
 $(document).ready(function(){
@@ -423,19 +486,6 @@ $(document).ready(function(){
 
     // Triggered by user selection of trait
     $('#composer_traits_selector input[type="radio"]').change(async function(){
-        // Now that everythings updated, we draw the preview
-        drawPreview(getImagesFromTraits());
-
-        // Verify and disable traits that are newly unavailable
-        await verifyTraits();
-        
-        // Disable traits that are sold out
-        HideSoldOutTraits();
-
-        // Update enable/disable categories based on traits currently active
-        // Example : Disable hair color if no haircut is selected
-        update_dependencies();
+        new_user_config();
     });
-
-    $('#composer_traits_selector input[type="radio"]').eq(0).trigger("change");
 });
