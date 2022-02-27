@@ -252,7 +252,7 @@ $(document).ready(async function() {
         var xhr = new XMLHttpRequest();
         xhr.open("GET", 'https://www.dekefake.duckdns.org:62192/get_mint_json/'+traits_enabled_hash()+'_'+ipfs_img, false);
         xhr.setRequestHeader('Accept', 'application/json');
-        xhr.send();console.log('API '+(++_n_api));
+        xhr.send();console.log('API get_mint_json - '+(++_n_api));
 
         if (xhr.status === 200) {
             _token_data = JSON.parse(JSON.parse(xhr.responseText));

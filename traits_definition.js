@@ -330,7 +330,7 @@ function HideSoldOutTraits(reset=false) {
         var xhr = new XMLHttpRequest();
         xhr.open("GET", 'https://www.dekefake.duckdns.org:62192/soldout_traits', false);
         xhr.setRequestHeader('Accept', 'application/json');
-        xhr.send();console.log('API '+(++_n_api));
+        xhr.send();console.log('API soldout_traits - '+(++_n_api));
         
         if(xhr.status === 200) {
             _soldout_traits = JSON.parse(JSON.parse(xhr.responseText));
@@ -364,7 +364,7 @@ async function verifyTraits(RetryIfError=true) {
     var xhr = new XMLHttpRequest();
     xhr.open("GET", 'https://www.dekefake.duckdns.org:62192/verify/'+_tkn_hash, false);
     xhr.setRequestHeader('Accept', 'application/json');
-    xhr.send();console.log('API '+(++_n_api));
+    xhr.send();console.log('API verify - '+(++_n_api));
     if(xhr.status ===  200) {
         _verify_traits = JSON.parse(JSON.parse(xhr.responseText));
         if(!_verify_traits['valid']) {
