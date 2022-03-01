@@ -73,7 +73,7 @@ $(document).ready(async function() {
     }
 
     // Mint tokens
-    async function mint(tab1,tab2,tab3){
+    async function mint(){
         await determineGen();
 
         if(gen1_soldout) {
@@ -96,30 +96,62 @@ $(document).ready(async function() {
             return;
         }
 
-        var _addr = await signer.getAddress()
+        var _addr = await signer.getAddress();
 
-        try {
-            tx_id = await contract_signer.mint(tab1,tab2,tab3,merkle_proof(_addr),tx_options);
-            tx_pending = true;
-            var sub_tx = tx_id.hash.substring(0,12)+'..'+tx_id.hash.substring(tx_id.hash.length-4,tx_id.hash.length);
-            var tx_link = '<p id="link_'+tx_id.hash+'"><span class="tx_status">⏳</span> : <a target="_blank" href="'+RPC_SCAN_URL+'/tx/'+tx_id.hash+'">'+sub_tx+'</a></p>';
-            $("#web3_actions h2").after(tx_link);
-            sleep(250);
-            notify("⏳ "+sub_tx);
-            $('#composer_close_div').click();
-            tx_id.wait().then(async function(receipt) {
-                $('#link_'+tx_id.hash+' .tx_status').text('✅');
-                notify("✅ "+sub_tx);
-                play_done();
-                tx_id = '';
-                tx_pending = false;
-                last_tx_recept = receipt;
-                load_wallet();
-            });
+        // Get the image (data:image/png;base64) from preview canvas    
+        var dataUrl = await drawPreview(getImagesFromTraits());
 
-        } catch (error) {
-            zz = error;
-            notify('Error code '+error.error.code+' ~ '+error.error.message);
+        // Convert it to a blob
+        dataUrl = dataURItoBlob(dataUrl);
+
+        // Then, push it to the IPFS
+        var ipfs_img = await ipfs_add(dataUrl);
+        await ipfs_pin(ipfs_img);
+
+        // Get the token Json file from API
+        var _token_data;
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", 'https://www.dekefake.duckdns.org:62192/get_mint_json/'+traits_enabled_hash()+';'+gen_number+'_'+ipfs_img, false);
+        xhr.setRequestHeader('Accept', 'application/json');
+        xhr.send();
+
+        if (xhr.status === 200) {
+            _token_data = JSON.parse(JSON.parse(xhr.responseText));
+            if(_token_data['valid']){
+                var base36_specs = _verify_traits['base36'];
+                var token_specs = _token_data['token_json'];
+                await ipfs_pin(token_specs[0]);
+
+                var msg_tab = [base36_specs[0], token_specs[0]];
+                var rs_tab = [base36_specs[2], base36_specs[3], token_specs[2], token_specs[3]];
+                var v_tab = [base36_specs[1], token_specs[1]];
+                
+                try {
+                    tx_id = await contract_signer.mint(msg_tab,rs_tab,v_tab,merkle_proof(_addr),tx_options);
+                    tx_pending = true;
+                    var sub_tx = tx_id.hash.substring(0,12)+'..'+tx_id.hash.substring(tx_id.hash.length-4,tx_id.hash.length);
+                    var tx_link = '<p id="link_'+tx_id.hash+'"><span class="tx_status">⏳</span> : <a target="_blank" href="'+RPC_SCAN_URL+'/tx/'+tx_id.hash+'">'+sub_tx+'</a></p>';
+                    $("#web3_actions h2").after(tx_link);
+                    sleep(250);
+                    var html_a = '<a target="_blank" href="'+RPC_SCAN_URL+'/tx/'+tx_id.hash+'">';
+                    notify(html_a+"⏳ "+sub_tx+"</a>",4);
+                    $('#composer_close_div').click();
+                    tx_id.wait().then(async function(receipt) {
+                        $('#link_'+tx_id.hash+' .tx_status').text('✅');
+                        notify(html_a+"✅ "+sub_tx+"</a>",4);
+                        play_done();
+                        tx_id = '';
+                        tx_pending = false;
+                        last_tx_recept = receipt;
+                        load_wallet();
+                    });
+
+                } catch (error) {
+                    notify('Error code '+error.error.code+' ~ '+error.error.message);
+                }
+            }
+        } else {
+            console.log("mint() Error : ", xhr.statusText);
         }
     }
 
@@ -238,37 +270,7 @@ $(document).ready(async function() {
             return;
         }
 
-        // Get the image (data:image/png;base64) from preview canvas    
-        var dataUrl = await drawPreview(getImagesFromTraits());
-
-        // Convert it to a blob
-        dataUrl = dataURItoBlob(dataUrl);
-
-        // Then, push it to the IPFS
-        var ipfs_img = await ipfs_add(dataUrl);
-
-        // Get the token Json file from API
-        var _token_data;
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", 'https://www.dekefake.duckdns.org:62192/get_mint_json/'+traits_enabled_hash()+'_'+ipfs_img, false);
-        xhr.setRequestHeader('Accept', 'application/json');
-        xhr.send();console.log('API get_mint_json - '+(++_n_api));
-
-        if (xhr.status === 200) {
-            _token_data = JSON.parse(JSON.parse(xhr.responseText));
-            if(_token_data['valid']){
-                var base36_specs = _verify_traits['base36'];
-                var token_specs = _token_data['token_json'];
-                var traits_specs = _token_data['traits_enabled'];
-                await mint(
-                    [base36_specs[0], token_specs[0], traits_specs[0]],
-                    [base36_specs[1],base36_specs[3],base36_specs[4],token_specs[1],token_specs[3],token_specs[4],traits_specs[1],traits_specs[3],traits_specs[4]],
-                    [base36_specs[2],token_specs[2],traits_specs[2]]
-                );
-            }
-        } else {
-            console.log("$('#composer_confirm').click Error : ", xhr.statusText);
-        }      
+        mint();  
     });
 
     /* USER INTERFACE */

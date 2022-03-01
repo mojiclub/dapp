@@ -330,7 +330,7 @@ function HideSoldOutTraits(reset=false) {
         var xhr = new XMLHttpRequest();
         xhr.open("GET", 'https://www.dekefake.duckdns.org:62192/soldout_traits', false);
         xhr.setRequestHeader('Accept', 'application/json');
-        xhr.send();console.log('API soldout_traits - '+(++_n_api));
+        xhr.send();
         
         if(xhr.status === 200) {
             _soldout_traits = JSON.parse(JSON.parse(xhr.responseText));
@@ -338,7 +338,7 @@ function HideSoldOutTraits(reset=false) {
                 $('.div_trait_'+_trait).addClass('disabled soldout');
             }
         } else {
-            console.log("HideSoldOutTraits() Error : ", xhr.statusText);
+            console.log("soldout_traits : ", xhr.statusText);
         }
     } else {
         for(const _trait of _soldout_traits){
@@ -362,22 +362,25 @@ async function verifyTraits(RetryIfError=true) {
     }
 
     var xhr = new XMLHttpRequest();
-    xhr.open("GET", 'https://www.dekefake.duckdns.org:62192/verify/'+_tkn_hash, false);
+    xhr.open("GET", 'https://www.dekefake.duckdns.org:62192/verify/'+_tkn_hash+';'+gen_number, false);
     xhr.setRequestHeader('Accept', 'application/json');
-    xhr.send();console.log('API verify - '+(++_n_api));
+    xhr.send();
     if(xhr.status ===  200) {
         _verify_traits = JSON.parse(JSON.parse(xhr.responseText));
         if(!_verify_traits['valid']) {
             $('#composer_confirm').addClass('disabled');
             $('#composer_confirm p').text('AVATAR HAS SOLD OUT TRAITS');
-            // Hide sold out traits (happens if a trait became unavailable while user was already on website)
-            for(const _tr of _verify_traits['unavailable_traits']) {
-                $('.div_trait_'+_trait).addClass('disabled soldout');
+
+            if(!_verify_traits['problem'] && _verify_traits['problem']!="Incorrect gen"){
+                // Hide sold out traits (happens if a trait became unavailable while user was already on website)
+                for(const _tr of _verify_traits['unavailable_traits']) {
+                    $('.div_trait_'+_trait).addClass('disabled soldout');
+                }
             }
         }
     } else {
         if(RetryIfError){
-            console.log("verifyTraits() Error : ", xhr.statusText);
+            console.log("verify : ", xhr.statusText);
             await sleep(1000);
             verifyTraits(false);
         }

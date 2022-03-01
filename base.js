@@ -103,7 +103,12 @@ async function mint_price_bc(){
 }
 
 async function gen0_supply_bc(){
-    var num = await contract.GEN0_Max_Id();
+    var num = await contract.GEN0_SUPPLY();
+    return num.toNumber();
+}
+
+async function gen1_supply_bc(){
+    var num = await contract.GEN1_SUPPLY();
     return num.toNumber();
 }
 
@@ -314,6 +319,19 @@ $("#web3_status").click(async function(){
     }
 });
 
+$('#ui_mode').click(async function(event){
+    var left = $('#ui_mode_slider').css('left');
+    if (left == '-2px') {
+        lightmode();
+        $('#ui_mode_slider').css('left','22px');
+        $('#ui_mode_icon').attr('src','sun.png');
+    } else {
+        darkmode();
+        $('#ui_mode_slider').css('left','-2px');
+        $('#ui_mode_icon').attr('src','moon.png');
+    }
+});
+
 $("#logout").click(async function(event){
     if($('#web3_actions').css('display')!='none') {
         $("#web3_actions").fadeOut(250);
@@ -341,8 +359,11 @@ const ipfs_node = IpfsHttpClient.create({
 
 async function ipfs_add(Obj) {
     const res = await ipfs_node.add(Obj);
-    await ipfs_node.pin.add(res.path);
     return res.path;
+}
+
+async function ipfs_pin(path) {
+    await ipfs_node.pin.add(path);
 }
 
 function dataURItoBlob(dataURI) {

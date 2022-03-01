@@ -21,7 +21,18 @@ var _colors = [
 ];
 document.documentElement.style.setProperty('--main-color', _colors[Math.floor(Math.random()*_colors.length)]);
 
-var _n_api = 0;
+function lightmode(){
+  document.documentElement.style.setProperty('--main-white', '0,0,0');
+  document.documentElement.style.setProperty('--main-black', '255,255,255');
+  $("#header_logo, #logout").css('filter','invert(1)');
+
+}
+
+function darkmode(){
+  document.documentElement.style.setProperty('--main-white', '255,255,255');
+  document.documentElement.style.setProperty('--main-black', '0,0,0');
+  $("#header_logo, #logout").css('filter','none');
+}
 
 // ----------------------------
 // Contract mint caracteristics
@@ -34,10 +45,10 @@ const RPC_SCAN_URL = "https://ropsten.etherscan.io";
 //const RPC = "https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161" // ETH Mainnet
 //const CHAIN_ID = 1; // ETH Mainnet
 // const RPC_SCAN_URL = "https://etherscan.io";
-const CONTRACT_ADDRESS = '0xbBb4D7E04612Ff9F4ff262Fbd7346600e0BeF959';
+const CONTRACT_ADDRESS = '0x4b3b9d84338B7132c669602F7DbCA00aa1035C5C';
 
 // Tickets
-const CONTRACT_ADDRESS_TICKETS = '0xcc86E13b2F72a640faA67bB6f82d7F8a709B12E3';
+const CONTRACT_ADDRESS_TICKETS = '0x76DC81EC31bC4Bc9a27989C601F07FA407233D01';
 const ABI_TICKETS = ["function balanceOf(address) view returns (uint)"];
 
 // Ethers.js
@@ -61,7 +72,8 @@ const ABI = [
   "function totalSupply() view returns (uint)",
   "function PRICE_ETH() public view returns (uint256)",
   "function MAX_MINT() public view returns (uint256)",
-  "function GEN0_Max_Id() public view returns (uint256)",
+  "function GEN0_SUPPLY() public view returns (uint256)",
+  "function GEN1_SUPPLY() public view returns (uint256)",
   "function WL_MINT_TIMESTAMP() public view returns (uint256)",
   "function MINT_TIMESTAMP() public view returns (uint256)",
   "function holderTokens() public view returns (uint256[] memory)",
@@ -71,7 +83,7 @@ const ABI = [
 
   // Sale
   "function SaleIsActive() public view returns (bool)",
-  "function mint(string[3] memory _msgs, bytes32[9] memory _hashs_r_s, uint8[3] memory _v, bytes32[] calldata _proof) public payable",
+  "function mint(string[2] memory _msgs, bytes32[4] memory _hashs_r_s, uint8[2] memory _v, bytes32[] calldata _proof) public payable",
 
   // Only for owner, remove later
   "function withdraw()",
@@ -99,8 +111,8 @@ var date_format_options = {year: "numeric", month: 'short', day: 'numeric', hour
 // Variables declaration
 var MINT_PRICE = 0.09;
 var MAX_MINT = 1;
-var GEN0_SUPPLY = 10000;
-var GEN1_SUPPLY = 40000;
+var GEN0_SUPPLY = 10;
+var GEN1_SUPPLY = 40;
 var WL_MINT_TIMESTAMP = 1645437000; // lundi 21 février 2022 10:50:00 GMT+01:00
 var MINT_TIMESTAMP = WL_MINT_TIMESTAMP + 600;
 

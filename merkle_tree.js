@@ -5,7 +5,7 @@ keccak256 = require('keccak256')
 // WL addr
 
 const wl_addrs = [
-'a',
+'0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2',
 'b',
 'c',
 'd',
