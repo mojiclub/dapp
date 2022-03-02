@@ -99,7 +99,7 @@ body {
 	color: rgb(var(--main-color));
 }
 .border_accent {
-	border: 1px solid rgb(var(--main-color));
+	border: 2px solid rgb(var(--main-color));
 }
 
 #header_logo {

@@ -58,6 +58,7 @@ async function web3_init(){
     provider = new ethers.providers.JsonRpcProvider(RPC);
     contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, provider);
     tickets_contract = new ethers.Contract(CONTRACT_ADDRESS_TICKETS, ABI_TICKETS, provider);
+    load_contract_vars();
     CURRENT_BLOCK = await provider.getBlockNumber();
     setInterval(lastBlock,2000); // Check if new block has been mined every 2 seconds
 }
@@ -97,8 +98,6 @@ if(!window.ethereum) {/*
     });
 }
 
-web3_init();
-
 // Get the wallet balance in ETH
 var _signer_balance_eth = -1;
 async function signer_balance_eth(reset=false){
@@ -135,39 +134,45 @@ async function signer_balance_nfts(reset=false) {
 }
 
 /* Blockchain getters */
-async function mint_price_bc(){
+async function _MINT_PRICE(){
     var num = await contract.PRICE_ETH();
-    return parseFloat(ethers.utils.formatEther(num));
+    MINT_PRICE = parseFloat(ethers.utils.formatEther(num));
 }
 
-async function gen0_supply_bc(){
-    var num = await contract.GEN0_SUPPLY();
-    return num.toNumber();
+async function MINT_TIMESTAMPS() {
+    if(WL_MINT_TIMESTAMP<=0){
+        WL_MINT_TIMESTAMP = await contract.WL_MINT_TIMESTAMP();
+        WL_MINT_TIMESTAMP = WL_MINT_TIMESTAMP.toNumber();
+    }
+    if(MINT_TIMESTAMP<=0){
+        MINT_TIMESTAMP = await contract.MINT_TIMESTAMP();
+        MINT_TIMESTAMP = MINT_TIMESTAMP.toNumber();
+    }
 }
 
-async function gen1_supply_bc(){
-    var num = await contract.GEN1_SUPPLY();
-    return num.toNumber();
-}
-
-async function nb_minted_bc(){
+async function _NB_MINTED(){
     var num = await contract.totalSupply();
-    return num.toNumber();
+    NB_MINTED = num.toNumber();
+    if(GEN0_SUPPLY==0){
+        var gen0s = await contract.GEN0_SUPPLY();
+        GEN0_SUPPLY = gen0s.toNumber();
+    }
+    if(GEN1_SUPPLY==0){
+        var gen1s = await contract.GEN1_SUPPLY();
+        GEN1_SUPPLY = gen1s.toNumber();
+    }
+    gen0_soldout = NB_MINTED >= GEN0_SUPPLY;
+    gen1_soldout = NB_MINTED >= GEN0_SUPPLY+GEN1_SUPPLY;
+    gen_number = gen0_soldout ? 1 : 0;
 }
 
-async function max_mint_bc(){
-    var num_maxmint = await contract.MAX_MINT();
-    var num_minted = await nb_minted_bc();
-    var num_gen0supply = await gen0_supply_bc();
-    num_maxmint = num_maxmint.toNumber();
-
-    // If gen0 is still active, we need to make sure to return the max between left to mint and MAX_MINT.
-    if(num_minted < num_gen0supply){
-        return Math.min(num_gen0supply - num_minted, num_maxmint);
-    } else {
-        return num_maxmint;
-    }    
+async function load_contract_vars() {
+    _MINT_PRICE();
+    MINT_TIMESTAMPS();
+    _NB_MINTED();
 }
+
+web3_init();
 
 async function lastBlock(){
     _block = await provider.getBlockNumber();
@@ -183,16 +188,18 @@ async function newBlock(){
     // Does nothing. Override it in specific JS file
 }
 
-var _minted_tokens = [];
-async function get_minted_tokens() {
-    // TODO : Create solidity function and bind here
+async function is_minted(_token_hash) {
+    var _r = await contract.MintedHash(_token_hash);
+    return _r;
 }
 
-function is_minted(_token_hash) {
-    return _minted_tokens.includes(_token_hash);
-}
-
-function wl_passed() {
+async function wl_passed() {
+    if(MINT_TIMESTAMP==-1 || WL_MINT_TIMESTAMP==-1) {
+        await MINT_TIMESTAMPS();
+    }
+    if(MINT_TIMESTAMP==0 || WL_MINT_TIMESTAMP==0) {
+        return false;
+    }
     return new Date(WL_MINT_TIMESTAMP * 1000) <= new Date();
 }
 
@@ -342,7 +349,6 @@ async function populate_web3_actions(){
 }
 
 $("#web3_status").hover(async function(e){
-    console.log(e);
     if(e.type == 'mouseleave') {
         $("#logout.lightmode").css('filter','invert(1)');
     } else {
@@ -429,11 +435,8 @@ function dataURItoBlob(dataURI) {
 // Determines current gen by getting number of minted NFTs.
 // Updates UI accordignly
 async function determineGen() {
-    NB_MINTED = await nb_minted_bc();
+    await _NB_MINTED();
     $('#span_nb_minted').text(NB_MINTED);
-    gen0_soldout = NB_MINTED >= GEN0_SUPPLY;
-    gen1_soldout = NB_MINTED >= GEN0_SUPPLY+GEN1_SUPPLY;
-    gen_number = gen0_soldout ? 1 : 0;
 
     if(!gen0_soldout) {
         $('.gen1only').addClass('disabled');

@@ -32,10 +32,10 @@ const RPC_SCAN_URL = "https://ropsten.etherscan.io";
 //const RPC = "https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161" // ETH Mainnet
 //const CHAIN_ID = 1; // ETH Mainnet
 // const RPC_SCAN_URL = "https://etherscan.io";
-const CONTRACT_ADDRESS = '0x4b3b9d84338B7132c669602F7DbCA00aa1035C5C';
+const CONTRACT_ADDRESS = '0xd122555B29851e03cE0d32DE96b274ef492ba43e';
 
 // Tickets
-const CONTRACT_ADDRESS_TICKETS = '0x76DC81EC31bC4Bc9a27989C601F07FA407233D01';
+const CONTRACT_ADDRESS_TICKETS = '0x30351B307D4A54335a5a45D984c863aE78B43032';
 const ABI_TICKETS = ["function balanceOf(address) view returns (uint)"];
 
 // Ethers.js
@@ -72,6 +72,9 @@ const ABI = [
   "function SaleIsActive() public view returns (bool)",
   "function mint(string[2] memory _msgs, bytes32[4] memory _hashs_r_s, uint8[2] memory _v, bytes32[] calldata _proof) public payable",
 
+  // Security
+  "function MintedHash(string memory _hash) public view returns(bool)",
+
   // Only for owner, remove later
   "function withdraw()",
 
@@ -96,12 +99,12 @@ var proj_reveal_date = "Reveal : ";
 var date_format_options = {year: "numeric", month: 'short', day: 'numeric', hour:'2-digit',minute:'2-digit', timeZone: 'UTC', timeZoneName:'short'};
 
 // Variables declaration
-var MINT_PRICE = 0.09;
+var MINT_PRICE = 0;
 var MAX_MINT = 1;
-var GEN0_SUPPLY = 10;
-var GEN1_SUPPLY = 40;
-var WL_MINT_TIMESTAMP = 1645437000; // lundi 21 février 2022 10:50:00 GMT+01:00
-var MINT_TIMESTAMP = WL_MINT_TIMESTAMP + 600;
+var GEN0_SUPPLY = 0;
+var GEN1_SUPPLY = 0;
+var WL_MINT_TIMESTAMP = -1;
+var MINT_TIMESTAMP = -1;
 
 var NB_MINTED;
 var gen0_soldout;

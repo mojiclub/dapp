@@ -351,7 +351,7 @@ function HideSoldOutTraits(reset=false) {
 var _verify_traits;
 async function verifyTraits(RetryIfError=true) {
     var _tkn_hash = traits_enabled_hash();
-    var token_minted = is_minted(traits_enabled_hash(_tkn_hash));
+    var token_minted = await is_minted(_tkn_hash);
     if(token_minted){
         $('#composer_confirm').addClass('disabled');
         $('#composer_confirm p').text('SAME AVATAR MINTED ALREADY');

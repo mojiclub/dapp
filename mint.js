@@ -44,9 +44,9 @@ function RemoveTrashScrolls(e){
 // We need to check if new things have changed in the contract
 // Overrides newBlock() from base.js
 async function newBlock(){
+    await load_contract_vars();
     await determineGen();
     HideSoldOutTraits(true);
-    get_minted_tokens();
 }
 
 $(document).ready(async function() {
@@ -138,7 +138,7 @@ $(document).ready(async function() {
                     $('#composer_close_div').click();
                     tx_id.wait().then(async function(receipt) {
                         $('#link_'+tx_id.hash+' .tx_status').text('✅');
-                        notify(html_a+"✅ "+sub_tx+"</a>",4);
+                        notify(html_a+"✅ "+sub_tx+"</a>",4); // TODO : Notify something nicer
                         play_done();
                         tx_id = '';
                         tx_pending = false;
@@ -148,6 +148,7 @@ $(document).ready(async function() {
 
                 } catch (error) {
                     notify('Error code '+error.error.code+' ~ '+error.error.message);
+                    // TODO : Notify messages based on fail reason (Fail1, Fail2, Fail3, Fail4)
                 }
             }
         } else {
@@ -163,8 +164,7 @@ $(document).ready(async function() {
             return;
         }
 
-
-        NB_MINTED = await nb_minted_bc();
+        await _NB_MINTED();
         $('#span_nb_minted').text(NB_MINTED);
 
         if(gen1_soldout) {
@@ -178,10 +178,12 @@ $(document).ready(async function() {
 
         if(!SALE_ACTIVE) {
             $('#mint_form').addClass("disabled");
-            if(wl_passed()){
+            var wl_pass = await wl_passed();
+            if(wl_pass){
                 $('#Main_btn p').text("SALE DISABLED TEMPORARILY");
             } else {
                 $('#Main_btn p').text("SALE NOT OPENED YET");
+                $('#mint_dates').show();
             }
             
             return;
@@ -307,19 +309,7 @@ $(document).ready(async function() {
     $('.marquee-content').append(html_marquee);
     $('.marquee-content').append(html_marquee);
 
-    // Pull informations from contract ~ Set to true to get data from blockchain (slows up website loading)
-    // It is better to put constants in the code directly (all are set already in project_constants.js)
-    if(false){
-        //MINT_PRICE = await mint_price_bc();
-        //MAX_MINT = await max_mint_bc();
-        //GEN0_SUPPLY = await gen0_supply_bc();
-        WL_MINT_TIMESTAMP = await contract.WL_MINT_TIMESTAMP();
-        WL_MINT_TIMESTAMP = WL_MINT_TIMESTAMP.toNumber();
-        MINT_TIMESTAMP = WL_MINT_TIMESTAMP + 600;
-        //MINT_TIMESTAMP = await contract.MINT_TIMESTAMP();
-        //MINT_TIMESTAMP = MINT_TIMESTAMP.toNumber();
-    }
-    // If the MAX_MINT is 1 NFT, hide the number input
+    // If the MAX_MINT is >1 NFT, show the number input
     if(MAX_MINT>1){
         $('.mint_amount_container').show();
     }
@@ -333,11 +323,9 @@ $(document).ready(async function() {
     $('#project_description').html(proj_description);
 
     // Mint dates Red box
-    if(WL_MINT_TIMESTAMP==0){
-        $('#wl_mint').text(proj_wl_mint + "TBA");
-        $('#public_mint').text(proj_public_mint + "TBA");
-    } else {
-            d_proj_wl_mint = wl_date_bc();
+    await MINT_TIMESTAMPS();
+    if(WL_MINT_TIMESTAMP>0){
+        d_proj_wl_mint = wl_date_bc();
         d_proj_public_mint = mint_date_bc();
         $('#wl_mint').text(proj_wl_mint + d_proj_wl_mint);
         $('#public_mint').text(proj_public_mint + d_proj_public_mint);
@@ -372,7 +360,7 @@ $(document).ready(async function() {
                 location.reload();
             }
             if(shown) {
-                $('.countdown_container, #mint_dates').show();
+                $('.countdown_container').show();
                 shown = false;
             }
         }, 1000);
