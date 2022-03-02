@@ -21,22 +21,6 @@ var _colors = [
 ];
 document.documentElement.style.setProperty('--main-color', _colors[Math.floor(Math.random()*_colors.length)]);
 
-function lightmode(){
-  document.documentElement.style.setProperty('--main-white', '0,0,0');
-  document.documentElement.style.setProperty('--main-black', '255,255,255');
-  $("#header_logo, #logout").css('filter','invert(1)');
-  $(".accordion").addClass('lightmode');
-  
-
-}
-
-function darkmode(){
-  document.documentElement.style.setProperty('--main-white', '255,255,255');
-  document.documentElement.style.setProperty('--main-black', '0,0,0');
-  $("#header_logo, #logout").css('filter','none');
-  $(".accordion").removeClass('lightmode');
-}
-
 // ----------------------------
 // Contract mint caracteristics
 // ----------------------------

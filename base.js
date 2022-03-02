@@ -2,6 +2,44 @@
 JS_COOKIES = require('js-cookie')
 var web3_session;
 
+// UI 
+
+function lightmode(){
+    document.documentElement.style.setProperty('--main-white', '0,0,0');
+    document.documentElement.style.setProperty('--main-black', '255,255,255');
+    document.getElementById('header_logo').style.filter = 'invert(1)';
+    document.getElementById('logout').style.filter = 'invert(1)';
+    document.getElementById('logout').classList.add('lightmode');
+    var accordions = Array.prototype.filter.call(document.getElementsByClassName('accordion'), function(elem){
+        elem.classList.add('lightmode');
+    });
+    document.getElementById('ui_mode_slider').style.left = '22px';
+    document.getElementById('ui_mode_icon').src = 'sun.svg';
+    JS_COOKIES.set('ui_mode','light');
+}
+
+function darkmode(){
+    document.documentElement.style.setProperty('--main-white', '255,255,255');
+    document.documentElement.style.setProperty('--main-black', '0,0,0');
+    document.getElementById('header_logo').style.filter = 'none';
+    document.getElementById('logout').style.filter = 'none';
+    document.getElementById('logout').classList.remove('lightmode');
+    var accordions = Array.prototype.filter.call(document.getElementsByClassName('accordion'), function(elem){
+        elem.classList.remove('lightmode');
+    });
+    document.getElementById('ui_mode_slider').style.left = '-2px';
+    document.getElementById('ui_mode_icon').src = 'moon.svg';
+    JS_COOKIES.set('ui_mode','dark');
+}
+
+var ui_mode = JS_COOKIES.get('ui_mode');
+if(!ui_mode) {
+    ui_mode = getComputedStyle(document.documentElement).getPropertyValue('--prefers_color_scheme');
+} 
+if(ui_mode=='light') {
+    lightmode();
+}
+
 // Store last TX information
 var tx_id = '';
 var tx_pending = false;
@@ -303,6 +341,15 @@ async function populate_web3_actions(){
     }
 }
 
+$("#web3_status").hover(async function(e){
+    console.log(e);
+    if(e.type == 'mouseleave') {
+        $("#logout.lightmode").css('filter','invert(1)');
+    } else {
+        $("#logout.lightmode").css('filter','invert(0)');
+    }
+});
+
 $("#web3_status").click(async function(){
     if(signer==''){
         $("#web3_status").css("pointer-events","none");
@@ -323,12 +370,9 @@ $('#ui_mode').click(async function(event){
     var left = $('#ui_mode_slider').css('left');
     if (left == '-2px') {
         lightmode();
-        $('#ui_mode_slider').css('left','22px');
-        $('#ui_mode_icon').attr('src','sun.png');
     } else {
         darkmode();
-        $('#ui_mode_slider').css('left','-2px');
-        $('#ui_mode_icon').attr('src','moon.png');
+        
     }
 });
 
