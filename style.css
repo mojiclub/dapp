@@ -563,6 +563,7 @@ body.hasHover #composer_close_div:hover {
 
 input[type="radio"] {
     accent-color: black;
+    margin: 0 5px;
 }
 
 div[class^="div_trait_"], div[class*="div_trait_"] {
