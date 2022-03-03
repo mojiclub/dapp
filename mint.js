@@ -232,7 +232,7 @@ $(document).ready(async function() {
     $(".mint_container").hover(async function() {
         if(!_nft_composer_loaded) {
             _nft_composer_loaded = true;
-            new_user_config(false,true);
+            new_user_config(true,true);
             disableIfMinted();
         }
     });
@@ -292,7 +292,7 @@ $(document).ready(async function() {
     });
 
     $('#avatar_hash_share').click(function(){
-        var _share_url = window.location.href+'?'+share_attr+'='+traits_enabled_hash();
+        var _share_url = window.location.href.split('?')[0]+'?'+share_attr+'='+traits_enabled_hash();
         if(navigator.share) {
             const shareData = {
                 title: 'MojiClub',
@@ -301,7 +301,15 @@ $(document).ready(async function() {
             }
             navigator.share(shareData);
         } else {
-            notify('<p>Share your avatar using the following link :</p><a href="'+_share_url+'">'+_share_url+'</a>');
+            notify('<p>Share your avatar using the following link :</p><a href="'+_share_url+'">'+_share_url+'</a>',10);
+        }
+    });
+
+    $("#avatar_hash_share").hover(async function(e){
+        if(e.type == 'mouseleave') {
+            $("#avatar_hash_share img").css('filter','invert(1)');
+        } else {
+            $("#avatar_hash_share img").css('filter','invert(0)');
         }
     });
 

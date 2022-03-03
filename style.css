@@ -21,7 +21,7 @@ html {
 }
 
 * {
-	transition: background-color 0.4s ease;
+	transition: background-color 0.4s ease, filter 0.5s ease;
 }
 
 body {
@@ -619,12 +619,14 @@ div[class^="div_trait_"], div[class*="div_trait_"] {
     width: 100%;
 }
 
-#avatar_hash_share img {
-		height: 70%;
-    	filter: invert(1);
-	}
 body.hasHover #avatar_hash_share img:hover {
    	filter: none;
+}
+
+#avatar_hash_share img {
+ 	height: 1.5em;
+    margin-right: 1em;
+    filter: invert(1);
 }
 
 #composer_buttons {
@@ -751,6 +753,11 @@ body.hasHover #avatar_hash_share img:hover {
 		padding: 8px 0;
 	    font-size: 24px;
 	}
+	
+	.composer_categorie_title {
+	    margin: 12px 0 12px 12px;
+	}
+
 	.textleftmobile {
 		text-align: left;
 	}
@@ -789,14 +796,9 @@ body.hasHover #avatar_hash_share img:hover {
 	#avatar_config_hash {
 		width: 80%;
 	}
-	#avatar_hash_load, #avatar_hash_copy {
+	#avatar_config .btnn {
 		padding: 0 12px;
 		height: 32px;
-	}
-	#avatar_hash_share {
-		padding: 0;
-		height: 32px;
-		width: 32px;
 	}
 	#mint_dates p {
 	    font-size: 80%;
@@ -833,12 +835,6 @@ body.hasHover #avatar_hash_share img:hover {
 	    -ms-box-shadow: rgb(var(--main-color)) 0px 0px 35px;
 	    -o-box-shadow: rgb(var(--main-color)) 0px 0px 35px;
 	    box-shadow: rgb(var(--main-color)) 0px 0px 35px;
-	}
-
-	/* Share menu usually not available in PCs */
-	#avatar_hash_share {
-		width: 48px;
-    	padding: 0;
 	}
 
 	.fakescrollbar {
