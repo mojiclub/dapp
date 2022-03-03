@@ -710,6 +710,10 @@ div[class^="div_trait_"], div[class*="div_trait_"] {
     letter-spacing: 1px;
 }
 
+.fakescrollbar {
+	overflow: hidden;
+}
+
 @media only screen and (max-device-width: 480px) {
 	#notification {
 		max-width: 250px;
@@ -846,7 +850,6 @@ div[class^="div_trait_"], div[class*="div_trait_"] {
 
 	.fakescrollbar {
 		margin-right: 24px;
-		overflow: hidden;
 	}
 }
 
