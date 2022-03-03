@@ -16,6 +16,10 @@ html {
 	scroll-behavior: smooth;
 }
 
+.testing {
+	display: none;
+}
+
 * {
 	transition: background-color 0.4s ease;
 }
@@ -394,7 +398,7 @@ sep {
     transition: all 0.3s ease;
     position: fixed;
     top: 96px;
-    max-width: 300px;
+    max-width: 500px;
     right: -100vw;
     background: rgb(var(--main-color));
     color: rgb(var(--main-white));
@@ -449,13 +453,24 @@ p.roadmap_num {
     height: 92px;
 }
 
+#nft_composer_header {
+	display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#nft_composer_header > plc {
+	width: 44px;
+	opacity: 0;
+}
+
 #nft_composer {
 	display: none;
 	position: fixed;
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
     background: rgba(var(--main-black),0.4);
-    inset: 24px 12px;
+    inset: 12px;
     margin: auto;
     text-align: center;
     z-index: 99999;
@@ -473,16 +488,13 @@ p.roadmap_num {
 	transform: translateZ(0);
 }
 
-#composer_title {
+#composer_title, #avatar_config > h2 {
 	font-family: Moji, var(--main-fonts);
-    margin-bottom: 8px;
+    margin: 8px 0;
 }
 
 #composer_close_div {
-    position: absolute;
-    top: 16px;
-    margin: 0;
-    right: 16px;
+    margin-right: 8px;
     overflow-wrap: normal;
     background: rgb(var(--main-white));
     color: rgb(var(--main-black));
@@ -565,8 +577,64 @@ div[class^="div_trait_"], div[class*="div_trait_"] {
 	text-transform: uppercase;
 }
 
-#composer_confirm {
-	width: 100%;
+#avatar_config {
+	display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+	z-index: 9999;
+    background: rgba(var(--main-black),0.65);
+    margin: 5%;
+    height: 90%;
+    width: 90%;
+    padding: 8px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+#avatar_config > * {
+	margin: 0;
+}
+
+#avatar_config_hash {
+	border: none;
+    background: rgb(var(--main-black));
+    color: rgb(var(--main-white));
+    margin: 2px;
+    text-align: center;
+    width: 50%;
+}
+
+#avatar_config_traits {
+	max-height: 30%;
+    overflow: auto;
+}
+
+#avatar_config_buttons {
+	display: flex;
+    justify-content: space-evenly;
+    flex-direction: row;
+    width: 100%;
+}
+
+#avatar_hash_share img {
+		height: 70%;
+    	filter: invert(1);
+	}
+#avatar_hash_share img:hover {
+   	filter: none;
+}
+
+#composer_buttons {
+	display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+}
+
+#composer_buttons > .btnn {
+	width: 48%;
 	padding: 0;
 }
 
@@ -643,6 +711,9 @@ div[class^="div_trait_"], div[class*="div_trait_"] {
 }
 
 @media only screen and (max-device-width: 480px) {
+	#notification {
+		max-width: 250px;
+	}
 	::-webkit-scrollbar {
 	  width: 6px;
 	}
@@ -694,12 +765,41 @@ div[class^="div_trait_"], div[class*="div_trait_"] {
 	#canvas_div{
 		height: 80vw;
 	}
+	#composer_title {
+	    font-size: 130%;
+	}
 	#composer_preview {
 		flex-direction: column;
 		align-items: center;
 	}
 	#composer_traits_selector {
 		height: calc(100vh - 80vw - 250px);
+		margin-bottom: 8px;
+	}
+	#composer_buttons {
+		flex-direction: column;
+	}
+	#composer_buttons > .btnn {
+		margin-top: 4px;
+		width: 100%;
+	}
+	#avatar_config {
+	    margin: 0;
+	    height: 100%;
+	    width: 100%;
+	    font-size: 60%;
+	}
+	#avatar_config_hash {
+		width: 80%;
+	}
+	#avatar_hash_load, #avatar_hash_copy {
+		padding: 0 12px;
+		height: 32px;
+	}
+	#avatar_hash_share {
+		padding: 0;
+		height: 32px;
+		width: 32px;
 	}
 	#mint_dates p {
 	    font-size: 80%;
@@ -736,6 +836,17 @@ div[class^="div_trait_"], div[class*="div_trait_"] {
 	    -ms-box-shadow: rgb(var(--main-color)) 0px 0px 35px;
 	    -o-box-shadow: rgb(var(--main-color)) 0px 0px 35px;
 	    box-shadow: rgb(var(--main-color)) 0px 0px 35px;
+	}
+
+	/* Share menu usually not available in PCs */
+	#avatar_hash_share {
+		width: 48px;
+    	padding: 0;
+	}
+
+	.fakescrollbar {
+		margin-right: 24px;
+		overflow: hidden;
 	}
 }
 

@@ -1,26 +1,41 @@
 // Set a random color each time website is loaded
 var _colors = [
   '154, 220, 255',
-  '255, 178, 166',
-  '255, 138, 174',
   '21, 114, 161',
-  '154, 208, 236',
-  '227, 190, 198',
-  '198, 213, 126',
-  '213, 126, 126',
-  '162, 205, 205',
   '89, 2, 236',
-  '224, 77, 176',
-  '210, 39, 121',
-  '97, 40, 151',
   '12, 30, 127',
+  '97, 40, 151',
+  '210, 39, 121',
+  '224, 77, 176',
+  '224, 93, 93',
+  '155, 0, 0',
+  '135, 100, 69',
+  '255, 138, 174',
+  '255, 204, 41',
+  '213, 126, 126',
   '14, 145, 140',
-  '150, 206, 180',
-  '0, 161, 157',
-  '224, 93, 93'
+  '101, 193, 140'
 ];
-document.documentElement.style.setProperty('--main-color', _colors[Math.floor(Math.random()*_colors.length)]);
 
+var _main_color = Math.floor(Math.random()*_colors.length);
+function _setColor(_i=-1,_col='240, 201, 41') {
+  if(_i==-1){
+    document.documentElement.style.setProperty('--main-color', _col);
+  } else {
+    document.documentElement.style.setProperty('--main-color', _colors[_i]);
+  }
+}
+_setColor(_main_color);
+
+// URL parameters
+var share_attr = 'avatarshare';
+const queryString = window.location.search;
+const urlParams = new URLSearchParams(queryString);
+
+var _tab_active = true;
+var _composer_on = false;
+var _avatar_config_on = false;
+var _inputChangeTmpDisable = false;
 // ----------------------------
 // Contract mint caracteristics
 // ----------------------------

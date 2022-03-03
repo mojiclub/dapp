@@ -273,14 +273,14 @@ function build_dialog_from_traits() {
     var _idx = 0;
     for (const _categorie of _categories) {
         var trait_categorie = _categories_titles[_idx].replace(' ','-').replace(')','-').replace('(','-').replace(' ','-');
-        html_append += '<h4 id="composer_categorie_title_'+_idx+'" class="composer_categorie_title accordion">'+_categories_titles[_idx]+'</h4><div class="div_categorie_'+_idx+' rounded accordion_panel">';
+        html_append += '<h4 data-categorie="'+_idx+'" id="composer_categorie_title_'+_idx+'" class="composer_categorie_title accordion">'+_categories_titles[_idx]+'</h4><div data-categorie="'+_idx+'" class="div_categorie div_categorie_'+_idx+' rounded accordion_panel">';
 
         for (const _trait of _categorie) {
             var trait_name = _trait[2].replace(' ','-').replace('~','-').replace(')','-').replace('(','-').replace(' ','-');
 
             var radio_id = trait_categorie+'_'+trait_name;
-            var radio = '<div class="div_trait_'+_trait[0]+'"><input type="radio" name="'+trait_categorie+'" id="'+radio_id+'" data-trait="'+_trait[0]+'">';
-            var label = '<label for="'+radio_id+'" data-trait="'+_trait[0]+'">'+_trait[2]+'</label></div>';
+            var radio = '<div class="div_trait_'+_trait[0]+' rounded"><input type="radio" name="'+trait_categorie+'" id="'+radio_id+'" data-trait="'+_trait[0]+'">';
+            var label = '<label data-catname="'+_categories_titles[_idx]+'" for="'+radio_id+'" data-trait="'+_trait[0]+'">'+_trait[2]+'</label></div>';
             html_append += (radio+label);
         }
         html_append += '</div>';
@@ -347,18 +347,26 @@ function HideSoldOutTraits(reset=false) {
     }
 }
 
-// This function verifies if the enabled traits are all available to mint and stores the result in '_verify_traits'
-var _verify_traits;
-async function verifyTraits(RetryIfError=true) {
+async function disableIfMinted() {
     var _tkn_hash = traits_enabled_hash();
     var token_minted = await is_minted(_tkn_hash);
     if(token_minted){
         $('#composer_confirm').addClass('disabled');
-        $('#composer_confirm p').text('SAME AVATAR MINTED ALREADY');
-        return;
+        $('#composer_confirm p').text('AVATAR MINTED ALREADY');
     } else {
         $('#composer_confirm p').text('MINT MY AVATAR NOW');
         $('#composer_confirm').removeClass('disabled');
+    }
+    return token_minted;
+}
+
+// This function verifies if the enabled traits are all available to mint and stores the result in '_verify_traits'
+var _verify_traits;
+async function verifyTraits(RetryIfError=true) {
+    var _tkn_hash = traits_enabled_hash();
+    var token_minted = await disableIfMinted();
+    if(token_minted){
+        return;
     }
 
     var xhr = new XMLHttpRequest();
@@ -419,6 +427,20 @@ function update_dependencies() {
     _disable_categorie_by_condition(!_wears_jacket(),'Jacket Elements');
 }
 
+function update_traits_text() {
+    var _ids = _get_enabled_traits_ids();
+    var _traits_names = [];
+    for(const _trait of _ids) {
+        var _label = $('label[data-trait="'+_trait+'"]');
+        var _tr_name = _label.text();
+        var _tr_cat = _label.data('catname');
+        if(_tr_name!='None') {
+            _traits_names.push(_tr_cat+': '+_tr_name);
+        }
+    }
+    $('#avatar_config_traits').text(_traits_names.join(', '));
+}
+
 const loadImage = src =>
   new Promise((resolve, reject) => {
     const img = new Image();
@@ -463,6 +485,8 @@ async function new_user_config(_verify=true, _hide=false) {
     // Draw NFT based on selected traits
     drawPreview(getImagesFromTraits());
 
+    $('#avatar_config_hash').val(traits_enabled_hash());
+
     if(_verify){
         // Verify and disable traits that are newly unavailable
         verifyTraits();
@@ -476,6 +500,9 @@ async function new_user_config(_verify=true, _hide=false) {
     // Update enable/disable categories based on traits currently active
     // Example : Disable hair color if no haircut is selected
     update_dependencies();
+
+    // Update traits in avatar config dialog
+    update_traits_text();
 }
 
 $(document).ready(function(){
@@ -489,6 +516,9 @@ $(document).ready(function(){
 
     // Triggered by user selection of trait
     $('#composer_traits_selector input[type="radio"]').change(async function(){
+        if(_inputChangeTmpDisable) {
+            return;
+        }
         new_user_config();
     });
 });

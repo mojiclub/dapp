@@ -40,6 +40,34 @@ if(ui_mode=='light') {
     lightmode();
 }
 
+// Triggered anytime the window loses focus, for example :
+// Clicking the address bar, the web console, switching tab, selecting another OS window)
+window.addEventListener('blur', function (event) {
+    //var s = 'tab not active anymore'+new Date().toISOString();
+    _tab_active = true;
+    //console.log(s);
+    //$('.mint_container').append('<p>'+s+'</p>');
+});
+
+// Triggered anytime the window gets focus back
+window.addEventListener('focus', function (event) {
+    //var s = 'tab now active'+new Date().toISOString();
+    _tab_active = true;
+    //console.log(s);
+    //$('.mint_container').append('<p>'+s+'</p>');
+});
+
+// Testing stuff
+var _col_list = '<div class="testing">'
+for(const col of _colors){
+    _col_list += '<div onclick="_setColor('
+        +_colors.indexOf(col)
+        +')" style="height:32px;width:100%;background-color:rgb('
+        +col+');font-weight:bold;">'
+        +(_colors.indexOf(col)+1)+'</div>';
+}
+$('.mint_container').append(_col_list+'</div>');
+
 // Store last TX information
 var tx_id = '';
 var tx_pending = false;
@@ -188,9 +216,18 @@ async function newBlock(){
     // Does nothing. Override it in specific JS file
 }
 
+var _minted_tokens = [];
 async function is_minted(_token_hash) {
-    var _r = await contract.MintedHash(_token_hash);
-    return _r;
+    if(_minted_tokens.includes(_token_hash)) {
+        return true;
+    }
+    var _r0 = await contract.MintedHash(_token_hash+";0");
+    var _r1 = await contract.MintedHash(_token_hash+";1");
+    if(_r0 || _r1) {
+        _minted_tokens.push(_token_hash);
+        return true;
+    }
+    return false;
 }
 
 async function wl_passed() {
@@ -430,6 +467,34 @@ function dataURItoBlob(dataURI) {
         ia[i] = byteString.charCodeAt(i);
     }
     return new Blob([ab], {type: mimeString});
+}
+
+function isAlphaNumeric(str) {
+    var code, i, len;
+
+    for (i = 0, len = str.length; i < len; i++) {
+        code = str.charCodeAt(i);
+        if (!(code > 47 && code < 58) && // numeric (0-9)
+            !(code > 64 && code < 91) && // upper alpha (A-Z)
+            !(code > 96 && code < 123)) { // lower alpha (a-z)
+                return false;
+        }
+    }
+    return true;
+}
+
+function parseBigInt(
+    numberString,
+    keyspace = "0123456789abcdefghijklmnopqrstuvwxyz",
+) {
+    let result = 0n;
+    const keyspaceLength = BigInt(keyspace.length);
+    for (let i = numberString.length - 1; i >= 0; i--) {
+        const value = keyspace.indexOf(numberString[i]);
+        if (value === -1) throw new Error("invalid string");
+        result = result * keyspaceLength + BigInt(value);
+    }
+    return result;
 }
 
 // Determines current gen by getting number of minted NFTs.

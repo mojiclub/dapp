@@ -25,28 +25,15 @@ function getImagesFromTraits() {
     // TODO : Get image for each trait in _enabled_traits to generate real preview
 }
 
-function RemoveTrashScrolls(e){
-    var n1 = e.target != document.getElementById('nft_composer');
-    var n2 = e.target != document.getElementById('preview_canvas');
-    var n3 = e.target != document.getElementById('composer_confirm');
-    var n4 = e.target != document.getElementById('composer_preview');
-    var n5 = e.target != document.getElementById('composer_left');
-    var n6 = e.target.tagName != 'H2' &&  e.target.tagName != 'P';
-    if(n1 && n2 && n3 && n4 && n5 && n6){
-        console.log(e.target);
-    } else {
-        e.preventDefault();
-    }
-    e.stopPropagation();
-}
-
 // Triggered when new block has been mined.
 // We need to check if new things have changed in the contract
 // Overrides newBlock() from base.js
 async function newBlock(){
     await load_contract_vars();
     await determineGen();
-    HideSoldOutTraits(true);
+    if(_tab_active) {
+        HideSoldOutTraits(true);
+    }
 }
 
 $(document).ready(async function() {
@@ -172,8 +159,11 @@ $(document).ready(async function() {
             $('#Main_btn p').text("SOLD OUT");
             return;
         } else {
-            $('#composer_confirm').removeClass("disabled");
-            $('#composer_confirm p').text("MINT MY AVATAR NOW");
+            var token_minted = await disableIfMinted();
+            if(!token_minted) {
+                $('#composer_confirm').removeClass("disabled");
+                $('#composer_confirm p').text("MINT MY AVATAR NOW");
+            }
         }
 
         if(!SALE_ACTIVE) {
@@ -243,9 +233,10 @@ $(document).ready(async function() {
         if(!_nft_composer_loaded) {
             _nft_composer_loaded = true;
             new_user_config(false,true);
+            disableIfMinted();
         }
     });
-
+    
     $("#Main_btn").click(async function() {
         if(gen1_soldout) {
             notify("SOLD OUT");
@@ -255,25 +246,105 @@ $(document).ready(async function() {
         $(".mint_container").trigger('hover');
 
         $('#nft_composer').fadeIn(250);
-        $('body').css('overflow','hidden');
-        //$('#nft_composer').bind('mousewheel wheel onwheel touchmove DOMMouseScroll keydown', RemoveTrashScrolls);
+        _composer_on = true;
+        $('body, #web3_status, #web3_actions, #notification').addClass('fakescrollbar');
     });
 
     $('#composer_close_div').click(function() {
         $('#nft_composer').fadeOut(250);
-        $('body').css('overflow','auto');
-        //$('#nft_composer').unbind('mousewheel wheel onwheel touchmove DOMMouseScroll keydown');
+        _composer_on = false;
+        $('body, #web3_status, #web3_actions, #notification').removeClass('fakescrollbar');
     });
 
     $('#composer_confirm').click(async function() {
-
         if(signer==''){
             $("#web3_status").trigger("click");
             return;
         }
-
         mint();  
     });
+
+    $('#avatar_config').hide();
+    $('#composer_config').click(async function() {
+        if(_avatar_config_on) {
+            _avatar_config_on = false;
+            $('#composer_config p span').text("SHOW");
+            $('#avatar_config').fadeOut(250);
+        } else {
+            _avatar_config_on = true;
+            $('#composer_config p span').text("HIDE");
+            $('#avatar_config').fadeIn(250);
+        }
+    });
+
+    $('#avatar_hash_load').click(async function() {
+        loadFromHash($('#avatar_config_hash').val());
+    });
+
+    $('#avatar_hash_copy').click(async function() {
+        var _input = document.createElement("input");
+        _input.value = document.getElementById('avatar_config_hash').value;
+        document.body.appendChild(_input);
+        _input.select();
+        document.execCommand("copy");
+        document.body.removeChild(_input);
+        notify("COPIED TO CLIPBOARD !");
+    });
+
+    $('#avatar_hash_share').click(function(){
+        var _share_url = window.location.href+'?'+share_attr+'='+traits_enabled_hash();
+        if(navigator.share) {
+            const shareData = {
+                title: 'MojiClub',
+                text: 'Look at my Moji Club avatar !',
+                url: _share_url
+            }
+            navigator.share(shareData);
+        } else {
+            notify('<p>Share your avatar using the following link :</p><a href="'+_share_url+'">'+_share_url+'</a>');
+        }
+    });
+
+    async function loadFromHash(_hash){
+        if(!isAlphaNumeric(_hash)) {
+            notify("INVALID HASH ENTERED");
+            return;
+        }
+        var _bin = parseBigInt(_hash.split("").reverse().join("")).toString(2);
+        for(i=_bin.length; i<nb_traits; i++){
+            _bin = '0'+_bin;
+        }
+        
+
+        // temporarly disable handling of inputs changes
+        _inputChangeTmpDisable = true;
+        // Select either first or "None" trait for each category
+        $('#composer_traits_selector .div_categorie').each(function() {
+            $(this).find('input[type="radio"]').first().click();
+        });
+
+        var _traitId = 1;
+        for(const ch of _bin) {
+            if(ch=='1'){
+                var _input = $('input[data-trait="'+_traitId+'"]');
+                var _cat = _input.closest('.div_categorie').data('categorie');
+                _input.click();
+                $('h4[data-categorie="'+_cat+'"]:not(.active)').click();
+                _input.closest('div').css('background','rgba(var(--main-color),0.7)');
+            }
+            _traitId++;
+        }
+        _inputChangeTmpDisable = false;
+        await new_user_config();
+        var _txt = $("#avatar_hash_load").text();
+        $("#avatar_hash_load").text("AVATAR LOADED");
+        setTimeout(function(){
+            $("#avatar_hash_load").text(_txt);
+        },2000);
+        setTimeout(function(){
+            $('input[type="radio"]').closest('div').css('background','none');
+        },5000);
+    }
 
     /* USER INTERFACE */
 
@@ -368,5 +439,18 @@ $(document).ready(async function() {
     }
 
     $(".wallet_sensitive").trigger('walletchanged');
+
+    // Sharing feature
+    var shared_avatar_hash = urlParams.get(share_attr);
+    if(shared_avatar_hash) {
+        setTimeout(async function() {
+            $("#Main_btn").trigger('click');
+            setTimeout(function() {
+                $('#avatar_config_hash').val(shared_avatar_hash);
+                $('#avatar_hash_load').trigger('click');
+                $('#composer_config').trigger('click');
+            },1000);
+        },1000);
+    }
 });
 
