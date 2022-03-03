@@ -474,7 +474,7 @@ p.roadmap_num {
     margin: auto;
     text-align: center;
     z-index: 99999;
-    padding: 16px;
+    padding: 6px 16px 16px 16px;
     box-shadow: rgb(var(--main-color)) 0px 0px 165px;
     -webkit-box-shadow: rgb(var(--main-color)) 0px 0px 165px;
     -moz-box-shadow: rgb(var(--main-color)) 0px 0px 165px;
@@ -623,6 +623,10 @@ body.hasHover #avatar_hash_share img:hover {
    	filter: none;
 }
 
+#avatar_hash_share {
+	width: max-content;
+}
+
 #avatar_hash_share img {
  	height: 1.5em;
     margin-right: 1em;
@@ -753,7 +757,7 @@ body.hasHover #avatar_hash_share img:hover {
 		padding: 8px 0;
 	    font-size: 24px;
 	}
-	
+
 	.composer_categorie_title {
 	    margin: 12px 0 12px 12px;
 	}
