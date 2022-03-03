@@ -2,7 +2,11 @@
 JS_COOKIES = require('js-cookie')
 var web3_session;
 
-// UI 
+// UI
+function disableHover() {
+    document.body.classList.remove('hasHover');
+}
+document.addEventListener('touchstart', disableHover, true)
 
 function lightmode(){
     document.documentElement.style.setProperty('--main-white', '0,0,0');

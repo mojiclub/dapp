@@ -327,7 +327,7 @@ a {
 	transition: background-color 0.2s ease, color 0.3s ease, transform .2s
 }
 
-#nb_mint_plus:hover, #nb_mint_minus:hover, #menu a:hover, .btnn:hover {
+body.hasHover #nb_mint_plus:hover, body.hasHover #nb_mint_minus:hover, body.hasHover #menu a:hover, body.hasHover .btnn:hover {
   color: rgb(var(--main-black));
   background: rgb(var(--main-white));
 }
@@ -515,7 +515,7 @@ p.roadmap_num {
     height: 36px;
 }
 
-#composer_close_div:hover {
+body.hasHover #composer_close_div:hover {
 	filter: invert(1);
 }
 
@@ -622,7 +622,7 @@ div[class^="div_trait_"], div[class*="div_trait_"] {
 		height: 70%;
     	filter: invert(1);
 	}
-#avatar_hash_share img:hover {
+body.hasHover #avatar_hash_share img:hover {
    	filter: none;
 }
 
@@ -668,15 +668,7 @@ div[class^="div_trait_"], div[class*="div_trait_"] {
 	filter: invert(1) brightness(1.5);
 }
 
-/*
-.accordion:hover {
-	color: rgb(var(--main-color));
-}
 
-.accordion:hover:after {
-	background-color: rgb(var(--main-color));
-}
-*/
 .accordion.active:after {
 	content: "\2796";
 }
