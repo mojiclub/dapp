@@ -31,6 +31,7 @@ _setColor(_main_color);
 var share_attr = 'avatarshare';
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
+var params_shared_avatar_hash = urlParams.get(share_attr);
 
 var _tab_active = true;
 var _composer_on = false;
@@ -101,10 +102,6 @@ var CURRENT_BLOCK;
 var proj_top_images = [];
 var imgList = document.querySelectorAll('.top_images.deskonly img');
 for(elem of imgList) {proj_top_images.push(elem.src);}
-
-// Project name and description
-var proj_name = "The Moji Club";
-var proj_description = "is a collection of unique personnalized avatars with traits <b>unique to you</b>. Mint yours and make it look like you!";
 
 // Listing date and details
 var proj_wl_mint = "Mint for WL users : ";

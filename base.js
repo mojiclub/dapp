@@ -512,10 +512,10 @@ async function determineGen() {
     $('#span_nb_minted').text(NB_MINTED);
 
     if(!gen0_soldout) {
-        $('.gen1only').addClass('disabled');
         $('#p_mint_price').text(MINT_PRICE + " Ξ");
         $('#span_total_supply').text(GEN0_SUPPLY); 
     } else {
+        $('.gen1only').css('display','block');
         $('#p_mint_price').text("1 $MJCC");
         $('#span_total_supply').text(GEN0_SUPPLY+GEN1_SUPPLY);
     }

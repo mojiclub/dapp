@@ -329,10 +329,6 @@ $(document).ready(async function() {
     SALE_ACTIVE = await SaleIsActive();
     $(".wallet_sensitive").trigger('walletchanged');
 
-    // Mint page Project name and description
-    $('#project_name').text(proj_name);
-    $('#project_description').html(proj_description);
-
     // Mint dates Red box
     await MINT_TIMESTAMPS();
     if(WL_MINT_TIMESTAMP>0){

@@ -1,6 +1,3 @@
-// NFT composer variables
-var nb_traits = 141;
-
 traits_lst = {
     1:["Skin Color","Light beige"],
     2:["Skin Color","Beige"],
@@ -170,9 +167,16 @@ traits_lst = {
     139:["On mouth", "Bubble Gum (Pale blue)"],
     140:["On mouth", "Bubble Gum (Pale green)"],
     141:["On mouth", "Bubble Gum (Pale yellow)"],
+
+    10012:["Mask", "None"],
+    142:["Mask", "Surgical mask (White)"],
+    143:["Mask", "Surgical mask (Moji Club)"],
 }
 
-var default_traits = [3,8,12,15,39,43,10001,10002,10003,10004,10005,10006,10007,10008,10009,10010,10011];
+// NFT composer variables
+var nb_traits = 143;
+
+var default_traits = [3,8,12,15,39,43,10001,10002,10003,10004,10005,10006,10007,10008,10009,10010,10011,10012];
 
 // Get an array containing all traits enabled in the configurator
 function _get_enabled_traits_ids() {
@@ -535,12 +539,11 @@ $(document).ready(function(){
     build_dialog_from_traits();
 
     // Sharing feature
-    var shared_avatar_hash = urlParams.get(share_attr);
-    if(shared_avatar_hash) {
+    if(params_shared_avatar_hash) {
         setTimeout(async function() {
             $("#Main_btn").trigger('click');
             setTimeout(function() {
-                loadFromHash(shared_avatar_hash);
+                loadFromHash(params_shared_avatar_hash);
             },1000);
         },1000);
     } else {
