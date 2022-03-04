@@ -69,7 +69,6 @@ body {
 #ui_mode_icon {
 	height: 20px;
 	width: 20px;
-	filter: invert(1);
 	margin: 2px;
 }
 
@@ -409,6 +408,7 @@ sep {
 }
 
 #notification p {
+	color: white;
 	margin: 0;
 }
 
@@ -488,7 +488,7 @@ p.roadmap_num {
 	transform: translateZ(0);
 }
 
-#composer_title, #avatar_config > h2 {
+#composer_title {
 	font-family: Moji, var(--main-fonts);
     margin: 8px 0;
 }
@@ -516,7 +516,7 @@ p.roadmap_num {
 }
 
 body.hasHover #composer_close_div:hover {
-	filter: invert(1);
+	filter: invert(0.4);
 }
 
 #composer_preview {
@@ -568,6 +568,8 @@ input[type="radio"] {
 
 div[class^="div_trait_"], div[class*="div_trait_"] {
     margin: 8px;
+    display: flex;
+    align-items: center;
 }
 
 .composer_categorie_title, #composer_traits_selector div {
@@ -578,51 +580,6 @@ div[class^="div_trait_"], div[class*="div_trait_"] {
 	text-transform: uppercase;
 }
 
-#avatar_config {
-	display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-around;
-	z-index: 9999;
-    background: rgba(var(--main-black),0.65);
-    margin: 5%;
-    height: 90%;
-    width: 90%;
-    padding: 8px;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-}
-
-#avatar_config > * {
-	margin: 0;
-}
-
-#avatar_config_hash {
-	border: none;
-    background: rgb(var(--main-black));
-    color: rgb(var(--main-white));
-    margin: 2px;
-    text-align: center;
-    width: 50%;
-}
-
-#avatar_config_traits {
-	max-height: 30%;
-    overflow: auto;
-}
-
-#avatar_config_buttons {
-	display: flex;
-    justify-content: space-evenly;
-    flex-direction: row;
-    width: 100%;
-}
-
-body.hasHover #avatar_hash_share img:hover {
-   	filter: none;
-}
-
 #avatar_hash_share {
 	width: max-content;
 }
@@ -630,7 +587,6 @@ body.hasHover #avatar_hash_share img:hover {
 #avatar_hash_share img {
  	height: 1.5em;
     margin-right: 1em;
-    filter: invert(1);
 }
 
 #composer_buttons {
@@ -790,19 +746,6 @@ body.hasHover #avatar_hash_share img:hover {
 	#composer_buttons > .btnn {
 		margin-top: 4px;
 		width: 100%;
-	}
-	#avatar_config {
-	    margin: 0;
-	    height: 100%;
-	    width: 100%;
-	    font-size: 60%;
-	}
-	#avatar_config_hash {
-		width: 80%;
-	}
-	#avatar_config .btnn {
-		padding: 0 12px;
-		height: 32px;
 	}
 	#mint_dates p {
 	    font-size: 80%;

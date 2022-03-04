@@ -34,7 +34,6 @@ const urlParams = new URLSearchParams(queryString);
 
 var _tab_active = true;
 var _composer_on = false;
-var _avatar_config_on = false;
 var _inputChangeTmpDisable = false;
 // ----------------------------
 // Contract mint caracteristics
@@ -124,5 +123,5 @@ var MINT_TIMESTAMP = -1;
 var NB_MINTED;
 var gen0_soldout;
 var gen1_soldout;
-var gen_number;
+var gen_number = -1;
 var SALE_ACTIVE;

@@ -354,7 +354,7 @@ async function disableIfMinted() {
         $('#composer_confirm').addClass('disabled');
         $('#composer_confirm p').text('AVATAR MINTED ALREADY');
     } else {
-        $('#composer_confirm p').text('MINT MY AVATAR NOW');
+        $('#composer_confirm p').text('MINT AVATAR');
         $('#composer_confirm').removeClass('disabled');
     }
     return token_minted;
@@ -370,6 +370,9 @@ async function verifyTraits(RetryIfError=true) {
     }
 
     var xhr = new XMLHttpRequest();
+    if(gen_number==-1) {
+        await _NB_MINTED();
+    }
     xhr.open("GET", 'https://www.dekefake.duckdns.org:62192/verify/'+_tkn_hash+';'+gen_number, false);
     xhr.setRequestHeader('Accept', 'application/json');
     xhr.send();
@@ -427,20 +430,6 @@ function update_dependencies() {
     _disable_categorie_by_condition(!_wears_jacket(),'Jacket Elements');
 }
 
-function update_traits_text() {
-    var _ids = _get_enabled_traits_ids();
-    var _traits_names = [];
-    for(const _trait of _ids) {
-        var _label = $('label[data-trait="'+_trait+'"]');
-        var _tr_name = _label.text();
-        var _tr_cat = _label.data('catname');
-        if(_tr_name!='None') {
-            _traits_names.push(_tr_cat+': '+_tr_name);
-        }
-    }
-    $('#avatar_config_traits').text(_traits_names.join(', '));
-}
-
 const loadImage = src =>
   new Promise((resolve, reject) => {
     const img = new Image();
@@ -479,13 +468,52 @@ async function drawPreview(_images){
     return c.toDataURL("image/jpeg");
 }
 
+async function loadFromHash(_hash){
+    if(!isAlphaNumeric(_hash)) {
+        notify("INVALID HASH ENTERED");
+        return;
+    }
+    var _bin = parseBigInt(_hash.split("").reverse().join("")).toString(2);
+    for(i=_bin.length; i<nb_traits; i++){
+        _bin = '0'+_bin;
+    }
+        
+
+    // temporarly disable handling of inputs changes
+    _inputChangeTmpDisable = true;
+    // Select either first or "None" trait for each category
+    $('#composer_traits_selector .div_categorie').each(function() {
+        $(this).find('input[type="radio"]').first().click();
+    });
+
+    var _traitId = 1;
+    for(const ch of _bin) {
+        if(ch=='1'){
+            var _input = $('input[data-trait="'+_traitId+'"]');
+            var _cat = _input.closest('.div_categorie').data('categorie');
+            _input.click();
+            $('h4[data-categorie="'+_cat+'"]:not(.active)').click();
+            _input.closest('div').css('background','rgba(var(--main-color),0.7)');
+        }
+        _traitId++;
+    }
+    _inputChangeTmpDisable = false;
+    await new_user_config();
+    var _share_btn_html = $('#avatar_hash_share').html();
+    html_anim('#avatar_hash_share','<p>AVATAR LOADED ✅</p>');
+    //$('#avatar_hash_share').html('<p>AVATAR LOADED ✅</p>');
+    setTimeout(function(){
+        html_anim('#avatar_hash_share',_share_btn_html);
+        //$('#avatar_hash_share').html(_share_btn_html);
+        $('input[type="radio"]').closest('div').css('background','none');
+    },5000);
+}
+
 // Called when user has selected new traits and on website load.
 // We need to update a bunch of things to make sure the underlying nft is mintable.
 async function new_user_config(_verify=true, _hide=false) {
     // Draw NFT based on selected traits
     drawPreview(getImagesFromTraits());
-
-    $('#avatar_config_hash').val(traits_enabled_hash());
 
     if(_verify){
         // Verify and disable traits that are newly unavailable
@@ -500,20 +528,28 @@ async function new_user_config(_verify=true, _hide=false) {
     // Update enable/disable categories based on traits currently active
     // Example : Disable hair color if no haircut is selected
     update_dependencies();
-
-    // Update traits in avatar config dialog
-    update_traits_text();
 }
 
 $(document).ready(function(){
     // NFT composer 
     build_dialog_from_traits();
 
-    // Select all default_traits
-    for (let trait = 0; trait < default_traits.length; trait++) {
-        $('input[data-trait="'+default_traits[trait]+'"]').click();
+    // Sharing feature
+    var shared_avatar_hash = urlParams.get(share_attr);
+    if(shared_avatar_hash) {
+        setTimeout(async function() {
+            $("#Main_btn").trigger('click');
+            setTimeout(function() {
+                loadFromHash(shared_avatar_hash);
+            },1000);
+        },1000);
+    } else {
+        // Select all default_traits
+        for (let trait = 0; trait < default_traits.length; trait++) {
+            $('input[data-trait="'+default_traits[trait]+'"]').click();
+        }
     }
-
+    
     // Triggered by user selection of trait
     $('#composer_traits_selector input[type="radio"]').change(async function(){
         if(_inputChangeTmpDisable) {
@@ -521,4 +557,5 @@ $(document).ready(function(){
         }
         new_user_config();
     });
+
 });

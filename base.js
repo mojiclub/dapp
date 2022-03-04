@@ -9,31 +9,33 @@ function disableHover() {
 document.addEventListener('touchstart', disableHover, true)
 
 function lightmode(){
+    document.body.classList.add('lightmode');
+    document.body.classList.remove('darkmode');
     document.documentElement.style.setProperty('--main-white', '0,0,0');
     document.documentElement.style.setProperty('--main-black', '255,255,255');
     document.getElementById('header_logo').style.filter = 'invert(1)';
-    document.getElementById('logout').style.filter = 'invert(1)';
-    document.getElementById('logout').classList.add('lightmode');
     var accordions = Array.prototype.filter.call(document.getElementsByClassName('accordion'), function(elem){
         elem.classList.add('lightmode');
     });
     document.getElementById('ui_mode_slider').style.left = '22px';
     document.getElementById('ui_mode_icon').src = 'sun.svg';
     JS_COOKIES.set('ui_mode','light');
+    ui_mode = 'light';
 }
 
 function darkmode(){
+    document.body.classList.add('darkmode');
+    document.body.classList.remove('lightmode');
     document.documentElement.style.setProperty('--main-white', '255,255,255');
     document.documentElement.style.setProperty('--main-black', '0,0,0');
     document.getElementById('header_logo').style.filter = 'none';
-    document.getElementById('logout').style.filter = 'none';
-    document.getElementById('logout').classList.remove('lightmode');
     var accordions = Array.prototype.filter.call(document.getElementsByClassName('accordion'), function(elem){
         elem.classList.remove('lightmode');
     });
     document.getElementById('ui_mode_slider').style.left = '-2px';
     document.getElementById('ui_mode_icon').src = 'moon.svg';
     JS_COOKIES.set('ui_mode','dark');
+    ui_mode = 'dark';
 }
 
 var ui_mode = JS_COOKIES.get('ui_mode');
@@ -127,6 +129,17 @@ if(!window.ethereum) {/*
             await load_wallet();
         }
       console.log(number);
+    });
+}
+
+// Utils
+function html_anim(_sel, _data, _time=200, _func='html') {
+    $(_sel+' *').fadeOut(_time, function() {
+        if(_func=='html') {
+            $(_sel).html(_data).fadeIn(_time);
+        } else {
+            $(_sel).text(_data).fadeIn(_time);
+        }
     });
 }
 
@@ -389,13 +402,6 @@ async function populate_web3_actions(){
     }
 }
 
-$("#web3_status").hover(async function(e){
-    if(e.type == 'mouseleave') {
-        $("#logout.lightmode").css('filter','invert(1)');
-    } else {
-        $("#logout.lightmode").css('filter','invert(0)');
-    }
-});
 
 $("#web3_status").click(async function(){
     if(signer==''){
@@ -414,12 +420,10 @@ $("#web3_status").click(async function(){
 });
 
 $('#ui_mode').click(async function(event){
-    var left = $('#ui_mode_slider').css('left');
-    if (left == '-2px') {
-        lightmode();
-    } else {
+    if (ui_mode == 'light') {
         darkmode();
-        
+    } else {
+        lightmode();
     }
 });
 

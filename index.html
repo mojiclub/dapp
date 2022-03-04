@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
         <title>Home ~ Moji Club</title>
     </head>
-    <body class="hasHover">
+    <body class="hasHover darkmode">
         <header>
             <img id="header_logo" src="logo.png">
         </header>
@@ -65,23 +65,6 @@
                         <!--<p>Now create an avatar with your image using the features available below and mint the associated NFT to generate your proof of ownership on the Ethereum blockchain !</p>-->
                         <div id="composer_preview">
                             <div id="canvas_div" class="rounded overlays_wrapper">
-                                <div id="avatar_config" class="rounded">
-                                    <h2>AVATAR SPECS</h2>
-                                    <p><b>~ Traits ~</b></p>
-                                    <p id="avatar_config_traits" class="noselect"></p>
-                                    <p><b>~ Hash ~</b></p>
-                                    <input id="avatar_config_hash" type="text">
-                                    <div id="avatar_config_buttons">
-                                        <div id="avatar_hash_load" class="rounded btnn"><p>LOAD FROM HASH</p></div>
-                                        <div id="avatar_hash_copy" class="rounded btnn"><p>COPY HASH</p></div>
-                                    </div>
-                                    <p>
-                                        <i>Copy your avatar hash if you want to save your token traits for later</i>
-                                    </p>
-                                    <div id="avatar_hash_share" class="rounded btnn">
-                                        <img src="share.png"><p>SHARE AVATAR</p>
-                                    </div>
-                                </div>
                                 <canvas class="rounded" id="preview_canvas" height="1000" width="1000"></canvas>
                                 <canvas class="rounded" id="preview_canvas2" height="1000" width="1000"></canvas>
                                 <div class="loader_wrapper">
@@ -91,7 +74,9 @@
                             <div id="composer_left">
                                 <div class="rounded" id="composer_traits_selector"></div>
                                 <div id="composer_buttons">
-                                    <div id="composer_config" class="rounded btnn"><p><span>SHOW</span> AVATAR SPECS</p></div>
+                                    <div id="avatar_hash_share" class="rounded btnn">
+                                        <img src="share.svg"><p>SHARE AVATAR</p>
+                                    </div>
                                     <div id="composer_confirm" class="rounded btnn"><p>CONNECT WALLET</p></div>
                                 </div>
                             </div>
