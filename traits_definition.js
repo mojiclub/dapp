@@ -478,6 +478,10 @@ async function loadFromHash(_hash){
         return;
     }
     var _bin = parseBigInt(_hash.split("").reverse().join("")).toString(2);
+    if(_bin.length>nb_traits) {
+        notify("INVALID HASH ENTERED");
+        return;
+    }
     for(i=_bin.length; i<nb_traits; i++){
         _bin = '0'+_bin;
     }

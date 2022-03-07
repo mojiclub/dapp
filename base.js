@@ -76,6 +76,7 @@ $('.mint_container').append(_col_list+'</div>');
 
 // Store last TX information
 var tx_id = '';
+var last_tx;
 var tx_pending = false;
 var last_tx_recept = '';
 
@@ -88,8 +89,13 @@ async function web3_init(){
     document.getElementById('logout').style.display = 'none';
     var composer_btn = document.querySelector("#composer_confirm p");
     composer_btn.innerText = "CONNECT WALLET";
+
+    try {
+        provider = new ethers.providers.JsonRpcProvider(RPC);
+    } catch(e) {
+        console.log('iran');
+    }
     
-    provider = new ethers.providers.JsonRpcProvider(RPC);
     contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, provider);
     tickets_contract = new ethers.Contract(CONTRACT_ADDRESS_TICKETS, ABI_TICKETS, provider);
     load_contract_vars();
@@ -193,6 +199,13 @@ async function MINT_TIMESTAMPS() {
         MINT_TIMESTAMP = await contract.MINT_TIMESTAMP();
         MINT_TIMESTAMP = MINT_TIMESTAMP.toNumber();
     }
+
+    var _mint_date = new Date(MINT_TIMESTAMP * 1000);
+    var _wl_date = new Date(WL_MINT_TIMESTAMP * 1000);
+    var _now = new Date();
+    var _seconds_to_mint = parseInt((_mint_date-_now)/1000);
+    var _seconds_to_wl = parseInt((_wl_date-_now)/1000);
+    WHITELIST_TIME = _seconds_to_mint>0 && _seconds_to_wl < 0;
 }
 
 async function _NB_MINTED(){
@@ -238,8 +251,8 @@ async function is_minted(_token_hash) {
     if(_minted_tokens.includes(_token_hash)) {
         return true;
     }
-    var _r0 = await contract.MintedHash(_token_hash+";0");
-    var _r1 = await contract.MintedHash(_token_hash+";1");
+    var _r0 = await contract._mojiTokensTraits(_token_hash+";0");
+    var _r1 = await contract._mojiTokensTraits(_token_hash+";1");
     if(_r0 || _r1) {
         _minted_tokens.push(_token_hash);
         return true;
@@ -274,6 +287,12 @@ async function SaleIsActive(){
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function ShortenBytes(_bytes, _chars=7) {
+    _bytes_a = _bytes.substring(0,_chars);
+    _bytes_b = _bytes.substring(_bytes.length-_chars,_bytes.length);
+    return _bytes_a+"..."+_bytes_b;
 }
 
 function notify(msg, seconds=3) {
@@ -348,6 +367,7 @@ async function load_wallet() {
         }
         signer = provider.getSigner();
         addr = await signer.getAddress();
+        merkle_verify(addr);
     } catch (error) {
         web3_init();
         notify("Error connecting wallet. Please check your Web3 Wallet extension.");
@@ -361,9 +381,7 @@ async function load_wallet() {
     $('#eth_status').text(addr);
     contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, provider);
     $(".wallet_sensitive").trigger('walletchanged');
-    addr_a = addr.substring(0,7);
-    addr_b = addr.substring(addr.length-7,addr.length);
-    $("#web3_status p").text(addr_a+"..."+addr_b);
+    $("#web3_status p").text(ShortenBytes(addr));
     document.getElementById('logout').style.display = 'block';
     await populate_web3_actions();
 
@@ -375,18 +393,18 @@ async function load_wallet() {
     }
 }
 
-async function populate_web3_actions(){
-    // Returns NFT transfers in the last 10 000 blocks
+async function populate_web3_actions(past_blocks=12000){
+    // Returns NFT transfers in the last 12 000 blocks (last 2 days)
     if(signer==''){
         return;
     }
     var addr = await signer.getAddress();
     var filtrr = contract.filters.Transfer(null, addr);
     var blocknum = await provider.getBlockNumber();
-    var txs = await contract.queryFilter(filtrr, blocknum-10000, blocknum);
+    var txs = await contract.queryFilter(filtrr, blocknum-past_blocks, blocknum);
     var addedHashs = [];
     if(txs.length>0){
-        $("#web3_actions").html('<h2>Transactions (10.000 last blocks) :</h2>');
+        $("#web3_actions").html('<h2>Transactions (Last '+past_blocks+' blocks) :</h2>');
         for(const tx of txs.reverse()){
             var hash = tx.transactionHash;
             if(addedHashs.includes(hash)){
@@ -394,11 +412,11 @@ async function populate_web3_actions(){
             } else {
                 addedHashs.push(hash);
             }
-            var tx_link = '<p id="link_'+hash+'"><span class="tx_status">✅</span> : <a target="_blank" href="'+RPC_SCAN_URL+'/tx/'+hash+'">'+hash.substring(0,12)+'..'+hash.substring(hash.length-4,hash.length)+'</a></p>';
+            var tx_link = '<p id="link_'+hash+'"><span class="tx_status">✅</span> : <a target="_blank" href="'+RPC_SCAN_URL+'/tx/'+hash+'">'+ShortenBytes(hash)+'</a></p>';
             $("#web3_actions").append(tx_link);
         }
     } else {
-        $("#web3_actions").html('<h2>No transactions (10.000 last blocks)</h2>');
+        $("#web3_actions").html('<h2>No transactions (Last '+past_blocks+' blocks)</h2>');
     }
 }
 
@@ -530,11 +548,31 @@ $(document).ready(async function() {
     }
 
     $('.mjc_contract').text(CONTRACT_ADDRESS);
-    $('.mjc_contract').attr('href',RPC_SCAN_URL+'/address/'+CONTRACT_ADDRESS);
+    $('.mjc_contract').attr('href',etherscan_url);
     $('.mjcc_contract').text(CONTRACT_ADDRESS_TICKETS);
-    $('.mjcc_contract').attr('href',RPC_SCAN_URL+'/address/'+CONTRACT_ADDRESS_TICKETS);
+    $('.mjcc_contract').attr('href',etherscan_url_tickets);
     $('.GEN0_SUPPLY').text(GEN0_SUPPLY);
+    $('.GEN1_SUPPLY').text(GEN1_SUPPLY);
+    $('.TOTAL_SUPPLY').text(GEN0_SUPPLY+GEN1_SUPPLY);
     $('.MINT_PRICE').text(MINT_PRICE);
+
+    // Footer
+    $('#footer_links_twitter').attr('href',twitter_url);
+    $('#footer_links_discord').attr('href',discord_url);
+    $('#footer_links_looksrare').attr('href',looksrare_url);
+    $('#footer_links_opensea').attr('href',opensea_url);
+    $('#footer_links_etherscan').attr('href',etherscan_url);
+
+    // Invert 
+    $('.btnn').hover(function(e){
+        if(ui_mode=='dark') {
+            if(e.type == 'mouseleave') {
+                $(this).find('img').css('filter','none');
+            } else {
+                $(this).find('img').css('filter','invert(1)');
+            }
+        }
+    });
 
     // Gen0 / Gen1 UI changes
     await determineGen();

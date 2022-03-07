@@ -25,7 +25,7 @@ function _setColor(_i=-1,_col='240, 201, 41') {
     document.documentElement.style.setProperty('--main-color', _colors[_i]);
   }
 }
-_setColor(_main_color);
+//_setColor(_main_color);
 
 // URL parameters
 var share_attr = 'avatarshare';
@@ -45,13 +45,22 @@ var RPC = "https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161" // ROP
 var CHAIN_ID = 3; // ROPSTEN Testnet
 const RPC_SCAN_URL = "https://ropsten.etherscan.io";
 //const RPC = "https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161" // ETH Mainnet
+//const RPC_BACKUP = "https://rpc.ankr.com/eth" // ETH Mainnet
 //const CHAIN_ID = 1; // ETH Mainnet
 // const RPC_SCAN_URL = "https://etherscan.io";
-const CONTRACT_ADDRESS = '0xd122555B29851e03cE0d32DE96b274ef492ba43e';
+const CONTRACT_ADDRESS = '0x58CcC647879b766436c6BA58Dfb622cBe9099E62';
 
 // Tickets
-const CONTRACT_ADDRESS_TICKETS = '0x30351B307D4A54335a5a45D984c863aE78B43032';
+const CONTRACT_ADDRESS_TICKETS = '0xd11e30Fef9a5f26382BCc11B54011794B7DFf688';
 const ABI_TICKETS = ["function balanceOf(address) view returns (uint)"];
+
+// Project URLs
+var twitter_url = 'https://twitter.com/i/user/2548559143'; // Get ID : https://tweeterid.com/
+var discord_url = 'https://discord.com/';
+var looksrare_url = 'https://looksrare.org/collections/'+CONTRACT_ADDRESS+'/';
+var opensea_url = 'https://opensea.io/collection/mutant-ape-yacht-club';
+var etherscan_url = RPC_SCAN_URL+'/address/'+CONTRACT_ADDRESS;
+var etherscan_url_tickets = RPC_SCAN_URL+'/address/'+CONTRACT_ADDRESS_TICKETS;
 
 // Ethers.js
 var wc_provider = '';
@@ -88,7 +97,7 @@ const ABI = [
   "function mint(string[2] memory _msgs, bytes32[4] memory _hashs_r_s, uint8[2] memory _v, bytes32[] calldata _proof) public payable",
 
   // Security
-  "function MintedHash(string memory _hash) public view returns(bool)",
+  "function _mojiTokensTraits(string memory _hash) public view returns(bool)",
 
   // Only for owner, remove later
   "function withdraw()",
@@ -104,9 +113,6 @@ var imgList = document.querySelectorAll('.top_images.deskonly img');
 for(elem of imgList) {proj_top_images.push(elem.src);}
 
 // Listing date and details
-var proj_wl_mint = "Mint for WL users : ";
-var proj_public_mint = "Public mint : ";
-var proj_reveal_date = "Reveal : ";
 var date_format_options = {year: "numeric", month: 'short', day: 'numeric', hour:'2-digit',minute:'2-digit', timeZone: 'UTC', timeZoneName:'short'};
 
 // Variables declaration
@@ -116,6 +122,7 @@ var GEN0_SUPPLY = 0;
 var GEN1_SUPPLY = 0;
 var WL_MINT_TIMESTAMP = -1;
 var MINT_TIMESTAMP = -1;
+var WHITELIST_TIME = false;
 
 var NB_MINTED;
 var gen0_soldout;

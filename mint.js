@@ -34,6 +34,7 @@ async function newBlock(){
     if(_tab_active) {
         HideSoldOutTraits(true);
     }
+    populate_web3_actions();
 }
 
 $(document).ready(async function() {
@@ -127,6 +128,7 @@ $(document).ready(async function() {
                         $('#link_'+tx_id.hash+' .tx_status').text('✅');
                         notify(html_a+"✅ "+sub_tx+"</a>",4); // TODO : Notify something nicer
                         play_done();
+                        last_tx = tx_id;
                         tx_id = '';
                         tx_pending = false;
                         last_tx_recept = receipt;
@@ -135,7 +137,6 @@ $(document).ready(async function() {
 
                 } catch (error) {
                     notify('Error code '+error.error.code+' ~ '+error.error.message);
-                    // TODO : Notify messages based on fail reason (Fail1, Fail2, Fail3, Fail4)
                 }
             }
         } else {
@@ -178,7 +179,16 @@ $(document).ready(async function() {
             
             return;
         } else {
-            $('#mint_form').removeClass("disabled");
+            if(WHITELIST_TIME) {
+                $('#mint_dates').show(); 
+            }
+            if(WHITELIST_TIME && !HAS_FREE_MINT && !HAS_WL){
+                $('#mint_form').addClass("disabled");
+                $('#Main_btn p').text("WALLET ISN'T WHITELISTED");
+                return;
+            } else {
+                $('#mint_form').removeClass("disabled");
+            }
         }
 
         if(signer!=''){
@@ -187,6 +197,8 @@ $(document).ready(async function() {
                 $('#composer_confirm p').text(can_mint[1]);
                 $('#composer_confirm').addClass("disabled");
                 return;
+            } else {
+                $('#Main_btn p').text("COMPOSE MY AVATAR"); 
             }
         }
 
@@ -194,12 +206,7 @@ $(document).ready(async function() {
         if(nbtm>MAX_MINT){
             $("#nb_mint").val(MAX_MINT);
         }
-        if(signer!=''){
-            // mint_txt = "MINT "+nbtm+" GEN"+gen_number+" TOKEN";
-            // if(nbtm>1){mint_txt+="S";}
-            mint_txt = "COMPOSE MY AVATAR";
-            $('#Main_btn p').text(mint_txt); 
-        }
+
         if(nbtm == 1) {
             $('#nb_mint_minus').addClass('disabled');
         } else {
@@ -278,14 +285,6 @@ $(document).ready(async function() {
         }
     });
 
-    $("#avatar_hash_share").hover(async function(e){
-        if(e.type == 'mouseleave') {
-            $("body.darkmode #avatar_hash_share img").css('filter','none');
-        } else {
-            $("body.darkmode #avatar_hash_share img").css('filter','invert(1)');
-        }
-    });
-
     /* USER INTERFACE */
 
     // Images on top(mobile)
@@ -332,10 +331,8 @@ $(document).ready(async function() {
     // Mint dates Red box
     await MINT_TIMESTAMPS();
     if(WL_MINT_TIMESTAMP>0){
-        d_proj_wl_mint = wl_date_bc();
-        d_proj_public_mint = mint_date_bc();
-        $('#wl_mint').text(proj_wl_mint + d_proj_wl_mint);
-        $('#public_mint').text(proj_public_mint + d_proj_public_mint);
+        $('#wl_mint span').text(wl_date_bc());
+        $('#public_mint span').text(mint_date_bc());
     }
 
     // Countdown

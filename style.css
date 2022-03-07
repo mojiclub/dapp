@@ -1,5 +1,5 @@
 :root {
-  --main-color: 167, 199, 231;
+  --main-color: 12, 30, 127;
   --main-fonts: Montserrat,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;
   --main-white: 255, 255, 255;
   --main-black: 0, 0, 0;
@@ -30,6 +30,7 @@ html {
 }
 
 body {
+	overflow: overlay;
 	margin: 0;
 	padding: 0 16px;
 	text-align: center;
@@ -44,6 +45,43 @@ body {
 	display: flex;
     align-items: center;
     flex-direction: column;
+}
+
+#footer_links {
+    display: flex;
+    width: 300px;
+    justify-content: space-between;
+    margin: 12px 0 24px;
+}
+
+#footer_links > .btnn {
+	width: 48px;
+    padding: 0;
+}
+
+#footer_links img {
+	height: 32px;
+	width: 32px;
+}
+
+#footer_links_twitter {
+	background: #2D9BF0;
+}
+
+#footer_links_discord {
+	background: #5562EA;
+}
+
+#footer_links_opensea {
+	background: #2681E2;
+}
+
+#footer_links_looksrare {
+	background: #39E370;
+}
+
+#footer_links_etherscan {
+	background: #21315B;
 }
 
 #ui_mode {
@@ -284,7 +322,7 @@ input::-webkit-inner-spin-button {
 	position: -webkit-sticky;
     position: fixed;
     top: 24px;
-    right: 12px;
+    right: 24px;
 }
 
 #web3_actions {
@@ -311,6 +349,11 @@ input::-webkit-inner-spin-button {
 
 a {
 	color: white;
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
 }
 
 .walletconnect-modal__mobile__toggle a {
@@ -332,8 +375,8 @@ a {
 }
 
 body.hasHover #nb_mint_plus:hover, body.hasHover #nb_mint_minus:hover, body.hasHover #menu a:hover, body.hasHover .btnn:hover {
-  color: rgb(var(--main-black));
-  background: rgb(var(--main-white));
+  color: rgb(var(--main-black))!important;
+  background: rgb(var(--main-white))!important;
 }
 
 .disabled {
@@ -678,6 +721,9 @@ div[class^="div_trait_"], div[class*="div_trait_"] {
 	#notification {
 		max-width: 250px;
 	}
+	#web3_status, #web3_actions {
+	    right: 12px;
+	}
 	::-webkit-scrollbar {
 	  width: 6px;
 	}
@@ -781,16 +827,14 @@ div[class^="div_trait_"], div[class*="div_trait_"] {
 	#nft_composer {
 		max-height: 800px;
     	max-width: 1300px;
-    	box-shadow: rgb(var(--main-color)) 0px 0px 35px;
+	}
+	.box-shadow-accent {
+		box-shadow: rgb(var(--main-color)) 0px 0px 35px;
 	    -webkit-box-shadow: rgb(var(--main-color)) 0px 0px 35px;
 	    -moz-box-shadow: rgb(var(--main-color)) 0px 0px 35px;
 	    -ms-box-shadow: rgb(var(--main-color)) 0px 0px 35px;
 	    -o-box-shadow: rgb(var(--main-color)) 0px 0px 35px;
 	    box-shadow: rgb(var(--main-color)) 0px 0px 35px;
-	}
-
-	.fakescrollbar {
-		margin-right: 24px;
 	}
 }
 
