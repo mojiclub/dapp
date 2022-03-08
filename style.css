@@ -79,6 +79,7 @@ body {
     border: 1px solid rgb(var(--main-color));
     box-sizing: border-box;
     width: 64px;
+    background: rgb(var(--main-color));
 }
 
 .image_with_text.image_on_right {
