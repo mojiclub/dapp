@@ -1,5 +1,5 @@
 :root {
-  --main-color: 12, 30, 127;
+  --main-color: 101, 193, 140;
   --main-fonts: Montserrat,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;
   --main-white: 255, 255, 255;
   --main-black: 0, 0, 0;
@@ -14,6 +14,10 @@
 
 html {
 	scroll-behavior: smooth;
+}
+
+.display_on_gen1, .display_on_soldout {
+	/*display:none;  TODO : remove comments */
 }
 
 .testing {
@@ -38,6 +42,62 @@ body {
 	color: rgb(var(--main-white));
 	font-family: var(--main-fonts);
 }
+.dialog_info {
+	width: 100%;
+  display: flex;
+  align-items: center;
+  background: rgba(var(--main-white),0.7)!important;
+  color: rgb(var(--main-black));
+}
+.dialog_info h2 {
+	width: 25%;
+}
+.dialog_info p {
+	width: 50%;
+	padding: 0 48px;
+  box-sizing: border-box;
+  text-align: left;
+}
+.dialog_info .btnn {
+	width: fit-content;
+}
+
+#the_team_showcase p {
+    margin: 8px 0;
+}
+
+.image_with_text {
+	  display: flex;
+    margin: 24px;
+    padding: 0 24px;
+   	align-items: center;
+   	text-align: left;
+}
+
+.image_with_text hr {
+		margin: 24px 48px;
+    border: 1px solid rgb(var(--main-color));
+    box-sizing: border-box;
+    width: 64px;
+}
+
+.image_with_text.image_on_right {
+	flex-direction: row-reverse;
+}
+
+.image_with_text .btnn {
+	width: fit-content;
+	margin-left: 48px;
+}
+
+.image_with_text img {
+    width: 30%;
+    padding: 0 10%;
+}
+
+.image_with_text i {
+	font-weight: bold;
+}
 
 #footer {
 	width: 100%;
@@ -47,19 +107,28 @@ body {
     flex-direction: column;
 }
 
-#footer_links {
+#footer_links_icons, #footer_links_other {
     display: flex;
-    width: 300px;
-    justify-content: space-between;
+    width: 320px;
+    justify-content: space-around;
     margin: 12px 0 24px;
 }
 
-#footer_links > .btnn {
+#footer_links_icons > .btnn {
 	width: 48px;
-    padding: 0;
+	height: 48px;
+  padding: 0;
 }
 
-#footer_links img {
+#footer_links_other {
+	flex-direction: column;
+}
+
+#footer_links_other a {
+    margin: 4px;
+}
+
+#footer_links_icons img {
 	height: 32px;
 	width: 32px;
 }
@@ -224,7 +293,8 @@ p {
 }
 
 .nolatpadd p {
-	padding: 0 24px;
+	padding: 0 48px;
+  margin: 24px 0;
 }
 
 .smallbox {
@@ -348,11 +418,15 @@ input::-webkit-inner-spin-button {
 }
 
 a {
-	color: white;
+	color: rgb(var(--main-white));
 	text-decoration: none;
 }
 
-a:hover {
+a.rounded {
+	color: white;
+}
+
+a:hover:not(.btnn) {
 	text-decoration: underline;
 }
 
@@ -472,7 +546,7 @@ p.roadmap_num {
     width: 48px;
     overflow-wrap: normal;
     border-radius: 50%;
-    border: 12px solid rgb(var(--main-white));
+    border: 12px solid rgb(var(--main-color));
     margin: 0 auto;
     display: flex;
     justify-content: center;
@@ -522,7 +596,7 @@ p.roadmap_num {
     margin: auto;
     text-align: center;
     z-index: 99999;
-    padding: 6px 16px 16px 16px;
+    padding: 16px;
     box-shadow: rgb(var(--main-color)) 0px 0px 165px;
     -webkit-box-shadow: rgb(var(--main-color)) 0px 0px 165px;
     -moz-box-shadow: rgb(var(--main-color)) 0px 0px 165px;
@@ -542,7 +616,6 @@ p.roadmap_num {
 }
 
 #composer_close_div {
-    margin-right: 8px;
     overflow-wrap: normal;
     background: rgb(var(--main-white));
     color: rgb(var(--main-black));
@@ -698,14 +771,24 @@ div[class^="div_trait_"], div[class*="div_trait_"] {
 .btnn {
 	color: white;
 	background: rgb(var(--main-color));
-	height: 48px;
 	padding: 0 24px;
 	display: flex;
 	justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    font-weight: bold;
-    border: none;
+  align-items: center;
+  cursor: pointer;
+  font-weight: bold;
+  border: none;
+}
+
+.btnn p {
+    margin: 12px 0;
+    padding: 0;
+    width: fit-content;
+}
+
+#nft_composer .btnn p {
+    margin: 8px 0;
+    font-size: 90%;
 }
 
 .btnn, #menu a {
@@ -718,6 +801,24 @@ div[class^="div_trait_"], div[class*="div_trait_"] {
 }
 
 @media only screen and (max-device-width: 480px) {
+	.image_with_text {
+		flex-direction: column;
+		padding: 0;
+		text-align: center;
+	}
+	.image_with_text .btnn {
+		margin-left: 0;
+	}
+	.image_with_text hr {
+		margin: 24px auto;
+	}
+	.image_with_text img {
+    width: 80%;
+	  padding: 0;
+	}
+	.nolatpadd p {
+		padding: 0 16px;
+	}
 	#notification {
 		max-width: 250px;
 	}
@@ -733,20 +834,20 @@ div[class^="div_trait_"], div[class*="div_trait_"] {
 	  border-width: 1px;
 	}
 
-    .deskonly {
-    	display: none!important;
-    }
+  .deskonly {
+  	display: none!important;
+  }
 
-    #header_logo {
-	    margin: 96px 48px 16px;
+  #header_logo {
+	  margin: 96px 48px 16px;
 	}
 	#menu a {
 		font-size: 90%;
 	}
-    .marquee-item {
-    	flex-basis: 96px;
-    }
-    #marquee2 {
+  .marquee-item {
+  	flex-basis: 96px;
+  }
+  #marquee2 {
 		margin-left: -180px;
 	}
 
@@ -763,6 +864,9 @@ div[class^="div_trait_"], div[class*="div_trait_"] {
 	.title h2 {
 		padding: 8px 0;
 	    font-size: 24px;
+	}
+	#nft_composer {
+		padding: 0 6px;
 	}
 
 	.composer_categorie_title {
@@ -783,13 +887,16 @@ div[class^="div_trait_"], div[class*="div_trait_"] {
 	#composer_title {
 	    font-size: 130%;
 	}
+	#composer_left, #canvas_div {
+		margin: 4px;
+	}
 	#composer_preview {
 		flex-direction: column;
 		align-items: center;
 	}
 	#composer_traits_selector {
 		height: calc(100vh - 80vw - 250px);
-		margin-bottom: 8px;
+		margin-bottom: 0;
 	}
 	#composer_buttons {
 		flex-direction: column;
@@ -804,6 +911,23 @@ div[class^="div_trait_"], div[class*="div_trait_"] {
 
 	#nb_minted p, #mint_price p {
 	    margin: 12px 0;
+	}
+	.dialog_info {
+		box-sizing: border-box;
+		flex-direction: column;
+	}
+	.dialog_info h2 {
+		width: 100%;
+	}
+	.dialog_info p {
+		width: 100%;
+		text-align: center;
+	}
+	.image_with_text.image_on_right {
+		flex-direction: column;
+	}
+	.image_with_text {
+    margin: 12px;
 	}
 }
 

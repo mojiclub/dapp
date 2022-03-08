@@ -179,7 +179,7 @@ var nb_traits = 143;
 var default_traits = [3,8,12,15,39,43,10001,10002,10003,10004,10005,10006,10007,10008,10009,10010,10011,10012];
 
 // Get an array containing all traits enabled in the configurator
-function _get_enabled_traits_ids() {
+const _get_enabled_traits_ids = function() {
     var res = [];
     $('#composer_traits_selector input[type="radio"]:checked').each(function( index ) {
         res.push($(this).data('trait'));
@@ -188,7 +188,7 @@ function _get_enabled_traits_ids() {
 }
 
 // Returns true if user has selected any Jacket of Chemise
-function _wears_shirt() {
+const _wears_shirt = function() {
     var ids = _get_enabled_traits_ids();
     for(const id of ids) {
         var tr = traits_lst[id];
@@ -200,7 +200,7 @@ function _wears_shirt() {
 }
 
 // Returns true if user has selected any Jacket of Chemise
-function _wears_jacket() {
+const _wears_jacket = function() {
     var ids = _get_enabled_traits_ids();
     for(const id of ids) {
         var tr = traits_lst[id];
@@ -212,7 +212,7 @@ function _wears_jacket() {
 }
 
 // Returns true if user has not selected any haircut
-function _bald() {
+const _bald = function() {
     var ids = _get_enabled_traits_ids();
     for(const id of ids) {
         var tr = traits_lst[id];
@@ -224,7 +224,7 @@ function _bald() {
 }
 
 // Returns true if user has not selected any bearcut
-function _no_beard() {
+const _no_beard = function() {
     var ids = _get_enabled_traits_ids();
     for(const id of ids) {
         var tr = traits_lst[id];
@@ -235,7 +235,7 @@ function _no_beard() {
     return true;
 }
 
-function _disable_categorie_by_condition(condition,categorie) {
+const _disable_categorie_by_condition = function(condition,categorie) {
     var _titles = $('.composer_categorie_title');
     if(condition){
         _titles.each(function( index ) {
@@ -253,7 +253,7 @@ function _disable_categorie_by_condition(condition,categorie) {
 }
 
 // This function builds the traits selector dialog based on the traits declared in 'traits_lst'
-function build_dialog_from_traits() {
+const build_dialog_from_traits = function() {
     var _items_list = new Map(Object.entries(traits_lst));
     var _categories = [];
     var _categories_titles = [];
@@ -327,7 +327,7 @@ function build_dialog_from_traits() {
 var _soldout_traits = []
 var _cooldown_seconds = 30;
 var _last_update = new Date(1); // 1 Jan 1970
-function HideSoldOutTraits(reset=false) {
+const HideSoldOutTraits = function(reset=false) {
     var reload = (new Date() - _last_update)/1000>_cooldown_seconds || reset;
     if(reload || _soldout_traits.length==0) {
         _last_update = new Date();
@@ -351,7 +351,7 @@ function HideSoldOutTraits(reset=false) {
     }
 }
 
-async function disableIfMinted() {
+const disableIfMinted = async function() {
     var _tkn_hash = traits_enabled_hash();
     var token_minted = await is_minted(_tkn_hash);
     if(token_minted){
@@ -366,7 +366,7 @@ async function disableIfMinted() {
 
 // This function verifies if the enabled traits are all available to mint and stores the result in '_verify_traits'
 var _verify_traits;
-async function verifyTraits(RetryIfError=true) {
+const verifyTraits = async function(RetryIfError=true) {
     var _tkn_hash = traits_enabled_hash();
     var token_minted = await disableIfMinted();
     if(token_minted){
@@ -403,7 +403,7 @@ async function verifyTraits(RetryIfError=true) {
 }
 
 // Builds a base36 string based on enabled traits
-function traits_enabled_hash() {
+const traits_enabled_hash = function() {
     var bi = '';
     var _trs = _get_enabled_traits_ids();
     for(let trait = 1; trait <=nb_traits; trait++) {
@@ -420,7 +420,7 @@ function traits_enabled_hash() {
 
 // Temporary disables traits that cannot be selected without using another
 // Example : Disable hair color if no haircut is selected
-function update_dependencies() {    
+const update_dependencies = function() {    
     // Bald -> No hair color selection
     _disable_categorie_by_condition(_bald(),'Hair Color');
 
@@ -446,7 +446,7 @@ const loadImage = src =>
 // Draws preview on a canvas based on a list of traits images. Returns the result as JPEG dataurl
 var _canvas_list = ["preview_canvas","preview_canvas2"];
 var _id_canvas = 0;
-async function drawPreview(_images){
+const drawPreview = async function(_images){
     var _canvas_id = _canvas_list[_id_canvas%2];
     var _other_canvas = _canvas_list[(_id_canvas+1)%2];
 
@@ -472,7 +472,7 @@ async function drawPreview(_images){
     return c.toDataURL("image/jpeg");
 }
 
-async function loadFromHash(_hash){
+const loadFromHash = async function(_hash){
     if(!isAlphaNumeric(_hash)) {
         notify("INVALID HASH ENTERED");
         return;
@@ -519,7 +519,7 @@ async function loadFromHash(_hash){
 
 // Called when user has selected new traits and on website load.
 // We need to update a bunch of things to make sure the underlying nft is mintable.
-async function new_user_config(_verify=true, _hide=false) {
+const new_user_config = async function(_verify=true, _hide=false) {
     // Draw NFT based on selected traits
     drawPreview(getImagesFromTraits());
 

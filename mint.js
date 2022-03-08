@@ -2,7 +2,7 @@
 var img_dataurl;
 
 adf = 0;
-function getImagesFromTraits() {
+const getImagesFromTraits = function() {
     // Just so theres some preview. Remove later
     aad = [
         "https://anatomyscienceapeclub.com/_next/static/images/m1-glow-3-91761278e95e18a3e4166ffe1203c44e.jpg",
@@ -40,7 +40,7 @@ async function newBlock(){
 $(document).ready(async function() {
 
     // Verify if user has enough tokens to mint NFTs
-    async function balance_enough_to_mint() {
+    const balance_enough_to_mint = async function() {
         var eth_balance = await signer_balance_eth();
         var ticket_balance = await signer_balance_tickets();
         var nb_mint = parseInt($("#nb_mint").val());
@@ -61,7 +61,7 @@ $(document).ready(async function() {
     }
 
     // Mint tokens
-    async function mint(){
+    const mint = async function(){
         await determineGen();
 
         if(gen1_soldout) {
@@ -154,6 +154,12 @@ $(document).ready(async function() {
 
         await _NB_MINTED();
         $('#span_nb_minted').text(NB_MINTED);
+
+        if(gen0_soldout) {
+            $('#span_total_supply').text(GEN0_SUPPLY+GEN1_SUPPLY);
+        } else {
+            $('#span_total_supply').text(GEN0_SUPPLY);
+        }
 
         if(gen1_soldout) {
             $('#mint_form').addClass("disabled");
@@ -275,8 +281,8 @@ $(document).ready(async function() {
         var _share_url = window.location.href.split('?')[0]+'?'+share_attr+'='+traits_enabled_hash();
         if(navigator.share) {
             const shareData = {
-                title: 'MojiClub',
-                text: 'Look at my Moji Club avatar !',
+                title: 'The Moji Club',
+                text: "Doesn't my Moji Club avatar looks dope ?",
                 url: _share_url
             }
             navigator.share(shareData);
@@ -294,13 +300,12 @@ $(document).ready(async function() {
 
     var rotate_imgs = 0;
     var seconds_change = 1.2;
-    setInterval(ChangeMobImage,seconds_change*1000);
 
     // Set height = width (square) 
     var _mob_img_overlay = $('.top_images .overlays_wrapper');
     _mob_img_overlay.css('height',_mob_img_overlay.css('width'));
 
-    async function ChangeMobImage() {
+    const ChangeMobImage = async function() {
         // Set height = width (square) 
         var _mob_img_overlay = $('.top_images .overlays_wrapper');
         _mob_img_overlay.css('height',_mob_img_overlay.css('width'));
@@ -308,6 +313,7 @@ $(document).ready(async function() {
         $('.top_images .overlays_wrapper > img').eq((rotate_imgs+1)%proj_top_images.length).fadeIn(seconds_change*750);
         rotate_imgs++;
     }
+    setInterval(ChangeMobImage,seconds_change*1000);
 
     // Images marquee
     var html_marquee = '';

@@ -18,7 +18,7 @@ var _colors = [
 ];
 
 var _main_color = Math.floor(Math.random()*_colors.length);
-function _setColor(_i=-1,_col='240, 201, 41') {
+function _setColor(_i=-1,_col='101, 193, 140') {
   if(_i==-1){
     document.documentElement.style.setProperty('--main-color', _col);
   } else {
@@ -59,6 +59,7 @@ var twitter_url = 'https://twitter.com/i/user/2548559143'; // Get ID : https://t
 var discord_url = 'https://discord.com/';
 var looksrare_url = 'https://looksrare.org/collections/'+CONTRACT_ADDRESS+'/';
 var opensea_url = 'https://opensea.io/collection/mutant-ape-yacht-club';
+var opensea_url_tickets = 'https://opensea.io/collection/mutant-ape-yacht-club';
 var etherscan_url = RPC_SCAN_URL+'/address/'+CONTRACT_ADDRESS;
 var etherscan_url_tickets = RPC_SCAN_URL+'/address/'+CONTRACT_ADDRESS_TICKETS;
 

@@ -81,21 +81,18 @@ var tx_pending = false;
 var last_tx_recept = '';
 
 // Start / reset web3 state 
-async function web3_init(){
+const web3_init = async function(){
     wc_provider = '';
     signer = '';
     var web3_btn = document.querySelector("#web3_status p");
     web3_btn.innerText = "CONNECT WALLET";
     document.getElementById('logout').style.display = 'none';
     var composer_btn = document.querySelector("#composer_confirm p");
-    composer_btn.innerText = "CONNECT WALLET";
-
-    try {
-        provider = new ethers.providers.JsonRpcProvider(RPC);
-    } catch(e) {
-        console.log('iran');
+    if(composer_btn) {
+        composer_btn.innerText = "CONNECT WALLET";
     }
-    
+
+    provider = new ethers.providers.JsonRpcProvider(RPC);
     contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, provider);
     tickets_contract = new ethers.Contract(CONTRACT_ADDRESS_TICKETS, ABI_TICKETS, provider);
     load_contract_vars();
@@ -139,7 +136,7 @@ if(!window.ethereum) {/*
 }
 
 // Utils
-function html_anim(_sel, _data, _time=200, _func='html') {
+const html_anim = function(_sel, _data, _time=200, _func='html') {
     $(_sel+' *').fadeOut(_time, function() {
         if(_func=='html') {
             $(_sel).html(_data).fadeIn(_time);
@@ -151,7 +148,7 @@ function html_anim(_sel, _data, _time=200, _func='html') {
 
 // Get the wallet balance in ETH
 var _signer_balance_eth = -1;
-async function signer_balance_eth(reset=false){
+const signer_balance_eth = async function(reset=false){
     if(signer=='') {_signer_balance_eth=0;return 0;}
     if(_signer_balance_eth==-1 || reset){
         var addr = await signer.getAddress();
@@ -163,7 +160,7 @@ async function signer_balance_eth(reset=false){
 }
 
 var _signer_balance_tickets = -1;
-async function signer_balance_tickets(reset=false) {
+const signer_balance_tickets = async function(reset=false) {
     if(signer=='') {_signer_balance_tickets=0;return 0;}
     if(_signer_balance_tickets==-1 || reset){
         var addr = await signer.getAddress();
@@ -174,7 +171,7 @@ async function signer_balance_tickets(reset=false) {
 }
 
 var _signer_balance_nfts = -1;
-async function signer_balance_nfts(reset=false) {
+const signer_balance_nfts = async function(reset=false) {
     if(signer=='') {_signer_balance_nfts=0;return 0;}
     if(_signer_balance_nfts==-1 || reset){
         var addr = await signer.getAddress();
@@ -185,12 +182,12 @@ async function signer_balance_nfts(reset=false) {
 }
 
 /* Blockchain getters */
-async function _MINT_PRICE(){
+const _MINT_PRICE = async function(){
     var num = await contract.PRICE_ETH();
     MINT_PRICE = parseFloat(ethers.utils.formatEther(num));
 }
 
-async function MINT_TIMESTAMPS() {
+const MINT_TIMESTAMPS = async function() {
     if(WL_MINT_TIMESTAMP<=0){
         WL_MINT_TIMESTAMP = await contract.WL_MINT_TIMESTAMP();
         WL_MINT_TIMESTAMP = WL_MINT_TIMESTAMP.toNumber();
@@ -208,7 +205,7 @@ async function MINT_TIMESTAMPS() {
     WHITELIST_TIME = _seconds_to_mint>0 && _seconds_to_wl < 0;
 }
 
-async function _NB_MINTED(){
+const _NB_MINTED = async function(){
     var num = await contract.totalSupply();
     NB_MINTED = num.toNumber();
     if(GEN0_SUPPLY==0){
@@ -224,15 +221,15 @@ async function _NB_MINTED(){
     gen_number = gen0_soldout ? 1 : 0;
 }
 
-async function load_contract_vars() {
-    _MINT_PRICE();
-    MINT_TIMESTAMPS();
-    _NB_MINTED();
+const load_contract_vars = async function() {
+    await _MINT_PRICE();
+    await MINT_TIMESTAMPS();
+    await _NB_MINTED();
 }
 
 web3_init();
 
-async function lastBlock(){
+const lastBlock = async function(){
     _block = await provider.getBlockNumber();
     if(_block!=CURRENT_BLOCK) {
         newBlock();
@@ -247,7 +244,7 @@ async function newBlock(){
 }
 
 var _minted_tokens = [];
-async function is_minted(_token_hash) {
+const is_minted = async function(_token_hash) {
     if(_minted_tokens.includes(_token_hash)) {
         return true;
     }
@@ -260,7 +257,7 @@ async function is_minted(_token_hash) {
     return false;
 }
 
-async function wl_passed() {
+const wl_passed = async function() {
     if(MINT_TIMESTAMP==-1 || WL_MINT_TIMESTAMP==-1) {
         await MINT_TIMESTAMPS();
     }
@@ -270,32 +267,32 @@ async function wl_passed() {
     return new Date(WL_MINT_TIMESTAMP * 1000) <= new Date();
 }
 
-function wl_date_bc(){
+const wl_date_bc = function(){
     var wl_date = new Date(WL_MINT_TIMESTAMP * 1000);
     return wl_date.toLocaleString('en-US', date_format_options);
 }
 
-function mint_date_bc(){
+const mint_date_bc = function(){
     var mint_date = new Date(MINT_TIMESTAMP * 1000);
     return mint_date.toLocaleString('en-US', date_format_options);
 }
 
-async function SaleIsActive(){
+const SaleIsActive = async function(){
     var b = await contract.SaleIsActive();
     return b;
 }
 
-function sleep(ms) {
+const sleep = function(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-function ShortenBytes(_bytes, _chars=7) {
+const ShortenBytes = function(_bytes, _chars=7) {
     _bytes_a = _bytes.substring(0,_chars);
     _bytes_b = _bytes.substring(_bytes.length-_chars,_bytes.length);
     return _bytes_a+"..."+_bytes_b;
 }
 
-function notify(msg, seconds=3) {
+const notify = function(msg, seconds=3) {
     $('#notification p').html(msg);
     $('#notification').css("right","12px");
     setTimeout(function() {
@@ -303,7 +300,7 @@ function notify(msg, seconds=3) {
     },1000*seconds);
 }
 
-async function connect_wallet() {
+const connect_wallet = async function() {
     wc_provider = '';
     provider = '';
     if(window.ethereum && window.ethereum.isMetaMask) {
@@ -359,7 +356,7 @@ async function connect_wallet() {
     await load_wallet();
 }
 
-async function load_wallet() {
+const load_wallet = async function() {
     var addr = '';
     try {
         if(wc_provider==''){
@@ -393,7 +390,7 @@ async function load_wallet() {
     }
 }
 
-async function populate_web3_actions(past_blocks=12000){
+const populate_web3_actions = async function(past_blocks=12000){
     // Returns NFT transfers in the last 12 000 blocks (last 2 days)
     if(signer==''){
         return;
@@ -455,7 +452,7 @@ $("#logout").click(async function(event){
     event.stopPropagation();
 });
 
-function play_done() {
+const play_done = function() {
     var audio = new Audio('done.mp3');
     audio.play();
 }
@@ -470,16 +467,16 @@ const ipfs_node = IpfsHttpClient.create({
     }
 });
 
-async function ipfs_add(Obj) {
+const ipfs_add = async function(Obj) {
     const res = await ipfs_node.add(Obj);
     return res.path;
 }
 
-async function ipfs_pin(path) {
+const ipfs_pin = async function(path) {
     await ipfs_node.pin.add(path);
 }
 
-function dataURItoBlob(dataURI) {
+const dataURItoBlob = function(dataURI) {
     // convert base64 to raw binary data held in a string
     var byteString = atob(dataURI.split(',')[1]);
 
@@ -495,7 +492,7 @@ function dataURItoBlob(dataURI) {
     return new Blob([ab], {type: mimeString});
 }
 
-function isAlphaNumeric(str) {
+const isAlphaNumeric = function(str) {
     var code, i, len;
 
     for (i = 0, len = str.length; i < len; i++) {
@@ -509,7 +506,7 @@ function isAlphaNumeric(str) {
     return true;
 }
 
-function parseBigInt(
+const parseBigInt = function(
     numberString,
     keyspace = "0123456789abcdefghijklmnopqrstuvwxyz",
 ) {
@@ -525,17 +522,27 @@ function parseBigInt(
 
 // Determines current gen by getting number of minted NFTs.
 // Updates UI accordignly
-async function determineGen() {
+const determineGen = async function() {
     await _NB_MINTED();
-    $('#span_nb_minted').text(NB_MINTED);
 
+    // TODO : Remove commenting out to enable showing stuff depending of gen
+    $('.generation_number').text(gen_number);
     if(!gen0_soldout) {
+        $('#span_nb_minted').text(NB_MINTED);
         $('#p_mint_price').text(MINT_PRICE + " Ξ");
-        $('#span_total_supply').text(GEN0_SUPPLY); 
+        $('#span_total_supply').text(GEN0_SUPPLY);
+        //$('.display_on_gen1').hide();
     } else {
+        $('#span_nb_minted').text(NB_MINTED-GEN0_SUPPLY);
         $('.gen1only').css('display','block');
         $('#p_mint_price').text("1 $MJCC");
         $('#span_total_supply').text(GEN0_SUPPLY+GEN1_SUPPLY);
+        //$('.display_on_gen1').show();
+    }
+    if(gen1_soldout){
+        //$('.display_on_soldout').show();
+    } else {
+        //$('.display_on_soldout').hide();
     }
     $(".wallet_sensitive").trigger('walletchanged');
 }
@@ -547,6 +554,14 @@ $(document).ready(async function() {
         $("#web3_status").trigger('click');
     }
 
+    if(window.location.href.includes('.github.io')) {
+        $('.intra_link').each(function(){
+            var href = '/dapp' + $(this).attr('href');
+            $(this).attr('href',href);
+        });
+    }
+    
+    await load_contract_vars();
     $('.mjc_contract').text(CONTRACT_ADDRESS);
     $('.mjc_contract').attr('href',etherscan_url);
     $('.mjcc_contract').text(CONTRACT_ADDRESS_TICKETS);
@@ -556,11 +571,12 @@ $(document).ready(async function() {
     $('.TOTAL_SUPPLY').text(GEN0_SUPPLY+GEN1_SUPPLY);
     $('.MINT_PRICE').text(MINT_PRICE);
 
-    // Footer
-    $('#footer_links_twitter').attr('href',twitter_url);
-    $('#footer_links_discord').attr('href',discord_url);
+    // Links
+    $('#footer_links_twitter, .twitter_link').attr('href',twitter_url);
+    $('#footer_links_discord, .discord_link').attr('href',discord_url);
     $('#footer_links_looksrare').attr('href',looksrare_url);
-    $('#footer_links_opensea').attr('href',opensea_url);
+    $('#footer_links_opensea, .opensea_moji').attr('href',opensea_url);
+    $('.opensea_tickets').attr('href',opensea_url_tickets);
     $('#footer_links_etherscan').attr('href',etherscan_url);
 
     // Invert 
