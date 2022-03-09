@@ -1,0 +1,63 @@
+#claim_avatars_list {
+	display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.avatar_thumb {
+    width: calc(33.3333% - 16px);
+    margin: 8px;
+    box-sizing: border-box;
+    padding: 8px;
+    background: rgba(var(--main-white),0.4);
+	cursor: pointer;
+}
+
+.avatar_thumb:last-child {
+	margin-right: auto;
+}
+
+.avatar_thumb.avatar_selected {
+	border: 18px solid rgb(var(--main-color));
+}
+
+.avatar_thumb img {
+	position: relative;
+    width: 100%;
+}
+
+.avatar_thumb h3, .avatar_thumb p {
+	margin: 8px 0;
+}
+
+#claim_buttons_parent {
+	display: none;
+}
+
+#claim_buttons {
+	display: flex;
+    justify-content: flex-end;
+    margin: 16px 8px;
+}
+
+#claim_buttons .btnn {
+	margin-left: 12px;
+}
+
+@media only screen and (max-device-width: 480px) {
+	.avatar_thumb {
+	    width: calc(50% - 16px);
+	}
+	.avatar_thumb.avatar_selected {
+		border-width: 12px;
+	}
+
+	#claim_buttons {
+		flex-direction: column;
+	}
+
+	#claim_buttons .btnn {
+	    margin: 8px 0;
+	}
+}

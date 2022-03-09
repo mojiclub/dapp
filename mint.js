@@ -115,26 +115,9 @@ $(document).ready(async function() {
                 var v_tab = [base36_specs[1], token_specs[1]];
                 
                 try {
-                    tx_id = await contract_signer.mint(msg_tab,rs_tab,v_tab,merkle_proof(_addr),tx_options);
-                    tx_pending = true;
-                    var sub_tx = tx_id.hash.substring(0,12)+'..'+tx_id.hash.substring(tx_id.hash.length-4,tx_id.hash.length);
-                    var tx_link = '<p id="link_'+tx_id.hash+'"><span class="tx_status">⏳</span> : <a target="_blank" href="'+RPC_SCAN_URL+'/tx/'+tx_id.hash+'">'+sub_tx+'</a></p>';
-                    $("#web3_actions h2").after(tx_link);
-                    sleep(250);
-                    var html_a = '<a target="_blank" href="'+RPC_SCAN_URL+'/tx/'+tx_id.hash+'">';
-                    notify(html_a+"⏳ "+sub_tx+"</a>",4);
+                    var tx = await contract_signer.mint(msg_tab,rs_tab,v_tab,merkle_proof(_addr),tx_options);
                     $('#composer_close_div').click();
-                    tx_id.wait().then(async function(receipt) {
-                        $('#link_'+tx_id.hash+' .tx_status').text('✅');
-                        notify(html_a+"✅ "+sub_tx+"</a>",4); // TODO : Notify something nicer
-                        play_done();
-                        last_tx = tx_id;
-                        tx_id = '';
-                        tx_pending = false;
-                        last_tx_recept = receipt;
-                        load_wallet();
-                    });
-
+                    transaction_experience(tx);
                 } catch (error) {
                     notify('Error code '+error.error.code+' ~ '+error.error.message);
                 }
@@ -292,6 +275,23 @@ $(document).ready(async function() {
     });
 
     /* USER INTERFACE */
+
+    // Images on PC
+
+    const ChangePCImage = async function(){
+        var nb_change = getRandomInt(2);
+        for(var _i = 0;_i<=nb_change;_i++) {
+            var _eq = getRandomInt($('.flip-card-inner').length);
+            var _elem = $('.flip-card-inner').eq(_eq);
+            if(getRotationDegrees(_elem)==180){
+                _elem.css("transform","rotateY(0deg)");
+            } else {
+                _elem.css("transform","rotateY(180deg)");
+            }
+        }
+    }
+
+    setInterval(ChangePCImage,5000);
 
     // Images on top(mobile)
     $('.top_images .overlays_wrapper > img').each(function( index ) {

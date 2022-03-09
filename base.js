@@ -75,7 +75,6 @@ for(const col of _colors){
 $('.mint_container').append(_col_list+'</div>');
 
 // Store last TX information
-var tx_id = '';
 var last_tx;
 var tx_pending = false;
 var last_tx_recept = '';
@@ -144,6 +143,72 @@ const html_anim = function(_sel, _data, _time=200, _func='html') {
             $(_sel).text(_data).fadeIn(_time);
         }
     });
+}
+
+const getRandomInt = function(max) {
+    return Math.floor(Math.random() * max);
+}
+
+const getRotationDegrees = function(obj) {
+    var matrix = obj.css("transform");
+    if(matrix !== 'none') {
+        var values = matrix.split('(')[1].split(')')[0].split(',');
+        var a = values[0];
+        var b = values[1];
+        var angle = Math.round(Math.atan2(b, a) * (180/Math.PI));
+    } else { var angle = 0; }
+    return (angle < 0) ? angle + 360 : angle;
+}
+
+// Store running intervals
+var RUNNING_INTERVALS = [];
+const clear_intervals = function(){
+    for(var _interval of RUNNING_INTERVALS) {
+        clearInterval(_interval);
+    }
+}
+
+const runCountdown = function(_elem, _date, _elapsed_text="NOW") {
+    var now = new Date();
+    var seconds = parseInt((_date-now)/1000);
+    if(seconds>0){
+        var _int = setInterval(function(){
+            var countdown_text = '';
+
+            var days = parseInt(seconds/(3600*24));
+            if(days<10) {
+                countdown_text += "0";
+            }
+            countdown_text += days+":";
+
+            var hours = parseInt((seconds/3600)%24);
+            if(hours<10) {
+                countdown_text += "0";
+            }
+            countdown_text += hours+":";
+
+            var minutes = parseInt((seconds/60)%60);
+            if(minutes<10) {
+                countdown_text += "0";
+            }
+            countdown_text += minutes+":";
+
+            var secs = seconds % 60;
+            if(secs<10) {
+                countdown_text += "0";
+            }
+            countdown_text += secs;
+
+            _elem.text(countdown_text);
+            seconds--;
+            if(seconds==0) {
+                location.reload();
+            }
+        }, 1000);
+        RUNNING_INTERVALS.push(_int);
+    } else {
+        _elem.text(_elapsed_text);
+    }
 }
 
 // Get the wallet balance in ETH
@@ -417,8 +482,29 @@ const populate_web3_actions = async function(past_blocks=12000){
     }
 }
 
+const transaction_experience = async function(_tx) {
+    tx_pending = true;
+    var sub_tx = ShortenBytes(_tx.hash);
+    var tx_link = '<p id="link_'+_tx.hash+'"><span class="tx_status">⏳</span> : <a target="_blank" href="'+RPC_SCAN_URL+'/tx/'+_tx.hash+'">'+sub_tx+'</a></p>';
+    $("#web3_actions h2").after(tx_link);
+    sleep(250);
+    var html_a = '<a target="_blank" href="'+RPC_SCAN_URL+'/tx/'+_tx.hash+'">';
+    notify(html_a+"⏳ "+sub_tx+"</a>",4);
+    _tx.wait().then(async function(receipt) {
+        $('#link_'+_tx.hash+' .tx_status').text('✅');
+        notify(html_a+"✅ "+sub_tx+"</a>",4);
+        play_done();
+        last_tx = _tx;
+        tx_pending = false;
+        last_tx_recept = receipt;
+        load_wallet();
+    });
+}
 
-$("#web3_status").click(async function(){
+$("#web3_status").click(async function(event){
+    if(event.target.id=="logout"){
+        return;
+    }
     if(signer==''){
         $("#web3_status").css("pointer-events","none");
         $("#web3_status p").text("LOGGING IN ...");
@@ -522,29 +608,30 @@ const parseBigInt = function(
 
 // Determines current gen by getting number of minted NFTs.
 // Updates UI accordignly
-const determineGen = async function() {
+const determineGen = async function(trigger=true) {
     await _NB_MINTED();
 
-    // TODO : Remove commenting out to enable showing stuff depending of gen
     $('.generation_number').text(gen_number);
     if(!gen0_soldout) {
         $('#span_nb_minted').text(NB_MINTED);
         $('#p_mint_price').text(MINT_PRICE + " Ξ");
         $('#span_total_supply').text(GEN0_SUPPLY);
-        //$('.display_on_gen1').hide();
+        $('.display_on_gen1').hide();
     } else {
         $('#span_nb_minted').text(NB_MINTED-GEN0_SUPPLY);
-        $('.gen1only').css('display','block');
+        $('.gen1only').removeClass('gen1only');
         $('#p_mint_price').text("1 $MJCC");
         $('#span_total_supply').text(GEN0_SUPPLY+GEN1_SUPPLY);
-        //$('.display_on_gen1').show();
+        $('.display_on_gen1').show();
     }
     if(gen1_soldout){
-        //$('.display_on_soldout').show();
+        $('.display_on_soldout').show();
     } else {
-        //$('.display_on_soldout').hide();
+        $('.display_on_soldout').hide();
     }
-    $(".wallet_sensitive").trigger('walletchanged');
+    if(trigger){
+        $(".wallet_sensitive").trigger('walletchanged');
+    }
 }
 
 $(document).ready(async function() {

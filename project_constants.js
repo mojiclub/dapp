@@ -88,10 +88,16 @@ const ABI = [
   "function GEN1_SUPPLY() public view returns (uint256)",
   "function WL_MINT_TIMESTAMP() public view returns (uint256)",
   "function MINT_TIMESTAMP() public view returns (uint256)",
-  "function holderTokens() public view returns (uint256[] memory)",
+  "function holderTokens(address _addr) public view returns (uint256[] memory)",
 
   // Ticket NFT claiming
   "function claimTickets() public",
+  "function RewardableCanClaim(uint256 tokenId) public view returns(bool)",
+  "function RewardableTimestamp(uint256 tokenId) public view returns(uint256)",
+  "function ClaimTickets(uint256[] memory tokenIds) public",
+
+  // NFTs previews
+  "function tokenURI(uint256 tokenId) public view override returns (string memory)",
 
   // Sale
   "function SaleIsActive() public view returns (bool)",
