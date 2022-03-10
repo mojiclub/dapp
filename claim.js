@@ -1,5 +1,3 @@
-var CLAIMABLE_TICKETS = [];
-
 var _tokensList;
 var TokensList = async function(reset=false) {
 	if(reset || !_tokensList) {
@@ -43,9 +41,7 @@ var claim_tickets = async function(){
 	var selected_tokens = [];
 	$('.avatar_thumb.avatar_selected').each(function(){
 		var _tkn = $(this).data("token");
-		if(CLAIMABLE_TICKETS.includes(_tkn)) {
-			selected_tokens.push(_tkn);
-		}
+		selected_tokens.push(_tkn);
 	});
 
 	if(!signer || signer==''){
@@ -121,33 +117,39 @@ $(document).ready(async function() {
 			if(_timestamps[_index]>-1){
 				var _ct = runCountdown($('.avatar_thumb b').eq(_index), new Date(_timestamps[_index] * 1000), _elapsed_text="CLAIM NOW");
 				if(_ct) {
-					CLAIMABLE_TICKETS.push(_tkn.toNumber());
+					$('.avatar_thumb').eq(_index).addClass("claimable");
 				}
 			}
 		}
 		if(gen0_soldout) {
 			$('#claim_buttons_parent').show();
-			$('.avatar_thumb').click(function(){
-				var _tkn = $(this).data("token");
-				if(CLAIMABLE_TICKETS.includes(_tkn)) {
+			if($('.avatar_thumb.claimable').length==0) {
+				$('#claim_btn_selection').addClass("disabled");
+			} else {
+				$('#claim_btn_selection').removeClass("disabled");
+				$('.avatar_thumb.claimable').click(function(){
+					var _tkn = $(this).data("token");
 					$(this).toggleClass('avatar_selected');
-				}
-				if($('.avatar_thumb:not(.avatar_selected)').length==0) {
-					$('#claim_btn_selection p').text('UNSELECT ALL');
-				} else {
-					$('#claim_btn_selection p').text('SELECT ALL');
-				}
-			});
+					if($('.avatar_thumb.claimable:not(.avatar_selected)').length>0) {
+						$('#claim_btn_selection p').text('SELECT ALL');
+					} else {
+						$('#claim_btn_selection p').text('UNSELECT ALL');
+					}
+				});
+			}
 		}
 	});
 
 	$('#claim_btn_selection').click(function(){
-		var _elems = $('.avatar_thumb:not(.avatar_selected)');
+		// Not selected elements
+		var _elems = $('.avatar_thumb.claimable:not(.avatar_selected)');
+		// If all claimable elements are selected
 		if(_elems.length==0) {
-			$('.avatar_thumb.avatar_selected').removeClass('avatar_selected');
+			// Click all selected claimable elements (unselect all)
+			$('.avatar_thumb.claimable.avatar_selected').trigger('click');
 		} else {
+			// Click all non-selected elements (select all)
 			_elems.trigger('click');
-			$('#claim_btn_selection p').text('UNSELECT ALL');
 		}
 	});
 

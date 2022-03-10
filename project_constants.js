@@ -110,6 +110,7 @@ const ABI = [
   "function withdraw()",
   "function setListingDate(uint256 _listing_timestamp, uint256 wl_delay) public",
   "function setMerkleRoots(bytes32 _wl, bytes32 _freemint) public",
+  "function setClaimTime(uint256 days) public",
 
   // An event triggered whenever anyone transfers to someone else
   "event Transfer(address indexed from, address indexed to, uint amount)"
