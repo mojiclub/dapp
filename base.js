@@ -106,17 +106,13 @@ function isMobile() {
     return false;
 }
 
-if(!window.ethereum) {/*
-    document.getElementById("web3_status").classList.add("disabled");
-    document.getElementById("web3_status").innerHTML = "<p>METAMASK NOT DETECTED</p>";
-    // Get rid of mint button if browser isnt web3.
-    if(document.getElementById("web3_status")){
-        document.getElementById("Main_btn").classList.add("disabled");
-        document.getElementById("Main_btn").innerHTML = "<p>METAMASK NOT DETECTED</p>";
-    }*/
-} else {
+if(window.ethereum) {
     window.ethereum.on('accountsChanged', async function (accounts) {
         await load_wallet();
+        if(merkle_verify){
+            merkle_verify(accounts[0]);
+        }
+        $(".wallet_sensitive").trigger('walletchanged');
     });
 
     window.ethereum.on("chainChanged", async function (number) {
@@ -160,6 +156,16 @@ const getRotationDegrees = function(obj) {
     return (angle < 0) ? angle + 360 : angle;
 }
 
+function openFullscreen() {
+  if (document.body.requestFullscreen) {
+    document.body.requestFullscreen();
+  } else if (document.body.webkitRequestFullscreen) { /* Safari */
+    document.body.webkitRequestFullscreen();
+  } else if (document.body.msRequestFullscreen) { /* IE11 */
+    document.body.msRequestFullscreen();
+  }
+}
+
 // Store running intervals
 var RUNNING_INTERVALS = [];
 const clear_intervals = function(){
@@ -168,6 +174,7 @@ const clear_intervals = function(){
     }
 }
 
+// Returns true if countdown is over, false if it will keep running in the BG
 const runCountdown = function(_elem, _date, _elapsed_text="NOW") {
     var now = new Date();
     var seconds = parseInt((_date-now)/1000);
@@ -206,8 +213,10 @@ const runCountdown = function(_elem, _date, _elapsed_text="NOW") {
             }
         }, 1000);
         RUNNING_INTERVALS.push(_int);
+        return false;
     } else {
         _elem.text(_elapsed_text);
+        return true;
     }
 }
 
@@ -290,6 +299,7 @@ const load_contract_vars = async function() {
     await _MINT_PRICE();
     await MINT_TIMESTAMPS();
     await _NB_MINTED();
+    SALE_ACTIVE = await SaleIsActive();
 }
 
 web3_init();
@@ -347,6 +357,13 @@ const SaleIsActive = async function(){
     return b;
 }
 
+const SetListingDate = async function(_ts, _delayMin) {
+    const contract_signer = contract.connect(signer);
+    var b = await contract_signer.setListingDate(_ts,_delayMin*60);
+    transaction_experience(b);
+    return b;
+}
+
 const sleep = function(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -359,9 +376,9 @@ const ShortenBytes = function(_bytes, _chars=7) {
 
 const notify = function(msg, seconds=3) {
     $('#notification p').html(msg);
-    $('#notification').css("right","12px");
+    $('#notification').toggleClass("sticky_right");
     setTimeout(function() {
-       $('#notification').css("right","-100vw"); 
+       $('#notification').toggleClass("sticky_right");
     },1000*seconds);
 }
 
@@ -460,25 +477,32 @@ const populate_web3_actions = async function(past_blocks=12000){
     if(signer==''){
         return;
     }
+    // We want to avoid refreshing while a TX is pending to prevent it from being removed in web3_actions
+    if($('#web3_actions span.tx_status:contains("⏳")').length>0){
+        return;
+    }
     var addr = await signer.getAddress();
     var filtrr = contract.filters.Transfer(null, addr);
     var blocknum = await provider.getBlockNumber();
     var txs = await contract.queryFilter(filtrr, blocknum-past_blocks, blocknum);
+    var txs_tickets = await tickets_contract.queryFilter(filtrr, blocknum-past_blocks, blocknum);
+    var all_txs = [...txs, ...txs_tickets]
+    all_txs.sort((a,b) => a.blockNumber-b.blockNumber);
     var addedHashs = [];
-    if(txs.length>0){
-        $("#web3_actions").html('<h2>Transactions (Last '+past_blocks+' blocks) :</h2>');
-        for(const tx of txs.reverse()){
+    if(all_txs.length>0){
+        $("#web3_actions").html('<h2>Mints/Transfers/Claims (Last '+past_blocks+' blocks) :</h2>');
+        for(const tx of all_txs.reverse()){
             var hash = tx.transactionHash;
             if(addedHashs.includes(hash)){
                 continue;
             } else {
                 addedHashs.push(hash);
             }
-            var tx_link = '<p id="link_'+hash+'"><span class="tx_status">✅</span> : <a target="_blank" href="'+RPC_SCAN_URL+'/tx/'+hash+'">'+ShortenBytes(hash)+'</a></p>';
+            var tx_link = '<p id="link_'+hash+'"><span class="tx_status">✅</span> : <a target="_blank" href="'+RPC_SCAN_URL+'/tx/'+hash+'">'+ShortenBytes(hash,12)+'</a></p>';
             $("#web3_actions").append(tx_link);
         }
     } else {
-        $("#web3_actions").html('<h2>No transactions (Last '+past_blocks+' blocks)</h2>');
+        $("#web3_actions").html('<h2>No Mints/Transfers/Claims (Last '+past_blocks+' blocks)</h2>');
     }
 }
 
@@ -491,7 +515,7 @@ const transaction_experience = async function(_tx) {
     var html_a = '<a target="_blank" href="'+RPC_SCAN_URL+'/tx/'+_tx.hash+'">';
     notify(html_a+"⏳ "+sub_tx+"</a>",4);
     _tx.wait().then(async function(receipt) {
-        $('#link_'+_tx.hash+' .tx_status').text('✅');
+        populate_web3_actions();
         notify(html_a+"✅ "+sub_tx+"</a>",4);
         play_done();
         last_tx = _tx;
@@ -560,6 +584,23 @@ const ipfs_add = async function(Obj) {
 
 const ipfs_pin = async function(path) {
     await ipfs_node.pin.add(path);
+
+    // Ping Cloudflare and ipfs.io to make them temporarly pin the files in their IPFS nodes
+    // Allows for a faster loading later on.
+    url_ping('https://cloudflare-ipfs.com/ipfs/'+path);
+    url_ping('https://ipfs.io/ipfs/'+path);
+    
+}
+
+const url_ping = async function(_url) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', _url, true);
+    xhr.onload = function() {
+      if (xhr.status === 200) {
+        console.log(_url+' OK 200');
+      }
+    };
+    xhr.send();
 }
 
 const dataURItoBlob = function(dataURI) {

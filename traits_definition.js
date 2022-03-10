@@ -334,7 +334,12 @@ const HideSoldOutTraits = function(reset=false) {
         var xhr = new XMLHttpRequest();
         xhr.open("GET", 'https://www.dekefake.duckdns.org:62192/soldout_traits', false);
         xhr.setRequestHeader('Accept', 'application/json');
-        xhr.send();
+        try {
+            xhr.send();
+        }catch(e) {
+            console.log("soldout_traits : ", e);
+        }
+        
         
         if(xhr.status === 200) {
             _soldout_traits = JSON.parse(JSON.parse(xhr.responseText));
@@ -536,6 +541,8 @@ const new_user_config = async function(_verify=true, _hide=false) {
     // Update enable/disable categories based on traits currently active
     // Example : Disable hair color if no haircut is selected
     update_dependencies();
+
+    $(".wallet_sensitive").trigger('walletchanged');
 }
 
 $(document).ready(function(){

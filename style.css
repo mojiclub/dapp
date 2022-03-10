@@ -51,7 +51,7 @@ html {
 }
 
 .display_on_gen1, .display_on_soldout {
-	/*display:none;  TODO : remove comments */
+	display:none;
 }
 
 .testing {
@@ -426,17 +426,21 @@ input::-webkit-inner-spin-button {
 	position: -webkit-sticky;
     position: fixed;
     top: 24px;
-    right: 24px;
+}
+
+.sticky_right {
+	right: 24px!important;
 }
 
 #web3_actions {
+	margin-left: 16px;
 	padding: 48px 24px 24px;
 	min-width: 64px;
 	z-index: 2;
 	display: none;
 	text-align: left;
 	backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
 }
 
 #logout {
@@ -456,7 +460,7 @@ a {
 	text-decoration: none;
 }
 
-a.rounded {
+a.rounded, #notification p a, #web3_actions a {
 	color: white;
 }
 
@@ -856,8 +860,8 @@ div[class^="div_trait_"], div[class*="div_trait_"] {
 	#notification {
 		max-width: 250px;
 	}
-	#web3_status, #web3_actions {
-	    right: 12px;
+	.sticky_right {
+		right: 12px!important;
 	}
 	::-webkit-scrollbar {
 	  width: 6px;

@@ -4,18 +4,8 @@ var img_dataurl;
 adf = 0;
 const getImagesFromTraits = function() {
     // Just so theres some preview. Remove later
-    aad = [
-        "https://anatomyscienceapeclub.com/_next/static/images/m1-glow-3-91761278e95e18a3e4166ffe1203c44e.jpg",
-        "https://anatomyscienceapeclub.com/_next/static/images/m1-frosted-5-d04ffc4c7aff5d32221a26dc24b065b1.jpg",
-        "https://anatomyscienceapeclub.com/_next/static/images/m2-white-3-eec6462b14fa0396206d166586485bb2.jpg",
-        "https://anatomyscienceapeclub.com/_next/static/images/m2-gold-1-5bb8ffe9155a5f697ead540621850c0c.jpg",
-        "https://anatomyscienceapeclub.com/_next/static/images/m1-white-3-a537e3fd09f323f6a58370ff1914f1ef.jpg",
-        "https://anatomyscienceapeclub.com/_next/static/images/m2-lava-1-be741908bdaa95bd41ba8c9d4ae59922.jpg",
-        "https://anatomyscienceapeclub.com/_next/static/images/m2-white-9-983075ed2dd5158b67e87f2199371c07.jpg",
-        "https://anatomyscienceapeclub.com/_next/static/images/m2-frosted-4-6d67a2eaece7ae75e91f36f1e3e7663e.jpg"
-    ];
     adf++;
-    return [aad[adf%aad.length]];
+    return [proj_top_images[adf%proj_top_images.length]];
 
     var traits_img_root = '/traits_components/';
     var traits_img_extension = '.png';
@@ -30,10 +20,10 @@ const getImagesFromTraits = function() {
 // Overrides newBlock() from base.js
 async function newBlock(){
     await load_contract_vars();
-    await determineGen();
     if(_tab_active) {
         HideSoldOutTraits(true);
     }
+    await determineGen(true);
     populate_web3_actions();
 }
 
@@ -47,14 +37,14 @@ $(document).ready(async function() {
         if(gen0_soldout) {
             // Gen1 needs tickets to mint NFTs
             if(ticket_balance < nb_mint) {
-                return [false,nb_mint+" $MJCC NEEDED TO MINT (BALANCE: "+ticket_balance+" $MJCC)"];
+                return [false,"INSUFFICIENT MJCC"];
             }
         } else {
             // Gen0 needs ETH to mint NFTs
             var price_to_pay = MINT_PRICE*nb_mint;
             if(eth_balance<price_to_pay) {
                 price_to_pay = parseFloat(price_to_pay).toString(); // Remove potential floating point stuff
-                return [false,price_to_pay+" ETH NEEDED TO MINT (BALANCE "+eth_balance+" ETH)"];
+                return [false,"INSUFFICIENT ETH"];
             }
         }
         return [true,""];
@@ -119,7 +109,7 @@ $(document).ready(async function() {
                     $('#composer_close_div').click();
                     transaction_experience(tx);
                 } catch (error) {
-                    notify('Error code '+error.error.code+' ~ '+error.error.message);
+                    notify('Error code '+error.code+' ~ '+error.message);
                 }
             }
         } else {
@@ -139,7 +129,8 @@ $(document).ready(async function() {
         $('#span_nb_minted').text(NB_MINTED);
 
         if(gen0_soldout) {
-            $('#span_total_supply').text(GEN0_SUPPLY+GEN1_SUPPLY);
+            $('#span_nb_minted').text(NB_MINTED-GEN0_SUPPLY);
+            $('#span_total_supply').text(GEN1_SUPPLY);
         } else {
             $('#span_total_supply').text(GEN0_SUPPLY);
         }

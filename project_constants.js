@@ -48,10 +48,10 @@ const RPC_SCAN_URL = "https://ropsten.etherscan.io";
 //const RPC_BACKUP = "https://rpc.ankr.com/eth" // ETH Mainnet
 //const CHAIN_ID = 1; // ETH Mainnet
 // const RPC_SCAN_URL = "https://etherscan.io";
-const CONTRACT_ADDRESS = '0x58CcC647879b766436c6BA58Dfb622cBe9099E62';
+const CONTRACT_ADDRESS = '0xC163FE1Ed1351B0382707Bb1C0A8a19100c1ACF7';
 
 // Tickets
-const CONTRACT_ADDRESS_TICKETS = '0xd11e30Fef9a5f26382BCc11B54011794B7DFf688';
+const CONTRACT_ADDRESS_TICKETS = '0x484c59142eFc33D428C696E877065962EB807C1D';
 const ABI_TICKETS = ["function balanceOf(address) view returns (uint)"];
 
 // Project URLs
@@ -91,10 +91,10 @@ const ABI = [
   "function holderTokens(address _addr) public view returns (uint256[] memory)",
 
   // Ticket NFT claiming
-  "function claimTickets() public",
-  "function RewardableCanClaim(uint256 tokenId) public view returns(bool)",
+  "function EligibleToClaim(uint256 tokenId) public view returns(bool)",
   "function RewardableTimestamp(uint256 tokenId) public view returns(uint256)",
   "function ClaimTickets(uint256[] memory tokenIds) public",
+  "function TokenGen(uint256 tokenId) public view returns(uint8)",
 
   // NFTs previews
   "function tokenURI(uint256 tokenId) public view override returns (string memory)",
@@ -108,6 +108,8 @@ const ABI = [
 
   // Only for owner, remove later
   "function withdraw()",
+  "function setListingDate(uint256 _listing_timestamp, uint256 wl_delay) public",
+  "function setMerkleRoots(bytes32 _wl, bytes32 _freemint) public",
 
   // An event triggered whenever anyone transfers to someone else
   "event Transfer(address indexed from, address indexed to, uint amount)"

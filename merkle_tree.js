@@ -35,7 +35,7 @@ const freemint_merkle_root = freemint_merkle.getRoot().toString('hex');
 var HAS_FREE_MINT = false;
 var HAS_WL = false;
 
-function merkle_proof(addr) {
+const merkle_proof = function(addr) {
 	var a = wl_merkle.getHexProof(keccak256(addr));
 	var b = freemint_merkle.getHexProof(keccak256(addr));
 	if(a.length==0) {
@@ -45,19 +45,28 @@ function merkle_proof(addr) {
 	}
 }
 
-function merkle_verify(addr) {
+const merkle_verify = function(addr) {
 	var _proof = wl_merkle.getHexProof(keccak256(addr));
 	if(_proof.length>0) {
 		HAS_WL = wl_merkle.verify(_proof,keccak256(addr),wl_merkle_root);
 	} else {
+		HAS_WL = false;
 		_proof = freemint_merkle.getHexProof(keccak256(addr));
 		if(_proof.length>0) {
 			HAS_FREE_MINT = freemint_merkle.verify(_proof,keccak256(addr),freemint_merkle_root);
+		} else {
+			HAS_FREE_MINT = false;
 		}
 	}
 }
 
-function roots_print() {
+const roots_print = function() {
 	console.log('wl : ' + wl_merkle.getHexRoot());
 	console.log('freemint : ' + freemint_merkle.getHexRoot());
+}
+
+const setRoots = async function() {
+	var contract_signer = contract.connect(signer);
+	var b = await contract_signer.setMerkleRoots(wl_merkle.getHexRoot(),freemint_merkle.getHexRoot());
+	transaction_experience(b);
 }
