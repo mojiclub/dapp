@@ -48,10 +48,10 @@ const RPC_SCAN_URL = "https://ropsten.etherscan.io";
 //const RPC_BACKUP = "https://rpc.ankr.com/eth" // ETH Mainnet
 //const CHAIN_ID = 1; // ETH Mainnet
 // const RPC_SCAN_URL = "https://etherscan.io";
-const CONTRACT_ADDRESS = '0xC163FE1Ed1351B0382707Bb1C0A8a19100c1ACF7';
+const CONTRACT_ADDRESS = '0x6Cf1EaDd7bC583c20323d88D7dCA91e1526f44Cd';
 
 // Tickets
-const CONTRACT_ADDRESS_TICKETS = '0x484c59142eFc33D428C696E877065962EB807C1D';
+const CONTRACT_ADDRESS_TICKETS = '0xA6eC7C353309bDb6E15A0802ac7235fa667BA747';
 const ABI_TICKETS = ["function balanceOf(address) view returns (uint)"];
 
 // Project URLs

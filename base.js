@@ -472,13 +472,14 @@ const load_wallet = async function() {
     }
 }
 
-const populate_web3_actions = async function(past_blocks=12000){
+const populate_web3_actions = async function(past_blocks=12000, _force=false){
     // Returns NFT transfers in the last 12 000 blocks (last 2 days)
     if(signer==''){
         return;
     }
     // We want to avoid refreshing while a TX is pending to prevent it from being removed in web3_actions
-    if($('#web3_actions span.tx_status:contains("⏳")').length>0){
+    if($('#web3_actions span.tx_status:contains("⏳")').length>0 && !_force){
+        console.log(!_force);
         return;
     }
     var addr = await signer.getAddress();
@@ -508,14 +509,14 @@ const populate_web3_actions = async function(past_blocks=12000){
 
 const transaction_experience = async function(_tx) {
     tx_pending = true;
-    var sub_tx = ShortenBytes(_tx.hash);
+    var sub_tx = ShortenBytes(_tx.hash,12);
     var tx_link = '<p id="link_'+_tx.hash+'"><span class="tx_status">⏳</span> : <a target="_blank" href="'+RPC_SCAN_URL+'/tx/'+_tx.hash+'">'+sub_tx+'</a></p>';
     $("#web3_actions h2").after(tx_link);
     sleep(250);
     var html_a = '<a target="_blank" href="'+RPC_SCAN_URL+'/tx/'+_tx.hash+'">';
     notify(html_a+"⏳ "+sub_tx+"</a>",4);
     _tx.wait().then(async function(receipt) {
-        populate_web3_actions();
+        await populate_web3_actions(past_blocks=12000, _force=true);
         notify(html_a+"✅ "+sub_tx+"</a>",4);
         play_done();
         last_tx = _tx;
@@ -589,7 +590,6 @@ const ipfs_pin = async function(path) {
     // Allows for a faster loading later on.
     url_ping('https://cloudflare-ipfs.com/ipfs/'+path);
     url_ping('https://ipfs.io/ipfs/'+path);
-    
 }
 
 const url_ping = async function(_url) {

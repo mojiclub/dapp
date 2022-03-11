@@ -84,7 +84,7 @@ $(document).ready(async function() {
 
         // Then, push it to the IPFS
         var ipfs_img = await ipfs_add(dataUrl);
-        await ipfs_pin(ipfs_img);
+        ipfs_pin(ipfs_img);
 
         // Get the token Json file from API
         var _token_data;
@@ -98,7 +98,7 @@ $(document).ready(async function() {
             if(_token_data['valid']){
                 var base36_specs = _verify_traits['base36'];
                 var token_specs = _token_data['token_json'];
-                await ipfs_pin(token_specs[0]);
+                ipfs_pin(token_specs[0]);
 
                 var msg_tab = [base36_specs[0], token_specs[0]];
                 var rs_tab = [base36_specs[2], base36_specs[3], token_specs[2], token_specs[3]];
@@ -287,6 +287,10 @@ $(document).ready(async function() {
     // Images on top(mobile)
     $('.top_images .overlays_wrapper > img').each(function( index ) {
         $( this ).attr('src',proj_top_images[index]);
+        // Only show first image on load
+        if(index>0){
+            $( this ).css('display','none');
+        }
     });
 
     var rotate_imgs = 0;
