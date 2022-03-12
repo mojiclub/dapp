@@ -433,25 +433,40 @@ const connect_wallet = async function() {
                 params: [{ chainId: '0x'+CHAIN_ID.toString(16) }],
             });
         } catch(e) {
-            // Chain not added in metamask
-            await ethereum.request({
-                method: 'wallet_addEthereumChain',
-                params: [
-                    {
-                        chainId: '0x'+CHAIN_ID.toString(16),
-                        chainName: CHAIN_NAME,
-                        nativeCurrency: {
-                            name: CHAIN_SYMBOL,
-                            symbol: CHAIN_SYMBOL,
-                            decimals: 18,
-                        },
-                        rpcUrls: [RPC],
-                        blockExplorerUrls: [RPC_SCAN_URL]
-                    },
-                ],
-            });
+            if(e.code==4902 || e.code==-32603){
+                // Chain not added in metamask
+                try {
+                    await ethereum.request({
+                        method: 'wallet_addEthereumChain',
+                        params: [
+                            {
+                                chainId: '0x'+CHAIN_ID.toString(16),
+                                chainName: CHAIN_NAME,
+                                nativeCurrency: {
+                                    name: CHAIN_SYMBOL,
+                                    symbol: CHAIN_SYMBOL,
+                                    decimals: 18,
+                                },
+                                rpcUrls: [RPC],
+                                blockExplorerUrls: [RPC_SCAN_URL]
+                            },
+                        ],
+                    });
+                } catch(e2) {
+                    if(e2.code==4001){
+                        // User rejected the request
+                        web3_init();
+                        return;
+                    }
+                }
+            } else {
+                if(e.code==4001){
+                    // User rejected the request
+                    web3_init();
+                    return;
+                }
+            }
         }
-        
         await connect_wallet();
         return;
     }
@@ -530,17 +545,19 @@ const populate_web3_actions = async function(past_blocks=12000, _force=false){
     all_txs.sort((a,b) => a.blockNumber-b.blockNumber);
     var addedHashs = [];
     if(all_txs.length>0){
-        $("#web3_actions").html('<h2>Mints/Transfers/Claims (Last '+past_blocks+' blocks) :</h2>');
+        console.log(all_txs[all_txs.length-1]);
+        var _html = '<h2>Mints/Transfers/Claims (Last '+past_blocks+' blocks) :</h2>';
         for(const tx of all_txs.reverse()){
             var hash = tx.transactionHash;
+            var _date = new Date((await tx.getBlock()).timestamp*1000).toISOString().replace('T',' ').split('.')[0]+' UTC';
             if(addedHashs.includes(hash)){
                 continue;
             } else {
                 addedHashs.push(hash);
             }
-            var tx_link = '<p id="link_'+hash+'"><span class="tx_status">✅</span> : <a target="_blank" href="'+RPC_SCAN_URL+'/tx/'+hash+'">'+ShortenBytes(hash,12)+'</a></p>';
-            $("#web3_actions").append(tx_link);
+            _html += '<p id="link_'+hash+'"><span class="tx_status">✅</span> : <a target="_blank" href="'+RPC_SCAN_URL+'/tx/'+hash+'">'+_date+' - '+ShortenBytes(hash,7)+'</a></p>';
         }
+        $("#web3_actions").html(_html);
     } else {
         $("#web3_actions").html('<h2>No Mints/Transfers/Claims (Last '+past_blocks+' blocks)</h2>');
     }
@@ -548,8 +565,9 @@ const populate_web3_actions = async function(past_blocks=12000, _force=false){
 
 const transaction_experience = async function(_tx, notifyComplete=true) {
     tx_pending = true;
-    var sub_tx = ShortenBytes(_tx.hash,12);
-    var tx_link = '<p id="link_'+_tx.hash+'"><span class="tx_status">⏳</span> : <a target="_blank" href="'+RPC_SCAN_URL+'/tx/'+_tx.hash+'">'+sub_tx+'</a></p>';
+    var sub_tx = ShortenBytes(_tx.hash,7);
+    var _date = new Date().toISOString().replace('T',' ').split('.')[0]+' UTC';
+    var tx_link = '<p id="link_'+_tx.hash+'"><span class="tx_status">⏳</span> : <a target="_blank" href="'+RPC_SCAN_URL+'/tx/'+_tx.hash+'">'+_date+' - '+sub_tx+'</a></p>';
     $("#web3_actions h2").after(tx_link);
     sleep(250);
     var html_a = '<a target="_blank" href="'+RPC_SCAN_URL+'/tx/'+_tx.hash+'">';

@@ -461,7 +461,7 @@ const drawPreview = async function(_images){
     var ctx = c.getContext("2d");
     ctx.clearRect( 0, 0, c.width, c.height);
 
-    await Promise.all(["https://lh3.googleusercontent.com/l9DQD2zJZ9oWkK9iypkkC26i_WYvGVYsoA0lXvNSTn3xLJ9cNa7ydzvfgJEVOKoKUZjPID0nYJH9Y6HSzTbz1qC3s-GU8NoNSXpc=s0"].map(loadImage)).then(images => {
+    await Promise.all(_images.map(loadImage)).then(images => {
       images.forEach((image, i) =>
         ctx.drawImage(image, 0, 0, c.width, c.height)
       );
