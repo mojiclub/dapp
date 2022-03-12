@@ -118,7 +118,7 @@ $(document).ready(async function() {
     }
 
     $("#nb_mint").bind('keyup mouseup walletchanged',async function () {
-        if(provider=='' || !provider.provider) {
+        if(provider=='') {
             $('#my_nft').hide();
             $('#composer_confirm').removeClass("disabled");
             $('#composer_confirm p').text("CONNECT WALLET");
@@ -171,7 +171,7 @@ $(document).ready(async function() {
             }
         }
 
-        if(signer!=''){
+        if(provider.provider && signer!=''){
             var can_mint = await balance_enough_to_mint();
             if(!can_mint[0]){
                 $('#composer_confirm p').text(can_mint[1]);
@@ -180,6 +180,8 @@ $(document).ready(async function() {
             } else {
                 $('#Main_btn p').text("COMPOSE MY AVATAR"); 
             }
+        } else {
+            return;
         }
 
         var nbtm = parseInt($("#nb_mint").val());

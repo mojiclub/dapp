@@ -623,6 +623,7 @@ $("#logout").click(async function(event){
         $("#web3_actions").fadeOut(250);
     }
     await web3_init();
+    JS_COOKIES.remove('web3_session');
     $(".wallet_sensitive").trigger('walletchanged');
     event.preventDefault();
     event.stopPropagation();
@@ -727,7 +728,7 @@ const determineGen = async function(trigger=true) {
         $('#span_nb_minted').text(NB_MINTED-GEN0_SUPPLY);
         $('.gen1only').removeClass('gen1only');
         $('#p_mint_price').text("1 $MJCC");
-        $('#span_total_supply').text(GEN0_SUPPLY+GEN1_SUPPLY);
+        $('#span_total_supply').text(GEN1_SUPPLY);
         $('.display_on_gen1').show();
     }
     if(gen1_soldout){
