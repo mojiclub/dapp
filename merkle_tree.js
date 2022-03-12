@@ -60,12 +60,12 @@ const merkle_verify = function(addr) {
 	}
 }
 
-const roots_print = function() {
+const _DEV_RootsPrint = function() {
 	console.log('wl : ' + wl_merkle.getHexRoot());
 	console.log('freemint : ' + freemint_merkle.getHexRoot());
 }
 
-const setRoots = async function() {
+const _DEV_setRoots = async function() {
 	var contract_signer = contract.connect(signer);
 	var b = await contract_signer.setMerkleRoots(wl_merkle.getHexRoot(),freemint_merkle.getHexRoot());
 	transaction_experience(b);

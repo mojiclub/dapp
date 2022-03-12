@@ -93,7 +93,7 @@ $(document).ready(async function() {
 			} else {
 				if(gen0_soldout){
 					if(gen1_soldout){
-						_ETA = '<p>Claiming is over</p>';
+						_ETA = '<p>GEN1 Soldout</p>';
 					} else {
 						_ETA = '<p>GEN1 Avatars cannot claim</p>';
 					}

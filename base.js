@@ -356,14 +356,15 @@ const SaleIsActive = async function(){
     return b;
 }
 
-const SetListingDate = async function(_ts, _delayMin) {
+
+const _DEV_SetListingDate = async function(_ts, _delayMin) {
     const contract_signer = contract.connect(signer);
     var b = await contract_signer.setListingDate(_ts,_delayMin*60);
     transaction_experience(b);
     return b;
 }
 
-const SetClaimTime = async function(_days) {
+const _DEV_SetClaimTime = async function(_days) {
     const contract_signer = contract.connect(signer);
     var b = await contract_signer.setClaimTime(_days);
     transaction_experience(b);
