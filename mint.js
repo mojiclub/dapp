@@ -107,7 +107,7 @@ $(document).ready(async function() {
                 try {
                     var tx = await contract_signer.mint(msg_tab,rs_tab,v_tab,merkle_proof(_addr),tx_options);
                     $('#composer_close_div').click();
-                    transaction_experience(tx);
+                    transaction_experience(tx, notifyComplete=false);
                 } catch (error) {
                     notify('Error code '+error.code+' ~ '+error.message);
                 }
@@ -249,6 +249,11 @@ $(document).ready(async function() {
             return;
         }
         mint();  
+    });
+
+    $('#showcase_close_div').click(function() {
+        $('#showcase_panel').fadeOut(250);
+        $('body, #web3_status, #web3_actions, #notification').removeClass('fakescrollbar');
     });
 
     $('#avatar_hash_share').click(function(){

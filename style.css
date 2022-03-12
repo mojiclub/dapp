@@ -613,18 +613,18 @@ p.roadmap_num {
     height: 92px;
 }
 
-#nft_composer_header {
+#nft_composer_header, #showcase_panel_header {
 	display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-#nft_composer_header > plc {
+#nft_composer_header > plc, #showcase_panel_header > plc {
 	width: 44px;
 	opacity: 0;
 }
 
-#nft_composer {
+#nft_composer, #showcase_panel {
 	display: none;
 	position: fixed;
     backdrop-filter: blur(24px);
@@ -648,12 +648,17 @@ p.roadmap_num {
 	transform: translateZ(0);
 }
 
-#composer_title {
+#composer_title, #showcase_title {
 	font-family: Moji, var(--main-fonts);
     margin: 8px 0;
 }
 
-#composer_close_div {
+#showcase_title span {
+	font-family: var(--main-fonts);
+	font-size: 130%;
+}
+
+#composer_close_div, #showcase_close_div {
     overflow-wrap: normal;
     background: rgb(var(--main-white));
     color: rgb(var(--main-black));
@@ -666,7 +671,7 @@ p.roadmap_num {
     transition: filter 0.2s ease;
 }
 
-#composer_close {
+#composer_close, #showcase_close {
 	display: flex;
     justify-content: center;
     align-items: center;
@@ -674,7 +679,7 @@ p.roadmap_num {
     height: 36px;
 }
 
-body.hasHover #composer_close_div:hover {
+body.hasHover #composer_close_div:hover, body.hasHover #showcase_close_div:hover {
 	filter: invert(0.4);
 }
 
@@ -824,7 +829,7 @@ div[class^="div_trait_"], div[class*="div_trait_"] {
     width: fit-content;
 }
 
-#nft_composer .btnn p {
+#nft_composer .btnn p, #showcase_panel .btnn p {
     margin: 8px 0;
     font-size: 90%;
 }
@@ -903,7 +908,7 @@ div[class^="div_trait_"], div[class*="div_trait_"] {
 		padding: 8px 0;
 	    font-size: 24px;
 	}
-	#nft_composer {
+	#nft_composer, #showcase_panel {
 		padding: 0 6px;
 	}
 
@@ -922,8 +927,9 @@ div[class^="div_trait_"], div[class*="div_trait_"] {
 	#canvas_div{
 		height: 80vw;
 	}
-	#composer_title {
+	#composer_title, #showcase_title {
 	    font-size: 130%;
+	    max-width: 70%;
 	}
 	#composer_left, #canvas_div {
 		margin: 4px;
@@ -986,7 +992,7 @@ div[class^="div_trait_"], div[class*="div_trait_"] {
     #menu, .full-width-pc {
 		width: 100%;
 	}
-	#nft_composer {
+	#nft_composer, #showcase_panel {
 		max-height: 800px;
     	max-width: 1300px;
 	}

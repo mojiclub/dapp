@@ -93,7 +93,7 @@ const web3_init = async function(){
 
     provider = new ethers.providers.JsonRpcProvider(RPC);
     contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, provider);
-    tickets_contract = new ethers.Contract(CONTRACT_ADDRESS_TICKETS, ABI_TICKETS, provider);
+    tickets_contract = new ethers.Contract(CONTRACT_ADDRESS_TICKETS, ABI, provider);
     load_contract_vars();
     CURRENT_BLOCK = await provider.getBlockNumber();
     setInterval(lastBlock,2000); // Check if new block has been mined every 2 seconds
@@ -126,7 +126,6 @@ if(window.ethereum) {
         } else {
             await load_wallet();
         }
-      console.log(number);
     });
 }
 
@@ -459,6 +458,8 @@ const load_wallet = async function() {
     await signer_balance_nfts(true);
     $('#eth_status').text(addr);
     contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, provider);
+    tickets_contract = new ethers.Contract(CONTRACT_ADDRESS_TICKETS, ABI, provider);
+    loadEvents(addr);
     $(".wallet_sensitive").trigger('walletchanged');
     $("#web3_status p").text(ShortenBytes(addr));
     document.getElementById('logout').style.display = 'block';
@@ -472,6 +473,22 @@ const load_wallet = async function() {
     }
 }
 
+const loadEvents = function(_addr) {
+    tickets_contract.on("Mint", (to, amount) => {
+        if(to == _addr){
+            // TODO : Showcase the claimed tickets
+            console.log("You minted "+amount+" tickets");
+        }
+    });
+
+    contract.on("Mint", (to, tokenId) => {
+        if(to == _addr){
+            // TODO : Showcase the minted NFT
+            console.log("You minted avatar #"+tokenId);
+        }
+    });
+}
+
 const populate_web3_actions = async function(past_blocks=12000, _force=false){
     // Returns NFT transfers in the last 12 000 blocks (last 2 days)
     if(signer==''){
@@ -479,14 +496,15 @@ const populate_web3_actions = async function(past_blocks=12000, _force=false){
     }
     // We want to avoid refreshing while a TX is pending to prevent it from being removed in web3_actions
     if($('#web3_actions span.tx_status:contains("⏳")').length>0 && !_force){
-        console.log(!_force);
         return;
     }
     var addr = await signer.getAddress();
     var filtrr = contract.filters.Transfer(null, addr);
     var blocknum = await provider.getBlockNumber();
     var txs = await contract.queryFilter(filtrr, blocknum-past_blocks, blocknum);
-    var txs_tickets = await tickets_contract.queryFilter(filtrr, blocknum-past_blocks, blocknum);
+
+    var filtrr2 = tickets_contract.filters.Transfer(null, addr);
+    var txs_tickets = await tickets_contract.queryFilter(filtrr2, blocknum-past_blocks, blocknum);
     var all_txs = [...txs, ...txs_tickets]
     all_txs.sort((a,b) => a.blockNumber-b.blockNumber);
     var addedHashs = [];
@@ -507,7 +525,7 @@ const populate_web3_actions = async function(past_blocks=12000, _force=false){
     }
 }
 
-const transaction_experience = async function(_tx) {
+const transaction_experience = async function(_tx, notifyComplete=true) {
     tx_pending = true;
     var sub_tx = ShortenBytes(_tx.hash,12);
     var tx_link = '<p id="link_'+_tx.hash+'"><span class="tx_status">⏳</span> : <a target="_blank" href="'+RPC_SCAN_URL+'/tx/'+_tx.hash+'">'+sub_tx+'</a></p>';
@@ -517,7 +535,9 @@ const transaction_experience = async function(_tx) {
     notify(html_a+"⏳ "+sub_tx+"</a>",4);
     _tx.wait().then(async function(receipt) {
         await populate_web3_actions(past_blocks=12000, _force=true);
-        notify(html_a+"✅ "+sub_tx+"</a>",4);
+        if(notifyComplete){
+            notify(html_a+"✅ "+sub_tx+"</a>",4);
+        }
         play_done();
         last_tx = _tx;
         tx_pending = false;
@@ -596,8 +616,8 @@ const url_ping = async function(_url) {
     var xhr = new XMLHttpRequest();
     xhr.open('GET', _url, true);
     xhr.onload = function() {
-      if (xhr.status === 200) {
-        console.log(_url+' OK 200');
+      if (xhr.status !== 200) {
+        url_ping(_url);
       }
     };
     xhr.send();

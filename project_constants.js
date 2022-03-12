@@ -41,18 +41,27 @@ var _inputChangeTmpDisable = false;
 // ----------------------------
 
 // Chain ID and RPC
-var RPC = "https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161" // ROPSTEN Testnet
-var CHAIN_ID = 3; // ROPSTEN Testnet
-const RPC_SCAN_URL = "https://ropsten.etherscan.io";
+
+// ROPSTEN TESTNET
+//var RPC = "https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161"
+//var CHAIN_ID = 3;
+//const RPC_SCAN_URL = "https://ropsten.etherscan.io";
+
+// ETH MAINNET
 //const RPC = "https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161" // ETH Mainnet
-//const RPC_BACKUP = "https://rpc.ankr.com/eth" // ETH Mainnet
-//const CHAIN_ID = 1; // ETH Mainnet
+//const CHAIN_ID = 1;
 // const RPC_SCAN_URL = "https://etherscan.io";
-const CONTRACT_ADDRESS = '0x6Cf1EaDd7bC583c20323d88D7dCA91e1526f44Cd';
+
+// POLYGON MUMBAI
+var RPC = "https://matic-mumbai.chainstacklabs.com"
+var CHAIN_ID = 80001;
+const RPC_SCAN_URL = "https://mumbai.polygonscan.com";
+
+
+const CONTRACT_ADDRESS = '0x901e80eE876789313087CCb2d8d6c838d268a849';
 
 // Tickets
-const CONTRACT_ADDRESS_TICKETS = '0xA6eC7C353309bDb6E15A0802ac7235fa667BA747';
-const ABI_TICKETS = ["function balanceOf(address) view returns (uint)"];
+const CONTRACT_ADDRESS_TICKETS = '0x6c40aBf9B9e57538dEcAA9f4D98B20a91DD7A0ae';
 
 // Project URLs
 var twitter_url = 'https://twitter.com/i/user/2548559143'; // Get ID : https://tweeterid.com/
@@ -113,8 +122,10 @@ const ABI = [
   "function setClaimTime(uint256 days) public",
 
   // An event triggered whenever anyone transfers to someone else
-  "event Transfer(address indexed from, address indexed to, uint amount)"
+  "event Transfer(address indexed from, address indexed to, uint256 indexed tokenId)",
+  "event Mint(address indexed to, uint256 indexed tokenId)"
 ];
+
 var CURRENT_BLOCK;
 
 // NFT images on top.
