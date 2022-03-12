@@ -545,7 +545,6 @@ const populate_web3_actions = async function(past_blocks=12000, _force=false){
     all_txs.sort((a,b) => a.blockNumber-b.blockNumber);
     var addedHashs = [];
     if(all_txs.length>0){
-        console.log(all_txs[all_txs.length-1]);
         var _html = '<h2>Mints/Transfers/Claims (Last '+past_blocks+' blocks) :</h2>';
         for(const tx of all_txs.reverse()){
             var hash = tx.transactionHash;
