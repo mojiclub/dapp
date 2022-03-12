@@ -43,16 +43,22 @@ var _inputChangeTmpDisable = false;
 // Chain ID and RPC
 
 // ROPSTEN TESTNET
+//var CHAIN_NAME = "Ethereum Ropsten"
+//var CHAIN_SYMBOL = "ETH"
 //var RPC = "https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161"
 //var CHAIN_ID = 3;
 //const RPC_SCAN_URL = "https://ropsten.etherscan.io";
 
 // ETH MAINNET
+//var CHAIN_NAME = "Ethereum Mainnet"
+//var CHAIN_SYMBOL = "ETH"
 //const RPC = "https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161" // ETH Mainnet
 //const CHAIN_ID = 1;
 // const RPC_SCAN_URL = "https://etherscan.io";
 
 // POLYGON MUMBAI
+var CHAIN_NAME = "Mumbai"
+var CHAIN_SYMBOL = "MATIC"
 var RPC = "https://matic-mumbai.chainstacklabs.com"
 var CHAIN_ID = 80001;
 const RPC_SCAN_URL = "https://mumbai.polygonscan.com";

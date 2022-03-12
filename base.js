@@ -427,10 +427,31 @@ const connect_wallet = async function() {
         await sleep(10);
     }
     if(provider._network.chainId != CHAIN_ID && window.ethereum && wc_provider == ''){
-        await ethereum.request({
-            method: 'wallet_switchEthereumChain',
-            params: [{ chainId: '0x'+CHAIN_ID.toString(16) }],
-        });
+        try {
+            await ethereum.request({
+                method: 'wallet_switchEthereumChain',
+                params: [{ chainId: '0x'+CHAIN_ID.toString(16) }],
+            });
+        } catch(e) {
+            // Chain not added in metamask
+            await ethereum.request({
+                method: 'wallet_addEthereumChain',
+                params: [
+                    {
+                        chainId: '0x'+CHAIN_ID.toString(16),
+                        chainName: CHAIN_NAME,
+                        nativeCurrency: {
+                            name: CHAIN_SYMBOL,
+                            symbol: CHAIN_SYMBOL,
+                            decimals: 18,
+                        },
+                        rpcUrls: [RPC],
+                        blockExplorerUrls: [RPC_SCAN_URL]
+                    },
+                ],
+            });
+        }
+        
         await connect_wallet();
         return;
     }
