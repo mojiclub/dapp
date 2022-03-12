@@ -363,6 +363,13 @@ const SetListingDate = async function(_ts, _delayMin) {
     return b;
 }
 
+const SetClaimTime = async function(_days) {
+    const contract_signer = contract.connect(signer);
+    var b = await contract_signer.setClaimTime(_days);
+    transaction_experience(b);
+    return b;
+}
+
 const sleep = function(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
