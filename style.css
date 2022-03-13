@@ -461,7 +461,7 @@ input::-webkit-inner-spin-button {
 #my_nft {
 	display: none;
 	justify-content: space-around;
-  flex-direction: row;
+  flex-direction: column;
   margin-top: 8px;
 }
 #my_nft p {
@@ -902,9 +902,6 @@ div[class^="div_trait_"], div[class*="div_trait_"] {
 	.image_with_text img {
     width: 80%;
 	  padding: 0;
-	}
-	#my_nft {
-	  flex-direction: column;
 	}
 	.nolatpadd p {
 		padding: 0 16px;
