@@ -6,7 +6,7 @@
 }
 
 .avatar_thumb {
-    width: calc(33.3333% - 16px);
+    width: calc(25% - 16px);
     margin: 8px;
     box-sizing: border-box;
     padding: 8px;
@@ -43,6 +43,33 @@
 
 #claim_buttons .btnn {
 	margin-left: 12px;
+}
+
+#nft_per_row {
+	text-align: right;
+    margin-right: 8px;
+    display: none;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+#nft_per_row p {
+	margin: 0 8px;
+}
+
+#nft_per_row_select {
+	height: 2em;
+    width: 3em;
+    background: rgb(var(--main-black));
+    color: rgb(var(--main-white));
+    border: 1px solid rgb(var(--main-color));
+    border-radius: 8px;
+}
+
+#my_nft {
+	flex-direction: column;
+    align-items: flex-end;
+    margin-right: 8px;
 }
 
 @media only screen and (max-device-width: 480px) {

@@ -26,6 +26,18 @@
                     <h2>MY AVATARS</h2>
                     <sep></sep>
                 </div>
+                
+                <div id="nft_per_row" class="deskonly">
+                    <p>Avatars per row : </p>
+                    <select name="nft_per_row" id="nft_per_row_select">
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4" selected>4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                    </select>
+                </div>
+
                 <div id="claim_avatars_list" class="wallet_sensitive"></div>
                 <div id="claim_buttons_parent" class="display_on_gen1">
                     <div id="claim_buttons">
@@ -33,7 +45,10 @@
                         <div id="claim_btn_claim" class="btnn rounded"><p>CLAIM TICKETS</p></div>
                     </div>
                 </div>
-                
+                <div id="my_nft">
+                    <p id="my_avatars">My minted Avatars: <span></span></p>
+                    <p id="my_tickets">My Tickets: <span></span></p>
+                </div>
             </div>
             
             <div id="footer" class="subcontainer rounded">

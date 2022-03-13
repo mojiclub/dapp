@@ -27,6 +27,31 @@ async function newBlock(){
     populate_web3_actions();
 }
 
+async function showcase_nft(tokenId) {
+    var _url = await NFT_Picture(tokenId);
+    var _tknGen = await TokenGen(tokenId);
+    $('#showcase_avatar_image').attr('src',_url);
+    $('#showcase_avatar_id').text(tokenId);
+    $('#showcase_avatar_opensea').attr('href',"https://opensea.io/assets/"+CONTRACT_ADDRESS+"/"+tokenId);
+    $('#showcase_avatar_looksrare').attr('href',"https://looksrare.org/collections/"+CONTRACT_ADDRESS+"/"+tokenId);
+    
+    var _twitter_share = encodeURI("https://twitter.com/intent/tweet?text=I've just minted The Moji Club avatar #"+tokenId+
+        ". Mint yours before it gets sold out at https://mojiclub.eth.link/ &hashtags=mojiclub,nft,mint").replace(/#/g, '%23');
+    $('#showcase_avatar_twittershare').attr('href',_twitter_share);
+
+    if(_tknGen==0){
+        $('#showcase_avatar_gen0').show();
+    } else {
+        $('#showcase_avatar_gen0').hide();
+    }
+    $('#showcase_panel').fadeIn(250);
+    $('body, #web3_status, #web3_actions, #notification').addClass('fakescrollbar');
+    const jsConfetti = new JSConfetti();
+    jsConfetti.addConfetti({
+       emojis: ['🎊', '💯', '🎉'],confettiNumber: 80
+    });
+}
+
 $(document).ready(async function() {
 
     // Verify if user has enough tokens to mint NFTs

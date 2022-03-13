@@ -113,7 +113,11 @@ body {
    	text-align: left;
 }
 
-.image_with_text hr {
+.center-hr {
+	margin: 24px auto!important;
+}
+
+.image_with_text hr, .accent-hr {
 		margin: 24px 48px;
     border: 1px solid rgb(var(--main-color));
     box-sizing: border-box;
@@ -441,6 +445,9 @@ input::-webkit-inner-spin-button {
 	text-align: left;
 	backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
+  max-height: calc(100vh - 48px);
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 #logout {
@@ -453,6 +460,12 @@ input::-webkit-inner-spin-button {
 
 #my_nft {
 	display: none;
+	justify-content: space-around;
+  flex-direction: row;
+  margin-top: 8px;
+}
+#my_nft p {
+    margin: 0;
 }
 
 a {
@@ -538,10 +551,12 @@ sep {
     margin: 16px 0;
 }
 
-.title {
+div.title {
 	display: flex;
     flex-direction: column;
     align-items: center;
+}
+.title {
     padding: 16px 0;
     margin: 0;
     font-family: Moji, var(--main-fonts);
@@ -623,6 +638,7 @@ p.roadmap_num {
 	display: flex;
   flex-direction: column;
   justify-content: center;
+  padding: 0 16px;
 }
 
 #showcase_avatar_icons {
@@ -681,7 +697,7 @@ p.roadmap_num {
     margin: 16px 0 8px 0;
 }
 
-#showcase_title span {
+#showcase_panel h2 > span {
 	font-family: var(--main-fonts);
 	font-size: 130%;
 }
@@ -886,6 +902,9 @@ div[class^="div_trait_"], div[class*="div_trait_"] {
 	.image_with_text img {
     width: 80%;
 	  padding: 0;
+	}
+	#my_nft {
+	  flex-direction: column;
 	}
 	.nolatpadd p {
 		padding: 0 16px;

@@ -536,44 +536,34 @@ const load_wallet = async function() {
 
     // Show NFT count at the bottom of the NFT
     if($('#my_nft').length>0) {
-        var nfts = await signer_balance_nfts();
-        $('#my_nft').text('My minted NFTs: '+nfts);
-        $('#my_nft').show();
+        var _nfts = await signer_balance_nfts();
+        var _tickets = await signer_balance_tickets();
+        $('#my_avatars span').text(_nfts);
+        $('#my_tickets span').text(_tickets);
+        $('#my_nft').css('display','flex');
     }
 }
 
+
+async function showcase_nft(tokenId) {
+    // Overriden in mint.js
+    notify("Moji Avatar #"+tokenId+" minted ✅");
+}
+
+async function showcase_tickets(amount) {
+    // Overriden in claim.js
+}
+
 const loadEvents = function(_addr) {
-    tickets_contract.on("Mint", (to, amount) => {
+    tickets_contract.on("Mint", async function(to, amount) {
         if(to == _addr){
-            // TODO : Showcase the claimed tickets
-            console.log("You minted "+amount+" tickets");
+            showcase_tickets(amount);
         }
     });
 
     contract.on("Mint", async function(to, tokenId) {
         if(to == _addr){
-            var _url = await NFT_Picture(tokenId);
-            var _tknGen = await TokenGen(tokenId);
-            $('#showcase_avatar_image').attr('src',_url);
-            $('#showcase_avatar_id').text(tokenId);
-            $('#showcase_avatar_opensea').attr('href',"https://opensea.io/assets/"+CONTRACT_ADDRESS+"/"+tokenId);
-            $('#showcase_avatar_looksrare').attr('href',"https://looksrare.org/collections/"+CONTRACT_ADDRESS+"/"+tokenId);
-            
-            var _twitter_share = encodeURI("https://twitter.com/intent/tweet?text=I've just minted The Moji Club avatar #"+tokenId+
-                ". Mint yours before it gets sold out at https://mojiclub.eth.link/ &hashtags=mojiclub,nft,mint").replace(/#/g, '%23');
-            $('#showcase_avatar_twittershare').attr('href',_twitter_share);
-
-            if(_tknGen==0){
-                $('#showcase_avatar_gen0').show();
-            } else {
-                $('#showcase_avatar_gen0').hide();
-            }
-            $('#showcase_panel').fadeIn(250);
-            $('body, #web3_status, #web3_actions, #notification').addClass('fakescrollbar');
-            const jsConfetti = new JSConfetti();
-            jsConfetti.addConfetti({
-               emojis: ['🎊', '💯', '🎉'],confettiNumber: 80
-            });
+            showcase_nft(tokenId);
         }
     });
 }
@@ -704,12 +694,17 @@ const ipfs_pin = async function(path) {
     url_ping('https://ipfs.io/ipfs/'+path);
 }
 
-const url_ping = async function(_url) {
+const url_ping = async function(_url,_recurrence=0) {
+    // Too much tries
+    if(_recurrence>5){
+        return;
+    }
+    await sleep(100*_recurrence);
     var xhr = new XMLHttpRequest();
     xhr.open('GET', _url, true);
     xhr.onload = function() {
       if (xhr.status !== 200) {
-        url_ping(_url);
+        url_ping(_url, _recurrence=_recurrence+1);
       }
     };
     xhr.send();
