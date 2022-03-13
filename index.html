@@ -205,10 +205,35 @@
 
         <div id="notification" class="rounded"><p>TOAST MESSAGE</p></div>
         <div id="showcase_panel" class="rounded box-shadow-accent">
-            <div id="nft_composer_header">
+            <div id="showcase_panel_header">
                 <plc></plc>
                 <h2 id="showcase_title">YOUR NEW AVATAR IS READY <span>!</span></h2>
                 <div id="showcase_close_div"><p id="showcase_close">X</p></div>
+            </div>
+            <div class="panel_flex_container">
+                <img id="showcase_avatar_image" src="https://ik.imagekit.io/bayc/assets/ape2.png" class="rounded">
+                <div class="panel_b_align_vertically">
+                    <h2 class="title">YOUR NEW AVATAR IS NOW HOME</h2>
+                    <p><b>Congrats !</b> You minted The Moji Club Avatar #<span id="showcase_avatar_id">0</span>.</p>
+                    <div id="showcase_avatar_icons">
+                        <a target="_blank" class="btnn rounded" id="showcase_avatar_opensea">
+                            <img src="opensea.svg">
+                            <p>View on Opensea</p>
+                        </a>
+                        <a target="_blank" class="btnn rounded" id="showcase_avatar_looksrare">
+                            <img src="looksrare.svg">
+                            <p>View on Looksrare</p>
+                        </a>
+                        <a target="_blank" class="btnn rounded" id="showcase_avatar_twittershare">
+                            <img src="twitter.svg">
+                            <p>Share on Twitter</p>
+                        </a>
+                    </div>
+                    <div id="showcase_avatar_gen0" class="deskonly">
+                        <h2 class="title">WHAT TO DO NEXT ></h2>
+                        <p>You have minted a Generation 0 Avatar, congrats ! As soon as GEN0 gets sold out, you'll be able to claim a ticket for your Avatar. Use it to mint a GEN1 avatar for free, or sell the ticket on the secondary market to give someone else the chance to create his own avatar !</p>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -224,5 +249,6 @@
         <script src="base.js"></script>
         <script src="merkle_tree.js"></script>
         <script src="mint.js"></script>
+        <script src="confetti.js"></script>
     </body>
 </html>

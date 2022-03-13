@@ -356,6 +356,31 @@ const SaleIsActive = async function(){
     return b;
 }
 
+var tokenURI = async function(tokenId) {
+    var _res = await contract.tokenURI(tokenId);
+    return _res.replaceAll('ipfs://','https://cloudflare-ipfs.com/ipfs/');
+}
+
+var NFT_Picture = async function(tokenId) {
+    var json_url = await tokenURI(tokenId);
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', json_url, false);
+    try {
+       xhr.send(); 
+   } catch(e){
+       return;
+   }
+    
+    if(xhr.status === 200) {
+        var _data = JSON.parse(xhr.response);
+        return _data['image'].replaceAll('ipfs://','https://cloudflare-ipfs.com/ipfs/');
+    }
+}
+
+var TokenGen = async function(tokenId) {
+    var _res = await contract.TokenGen(tokenId);
+    return _res;
+}
 
 const _DEV_SetListingDate = async function(_ts, _delayMin) {
     const contract_signer = contract.connect(signer);
@@ -525,10 +550,30 @@ const loadEvents = function(_addr) {
         }
     });
 
-    contract.on("Mint", (to, tokenId) => {
+    contract.on("Mint", async function(to, tokenId) {
         if(to == _addr){
-            // TODO : Showcase the minted NFT
-            console.log("You minted avatar #"+tokenId);
+            var _url = await NFT_Picture(tokenId);
+            var _tknGen = await TokenGen(tokenId);
+            $('#showcase_avatar_image').attr('src',_url);
+            $('#showcase_avatar_id').text(tokenId);
+            $('#showcase_avatar_opensea').attr('href',"https://opensea.io/assets/"+CONTRACT_ADDRESS+"/"+tokenId);
+            $('#showcase_avatar_looksrare').attr('href',"https://looksrare.org/collections/"+CONTRACT_ADDRESS+"/"+tokenId);
+            
+            var _twitter_share = encodeURI("https://twitter.com/intent/tweet?text=I've just minted The Moji Club avatar #"+tokenId+
+                ". Mint yours before it gets sold out at https://mojiclub.eth.link/ &hashtags=mojiclub,nft,mint").replace(/#/g, '%23');
+            $('#showcase_avatar_twittershare').attr('href',_twitter_share);
+
+            if(_tknGen==0){
+                $('#showcase_avatar_gen0').show();
+            } else {
+                $('#showcase_avatar_gen0').hide();
+            }
+            $('#showcase_panel').fadeIn(250);
+            $('body, #web3_status, #web3_actions, #notification').addClass('fakescrollbar');
+            const jsConfetti = new JSConfetti();
+            jsConfetti.addConfetti({
+               emojis: ['🎊', '💯', '🎉'],confettiNumber: 80
+            });
         }
     });
 }

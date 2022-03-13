@@ -64,10 +64,10 @@ var CHAIN_ID = 80001;
 const RPC_SCAN_URL = "https://mumbai.polygonscan.com";
 
 
-const CONTRACT_ADDRESS = '0x901e80eE876789313087CCb2d8d6c838d268a849';
+const CONTRACT_ADDRESS = '0xbBb4D7E04612Ff9F4ff262Fbd7346600e0BeF959';
 
 // Tickets
-const CONTRACT_ADDRESS_TICKETS = '0x6c40aBf9B9e57538dEcAA9f4D98B20a91DD7A0ae';
+const CONTRACT_ADDRESS_TICKETS = '0xcc86E13b2F72a640faA67bB6f82d7F8a709B12E3';
 
 // Project URLs
 var twitter_url = 'https://twitter.com/i/user/2548559143'; // Get ID : https://tweeterid.com/

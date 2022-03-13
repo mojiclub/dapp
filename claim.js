@@ -16,27 +16,6 @@ var EligibleToClaim = async function(tokenId) {
 	return _res;
 }
 
-var TokenGen = async function(tokenId) {
-	var _res = await contract.TokenGen(tokenId);
-	return _res;
-}
-
-var tokenURI = async function(tokenId) {
-	var _res = await contract.tokenURI(tokenId);
-	return _res.replaceAll('ipfs://','https://cloudflare-ipfs.com/ipfs/');
-}
-
-var NFT_Picture = async function(tokenId) {
-	var json_url = await tokenURI(tokenId);
-	var xhr = new XMLHttpRequest();
-	xhr.open('GET', json_url, false);
-	xhr.send();
-	if(xhr.status === 200) {
-		var _data = JSON.parse(xhr.response);
-		return _data['image'].replaceAll('ipfs://','https://cloudflare-ipfs.com/ipfs/');
-	}
-}
-
 var claim_tickets = async function(){
 	var selected_tokens = [];
 	$('.avatar_thumb.avatar_selected').each(function(){

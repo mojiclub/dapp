@@ -65,7 +65,7 @@ const _DEV_RootsPrint = function() {
 	console.log('freemint : ' + freemint_merkle.getHexRoot());
 }
 
-const _DEV_setRoots = async function() {
+const _DEV_SetRoots = async function() {
 	var contract_signer = contract.connect(signer);
 	var b = await contract_signer.setMerkleRoots(wl_merkle.getHexRoot(),freemint_merkle.getHexRoot());
 	transaction_experience(b);
