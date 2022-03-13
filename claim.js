@@ -110,6 +110,8 @@ $(document).ready(async function() {
 		var _nft_per_row = JS_COOKIES.get('nft_per_row');
 		if(_nft_per_row){
 			$('#nft_per_row_select').val(_nft_per_row);
+		} else {
+			$('#nft_per_row_select').val(Math.max(2,Math.min(4,_tokensList.length)));
 		}
 		$('#nft_per_row_select').trigger('change');
 		clear_intervals();
