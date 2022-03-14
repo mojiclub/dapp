@@ -64,10 +64,10 @@ var CHAIN_ID = 80001;
 const RPC_SCAN_URL = "https://mumbai.polygonscan.com";
 
 
-const CONTRACT_ADDRESS = '0xbBb4D7E04612Ff9F4ff262Fbd7346600e0BeF959';
+const CONTRACT_ADDRESS = '0xbC175f056C832998EAA729E75e6D9f5d138a210b';
 
 // Tickets
-const CONTRACT_ADDRESS_TICKETS = '0xcc86E13b2F72a640faA67bB6f82d7F8a709B12E3';
+const CONTRACT_ADDRESS_TICKETS = '0xf3487D89E845520a64754Abee69DF34F3023B6f3';
 
 // Project URLs
 var twitter_url = 'https://twitter.com/i/user/2548559143'; // Get ID : https://tweeterid.com/
@@ -121,15 +121,24 @@ const ABI = [
   // Security
   "function _mojiTokensTraits(string memory _hash) public view returns(bool)",
 
-  // Only for owner, remove later
+  // Only for owner and team
   "function withdraw()",
   "function setListingDate(uint256 _listing_timestamp, uint256 wl_delay) public",
   "function setMerkleRoots(bytes32 _wl, bytes32 _freemint) public",
   "function setClaimTime(uint256 days) public",
+  "function TeamMint(string memory _url_msg, string memory _base36_msg) public",
 
   // An event triggered whenever anyone transfers to someone else
   "event Transfer(address indexed from, address indexed to, uint256 indexed tokenId)",
   "event Mint(address indexed to, uint256 indexed tokenId)"
+];
+
+const TeamAddrs = [
+'a',
+'0x2c3a0AB337d814dd7a83e3C8Ac0a127Fad7de241',
+'c',
+'d',
+'e'
 ];
 
 var CURRENT_BLOCK;
@@ -156,3 +165,5 @@ var gen0_soldout;
 var gen1_soldout;
 var gen_number = -1;
 var SALE_ACTIVE;
+
+var IAMTEAM = false;

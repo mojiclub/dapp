@@ -396,6 +396,18 @@ const _DEV_SetClaimTime = async function(_days) {
     return b;
 }
 
+const _DEV_IAMTeam = async function() {
+    if(IAMTEAM){
+        notify("STAFF MODE DISABLED");
+        $(".wallet_sensitive").trigger('walletchanged');
+    } else {
+        $('#mint_form').removeClass('disabled');
+        $('#Main_btn p').text('COMPOSE MY AVATAR');
+        notify("STAFF MODE ENABLED");
+    }
+    IAMTEAM = !IAMTEAM;
+}
+
 const sleep = function(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -587,8 +599,11 @@ const populate_web3_actions = async function(past_blocks=12000, _force=false){
     var all_txs = [...txs, ...txs_tickets]
     all_txs.sort((a,b) => a.blockNumber-b.blockNumber);
     var addedHashs = [];
+    var _gwei = (await provider.getGasPrice()).toNumber();
+    _gwei = Math.round(ethers.utils.formatUnits(_gwei, "gwei") * 100) / 100;
+    var _gas_ui = '<div class="gas_indicator"><img src="pumpgas.png"><p><span>'+_gwei+'</span> Gwei</p></div>';
     if(all_txs.length>0){
-        var _html = '<h2>Mints/Transfers/Claims (Last '+past_blocks+' blocks) :</h2>';
+        var _html = _gas_ui+'<h2>Mints/Transfers/Claims (Last '+past_blocks+' blocks) :</h2>';
         for(const tx of all_txs.reverse()){
             var hash = tx.transactionHash;
             var _date = new Date((await tx.getBlock()).timestamp*1000).toISOString().replace('T',' ').split('.')[0]+' UTC';
@@ -601,7 +616,7 @@ const populate_web3_actions = async function(past_blocks=12000, _force=false){
         }
         $("#web3_actions").html(_html);
     } else {
-        $("#web3_actions").html('<h2>No Mints/Transfers/Claims (Last '+past_blocks+' blocks)</h2>');
+        $("#web3_actions").html(_gas_ui+'<h2>No Mints/Transfers/Claims (Last '+past_blocks+' blocks)</h2>');
     }
 }
 

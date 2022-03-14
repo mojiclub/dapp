@@ -532,7 +532,7 @@ const new_user_config = async function(_verify=true, _hide=false) {
         // Verify and disable traits that are newly unavailable
         verifyTraits();
     }
-    
+        
     if(_hide){
         // Disable traits that are sold out
         HideSoldOutTraits();
@@ -541,7 +541,6 @@ const new_user_config = async function(_verify=true, _hide=false) {
     // Update enable/disable categories based on traits currently active
     // Example : Disable hair color if no haircut is selected
     update_dependencies();
-
     $(".wallet_sensitive").trigger('walletchanged');
 }
 

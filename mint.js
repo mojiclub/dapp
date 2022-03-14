@@ -79,27 +79,29 @@ $(document).ready(async function() {
     const mint = async function(){
         await determineGen();
 
-        if(gen1_soldout) {
-            notify("SOLD OUT");
-            return;
-        }
-
-        var nb_mint = 1; // parseInt($("#nb_mint").val()); // Version with multiple NFTs to mint
+        var _addr = await signer.getAddress();
         const contract_signer = contract.connect(signer);
         var tx_options = {};
 
-        if(!gen0_soldout) {
-            var price_to_pay = MINT_PRICE*nb_mint;
-            price_to_pay = parseFloat(price_to_pay).toString(); // Remove potential floating point stuff
-            tx_options = {value: ethers.utils.parseEther(price_to_pay.toString())}
-        }
-        var can_mint = await balance_enough_to_mint();
-        if(!can_mint[0]) {
-            notify(can_mint[1]);
-            return;
-        }
+        if(!IAMTEAM){
+            if(gen1_soldout) {
+                notify("SOLD OUT");
+                return;
+            }
 
-        var _addr = await signer.getAddress();
+            var nb_mint = 1; // parseInt($("#nb_mint").val()); // Version with multiple NFTs to mint
+
+            if(!gen0_soldout) {
+                var price_to_pay = MINT_PRICE*nb_mint;
+                price_to_pay = parseFloat(price_to_pay).toString(); // Remove potential floating point stuff
+                tx_options = {value: ethers.utils.parseEther(price_to_pay.toString())}
+            }
+            var can_mint = await balance_enough_to_mint();
+            if(!can_mint[0]) {
+                notify(can_mint[1]);
+                return;
+            }
+        }
 
         // Get the image (data:image/png;base64) from preview canvas    
         var dataUrl = await drawPreview(getImagesFromTraits());
@@ -124,18 +126,24 @@ $(document).ready(async function() {
                 var base36_specs = _verify_traits['base36'];
                 var token_specs = _token_data['token_json'];
                 ipfs_pin(token_specs[0]);
-
-                var msg_tab = [base36_specs[0], token_specs[0]];
-                var rs_tab = [base36_specs[2], base36_specs[3], token_specs[2], token_specs[3]];
-                var v_tab = [base36_specs[1], token_specs[1]];
                 
                 try {
-                    var tx = await contract_signer.mint(msg_tab,rs_tab,v_tab,merkle_proof(_addr),tx_options);
+                    var tx;
+                    if(IAMTEAM){
+                        tx = await contract_signer.TeamMint(token_specs[0], base36_specs[0]);
+                    } else {
+                        var msg_tab = [base36_specs[0], token_specs[0]];
+                        var rs_tab = [base36_specs[2], base36_specs[3], token_specs[2], token_specs[3]];
+                        var v_tab = [base36_specs[1], token_specs[1]];
+                        tx = await contract_signer.mint(msg_tab,rs_tab,v_tab,merkle_proof(_addr),tx_options);
+                    }
                     $('#composer_close_div').click();
                     transaction_experience(tx, notifyComplete=false);
                 } catch (error) {
                     notify('Error code '+error.code+' ~ '+error.message);
                 }
+            } else {
+                notify(_token_data['problem']);
             }
         } else {
             console.log("mint() Error : ", xhr.statusText);
@@ -160,6 +168,11 @@ $(document).ready(async function() {
             $('#span_total_supply').text(GEN0_SUPPLY);
         }
 
+        if(IAMTEAM){
+            return;
+        }
+
+        // Disable things based on contract state
         if(gen1_soldout) {
             $('#mint_form').addClass("disabled");
             $('#Main_btn p').text("SOLD OUT");
@@ -281,6 +294,22 @@ $(document).ready(async function() {
     $('#showcase_close_div').click(function() {
         $('#showcase_panel').fadeOut(250);
         $('body, #web3_status, #web3_actions, #notification').removeClass('fakescrollbar');
+    });
+
+    // Spam click "The Team" section title to enable/disable staff mode (free mint one token)
+    var _team_clicks = 0;
+    $('#the_team_title').click(function() {
+        if(_team_clicks==0){
+            setTimeout(function(){
+                _team_clicks=0;
+            },2000);
+        } else {
+            if(_team_clicks>4) {
+                _DEV_IAMTeam();
+                _team_clicks=0;
+            }
+        }
+        _team_clicks++;
     });
 
     $('#avatar_hash_share').click(function(){

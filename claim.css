@@ -72,6 +72,10 @@
     margin-right: 8px;
 }
 
+#my_nft_container {
+	display: none;
+}
+
 @media only screen and (max-device-width: 480px) {
 	.avatar_thumb {
 	    width: calc(50% - 16px);

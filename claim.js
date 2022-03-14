@@ -57,13 +57,12 @@ $(document).ready(async function() {
 		var _elem = $('#claim_avatars_list');
 
 		if(!signer || signer==''){
-			$('#my_nft').hide();
+			$('#my_nft_container').hide();
 			_elem.before('<p id="claim_no_wallet">Connect your wallet to see your avatars</p>');
 			_elem.find('*').remove();
 			$('#claim_buttons_parent').hide();
 			return;
 		}
-		$('#my_nft').show();
 		$('#claim_no_wallet').remove();
 		_elem.find('*').remove();
 		_elem.html('<h2></h2><h2 class="title">Loading ...</h2><h2></h2>');
@@ -101,12 +100,13 @@ $(document).ready(async function() {
 			if(_timestamp==-1){
 				not_eligible = 'disabled ';
 			}
-			_html += '<div data-token="'+_tkn+'" class="'+not_eligible+'avatar_thumb rounded"><img src="'+_uri+'"><h3>Moji #'+_tkn
+			_html += '<div data-token="'+_tkn+'" class="'+not_eligible+'avatar_thumb rounded"><img class="rounded" src="'+_uri+'"><h3>Moji #'+_tkn
 				+'</h3>'+_ETA+'</div>';
 		}
 		$('#nft_per_row').css('display','flex');
 		_elem.find('*').remove();
 		_elem.html(_html);
+		$('#my_nft_container').show();
 		var _nft_per_row = JS_COOKIES.get('nft_per_row');
 		if(_nft_per_row){
 			$('#nft_per_row_select').val(_nft_per_row);
@@ -137,6 +137,11 @@ $(document).ready(async function() {
 						$('#claim_btn_selection p').text('SELECT ALL');
 					} else {
 						$('#claim_btn_selection p').text('UNSELECT ALL');
+					}
+					if($('.avatar_selected').length==0){
+						$('#claim_btn_claim').addClass('disabled');
+					} else {
+						$('#claim_btn_claim').removeClass('disabled');
 					}
 				});
 			}
