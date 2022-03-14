@@ -103,7 +103,7 @@ function isMobile() {
     if(navigator.userAgentData) {
         return navigator.userAgentData.mobile;
     }
-    return false;
+    return window.outerWidth<=768;
 }
 
 if(window.ethereum) {

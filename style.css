@@ -911,7 +911,7 @@ div[class^="div_trait_"], div[class*="div_trait_"] {
 	overflow: hidden;
 }
 
-@media only screen and (max-device-width: 480px) {
+@media only screen and (max-device-width: 768px) {
 	.image_with_text {
 		flex-direction: column;
 		padding: 0;
@@ -1043,7 +1043,7 @@ div[class^="div_trait_"], div[class*="div_trait_"] {
 	}
 }
 
-@media only screen and (min-device-width: 481px) {
+@media only screen and (min-device-width: 769px) {
     .mobonly {
     	display: none!important;
     }

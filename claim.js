@@ -108,7 +108,7 @@ $(document).ready(async function() {
 		_elem.html(_html);
 		$('#my_nft_container').show();
 		var _nft_per_row = JS_COOKIES.get('nft_per_row');
-		if(_nft_per_row){
+		if(_nft_per_row && !isMobile()){
 			$('#nft_per_row_select').val(_nft_per_row);
 		} else {
 			$('#nft_per_row_select').val(Math.max(2,Math.min(4,_tokensList.length)));
