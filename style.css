@@ -341,6 +341,7 @@ p {
     align-items: center;
     justify-content: space-between;
     font-size: 120%;
+    margin: 0 0 18px 0;
 }
 
 #nb_minted, #mint_price {
