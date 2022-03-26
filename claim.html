@@ -1,34 +1,23 @@
 <!doctype html>
-<html lang="fr">
+<html lang="en">
     <head>
         <link rel="stylesheet" href="style.css">
         <link rel="stylesheet" href="claim.css">
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-        <title>Home ~ Moji Club</title>
+        <title>My PFPs ~ Moji Club</title>
     </head>
     <body class="hasHover darkmode">
-        <header>
-            <img id="header_logo" src="logo.png">
-        </header>
-        <div id="web3_status" class="sticky_right rounded btnn"><p>CONNECT WALLET</p><img src="logout.png" id="logout"></div>
-        <div id="web3_actions" class="sticky_right rounded bg_accent80 box-shadow-accent"></div>
-         <div class="container wallpaper_page">
-            <div id="menu" class="subcontainer rounded">
-                <a href="/" class="rounded intra_link">HOME</a>
-                <a href="/claim.html" class="rounded intra_link">MY AVATARS</a>
-                <a href="/litepaper.html" class="rounded intra_link">LITEPAPER</a>
-            </div>
-        </div>
+        <header></header>
         <div class="container wallpaper_page">
             <div class="subcontainer rounded wide avatar_list">
                 <div class="title">
-                    <h2>MY AVATARS</h2>
+                    <h2>MY PFPs</h2>
                     <sep></sep>
                 </div>
                 
                 <div id="nft_per_row" class="deskonly">
-                    <p>Avatars per row : </p>
+                    <p>PFPs per row : </p>
                     <select name="nft_per_row" id="nft_per_row_select">
                         <option value="2">2</option>
                         <option value="3">3</option>
@@ -47,45 +36,19 @@
                 </div>
                 <div id="my_nft_container">
                     <div id="my_nft">
-                        <p id="my_avatars">My Avatars: <span></span></p>
+                        <p id="my_avatars">My PFPs: <span></span></p>
                         <p id="my_tickets">My Tickets: <span></span></p>
                     </div>
                 </div> 
             </div>
             
-            <div id="footer" class="subcontainer rounded">
-            <p>&copy; 2022 Moji Club</p>
-                <div id="footer_links_icons"> 
-                    <a target="_blank" id="footer_links_twitter" href="" class="rounded btnn">
-                        <img src="twitter.svg">
-                    </a>
-                    <a target="_blank" id="footer_links_discord" href="" class="rounded btnn">
-                        <img src="discord.svg">
-                    </a>
-                    <a target="_blank" id="footer_links_opensea" href="" class="rounded btnn">
-                        <img src="opensea.svg">
-                    </a>
-                    <a target="_blank" id="footer_links_looksrare" href="" class="rounded btnn">
-                        <img src="looksrare.svg">
-                    </a>
-                    <a target="_blank" id="footer_links_etherscan" href="" class="rounded btnn">
-                        <img src="etherscan.svg">
-                    </a>
-                </div>
-                <div id="footer_links_other">
-                    <a target="_blank" class="intra_link" href="/provable-fairness.html">Provable fairness</a>
-                    <a target="_blank" class="intra_link" href="/terms.html">Terms &amp; Conditions</a>
-                </div>
-                <div id="ui_mode" class="noselect">
-                    <div id="ui_mode_slider" class="noselect">
-                        <img id="ui_mode_icon" class="noselect" src="moon.svg">
-                    </div>
-                </div>    
-            </div>
+            <footer></footer>
         </div>
 
         <div id="notification" class="rounded"><p>TOAST MESSAGE</p></div>
         
+        <script src="html_elements.js"></script>
+
         <script src="project_constants.js"></script>
         <script src="walletconnect.js"></script>
         <script src="jquery-3.6.0.min.js"></script>

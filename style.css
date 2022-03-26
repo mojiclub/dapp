@@ -1,5 +1,5 @@
 :root {
-  --main-color: 101, 193, 140;
+  --main-color: 101, 193, 240;
   --main-fonts: Montserrat,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;
   --main-white: 255, 255, 255;
   --main-black: 0, 0, 0;
@@ -141,6 +141,10 @@ body {
 
 .image_with_text i {
 	font-weight: bold;
+}
+
+footer {
+	width: 100%;
 }
 
 #footer {
@@ -502,7 +506,7 @@ a.rounded, #notification p a, #web3_actions a {
 	color: white;
 }
 
-a:hover:not(.btnn) {
+a:hover:not(.btnn), .underline {
 	text-decoration: underline;
 }
 
@@ -561,7 +565,7 @@ body.hasHover #nb_mint_plus:hover, body.hasHover #nb_mint_minus:hover, body.hasH
 
 @keyframes scrolling {
   0% { transform: translateX(0); }
-  100% { transform: translatex(-1536px); }
+  100% { transform: translateX(-1536px); }
 }
 
 .possibilities {
@@ -569,11 +573,17 @@ body.hasHover #nb_mint_plus:hover, body.hasHover #nb_mint_minus:hover, body.hasH
 }
 
 sep {
+	display: block;
     width: 32px;
     height: 4px;
     background: rgb(var(--main-white));
     text-align: center;
-    margin: 16px 0;
+    margin: 16px auto;
+}
+
+
+sep.sep32 {
+		margin: 32px auto;
 }
 
 div.title {
@@ -612,10 +622,6 @@ div.title {
 	margin: 0;
 }
 
-.wallpaper_page {
-	max-width: 1080px;
-}
-
 p.roadmap_num {
     font-size: 200%;
     font-weight: bold;
@@ -633,6 +639,10 @@ p.roadmap_num {
 
 .roadmap_num.done {
 	background: mediumseagreen;
+}
+
+#roadmap i {
+	font-size: 80%;
 }
 
 .wp_crew {
@@ -935,7 +945,7 @@ div[class^="div_trait_"], div[class*="div_trait_"] {
 		max-width: 250px;
 	}
 	.sticky_right {
-		right: 12px!important;
+		right: 16px!important;
 	}
 	::-webkit-scrollbar {
 	  width: 6px;
@@ -961,11 +971,6 @@ div[class^="div_trait_"], div[class*="div_trait_"] {
   }
   #marquee2 {
 		margin-left: -180px;
-	}
-
-	sep {
-	    width: 24x;
-	    height: 2px;
 	}
 
 	.title {
@@ -1077,6 +1082,9 @@ div[class^="div_trait_"], div[class*="div_trait_"] {
 	    -ms-box-shadow: rgb(var(--main-color)) 0px 0px 35px;
 	    -o-box-shadow: rgb(var(--main-color)) 0px 0px 35px;
 	    box-shadow: rgb(var(--main-color)) 0px 0px 35px;
+	}
+	.wallpaper_page .subcontainer {
+		width: 100%;
 	}
 }
 

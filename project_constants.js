@@ -18,7 +18,7 @@ var _colors = [
 ];
 
 var _main_color = Math.floor(Math.random()*_colors.length);
-function _setColor(_i=-1,_col='101, 193, 140') {
+function _setColor(_i=-1,_col='101, 193, 240') {
   if(_i==-1){
     document.documentElement.style.setProperty('--main-color', _col);
   } else {
@@ -139,6 +139,16 @@ const TeamAddrs = [
 'c',
 'd',
 'e'
+];
+
+// IPFS
+const _ipfs_gateways = [
+    'https://cloudflare-ipfs.com/ipfs/',
+    'https://ipfs.io/ipfs/',
+    'https://dweb.link/ipfs/',
+    'https://ipfs.fleek.co/ipfs/',
+    'https://hardbin.com/ipfs/',
+    'https://astyanax.io/ipfs/'
 ];
 
 var CURRENT_BLOCK;

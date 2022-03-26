@@ -35,7 +35,7 @@ async function showcase_nft(tokenId) {
     $('#showcase_avatar_opensea').attr('href',"https://opensea.io/assets/"+CONTRACT_ADDRESS+"/"+tokenId);
     $('#showcase_avatar_looksrare').attr('href',"https://looksrare.org/collections/"+CONTRACT_ADDRESS+"/"+tokenId);
     
-    var _twitter_share = encodeURI("https://twitter.com/intent/tweet?text=I've just minted The Moji Club avatar #"+tokenId+
+    var _twitter_share = encodeURI("https://twitter.com/intent/tweet?text=I've just minted The Moji Club PFP #"+tokenId+
         ". Mint yours before it gets sold out at https://mojiclub.eth.link/ &hashtags=mojiclub,nft,mint").replace(/#/g, '%23');
     $('#showcase_avatar_twittershare').attr('href',_twitter_share);
 
@@ -181,7 +181,7 @@ $(document).ready(async function() {
             var token_minted = await disableIfMinted();
             if(!token_minted) {
                 $('#composer_confirm').removeClass("disabled");
-                $('#composer_confirm p').text("MINT AVATAR");
+                $('#composer_confirm p').text("MINT PFP");
             }
         }
 
@@ -216,7 +216,7 @@ $(document).ready(async function() {
                 $('#composer_confirm').addClass("disabled");
                 return;
             } else {
-                $('#Main_btn p').text("COMPOSE MY AVATAR"); 
+                $('#Main_btn p').text("COMPOSE MY PFP"); 
             }
         } else {
             return;
@@ -317,12 +317,12 @@ $(document).ready(async function() {
         if(navigator.share) {
             const shareData = {
                 title: 'The Moji Club',
-                text: "Doesn't my Moji Club avatar looks dope ?",
+                text: "Doesn't my Moji Club PFP looks dope ?",
                 url: _share_url
             }
             navigator.share(shareData);
         } else {
-            notify('<p>Share your avatar using the following link :</p><a href="'+_share_url+'">'+_share_url+'</a>',10);
+            notify('<p>Share your PFP using the following link :</p><a href="'+_share_url+'">'+_share_url+'</a>',10);
         }
     });
 

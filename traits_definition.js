@@ -361,9 +361,9 @@ const disableIfMinted = async function() {
     var token_minted = await is_minted(_tkn_hash);
     if(token_minted){
         $('#composer_confirm').addClass('disabled');
-        $('#composer_confirm p').text('AVATAR MINTED ALREADY');
+        $('#composer_confirm p').text('PFP MINTED ALREADY');
     } else {
-        $('#composer_confirm p').text('MINT AVATAR');
+        $('#composer_confirm p').text('MINT PFP');
         $('#composer_confirm').removeClass('disabled');
     }
     return token_minted;
@@ -389,7 +389,7 @@ const verifyTraits = async function(RetryIfError=true) {
         _verify_traits = JSON.parse(JSON.parse(xhr.responseText));
         if(!_verify_traits['valid']) {
             $('#composer_confirm').addClass('disabled');
-            $('#composer_confirm p').text('AVATAR HAS SOLD OUT TRAITS');
+            $('#composer_confirm p').text('PFP HAS SOLD OUT TRAITS');
 
             if(!_verify_traits['problem'] && _verify_traits['problem']!="Incorrect gen"){
                 // Hide sold out traits (happens if a trait became unavailable while user was already on website)
@@ -513,8 +513,8 @@ const loadFromHash = async function(_hash){
     _inputChangeTmpDisable = false;
     await new_user_config();
     var _share_btn_html = $('#avatar_hash_share').html();
-    html_anim('#avatar_hash_share','<p>AVATAR LOADED ✅</p>');
-    //$('#avatar_hash_share').html('<p>AVATAR LOADED ✅</p>');
+    html_anim('#avatar_hash_share','<p>PFP LOADED ✅</p>');
+    //$('#avatar_hash_share').html('<p>PFP LOADED ✅</p>');
     setTimeout(function(){
         html_anim('#avatar_hash_share',_share_btn_html);
         //$('#avatar_hash_share').html(_share_btn_html);

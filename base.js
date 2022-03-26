@@ -356,13 +356,13 @@ const SaleIsActive = async function(){
     return b;
 }
 
-var tokenURI = async function(tokenId) {
+var tokenURI = async function(tokenId, gatewayId=0) {
     var _res = await contract.tokenURI(tokenId);
-    return _res.replaceAll('ipfs://','https://cloudflare-ipfs.com/ipfs/');
+    return _res.replaceAll('ipfs://',_ipfs_gateways[gatewayId]);
 }
 
-var NFT_Picture = async function(tokenId) {
-    var json_url = await tokenURI(tokenId);
+var NFT_Picture = async function(tokenId, gatewayId=0) {
+    var json_url = await tokenURI(tokenId, gatewayId=0);
     var xhr = new XMLHttpRequest();
     xhr.open('GET', json_url, false);
     try {
@@ -373,7 +373,11 @@ var NFT_Picture = async function(tokenId) {
     
     if(xhr.status === 200) {
         var _data = JSON.parse(xhr.response);
-        return _data['image'].replaceAll('ipfs://','https://cloudflare-ipfs.com/ipfs/');
+        return _data['image'].replaceAll('ipfs://',_ipfs_gateways[gatewayId]);
+    } else {
+        if(gatewayId!=_ipfs_gateways.length-1){
+            NFT_Picture(tokenId, gatewayId=gatewayId+1);
+        }
     }
 }
 
@@ -402,7 +406,7 @@ const _DEV_IAMTeam = async function() {
         $(".wallet_sensitive").trigger('walletchanged');
     } else {
         $('#mint_form').removeClass('disabled');
-        $('#Main_btn p').text('COMPOSE MY AVATAR');
+        $('#Main_btn p').text('COMPOSE MY PFP');
         notify("STAFF MODE ENABLED");
     }
     IAMTEAM = !IAMTEAM;
@@ -552,14 +556,16 @@ const load_wallet = async function() {
         var _tickets = await signer_balance_tickets();
         $('#my_avatars span').text(_nfts);
         $('#my_tickets span').text(_tickets);
-        $('#my_nft').css('display','flex');
+        if(_nfts+_tickets>0){
+            $('#my_nft').css('display','flex');
+        }
     }
 }
 
 
 async function showcase_nft(tokenId) {
     // Overriden in mint.js
-    notify("Moji Avatar #"+tokenId+" minted ✅");
+    notify("Moji PFP #"+tokenId+" minted ✅");
 }
 
 async function showcase_tickets(amount) {
@@ -700,13 +706,27 @@ const ipfs_add = async function(Obj) {
     return res.path;
 }
 
-const ipfs_pin = async function(path) {
-    await ipfs_node.pin.add(path);
+const ipfs_pin = async function(path,_recurrence=0) {
+    // Too much tries
+    if(_recurrence>5){
+        return;
+    }
+    try {
+        await ipfs_node.pin.add(path);
+    } catch(e) {
+        await ipfs_pin(path,_recurrence=_recurrence+1);
+        return;
+    }
 
-    // Ping Cloudflare and ipfs.io to make them temporarly pin the files in their IPFS nodes
+    ipfs_ping(path);
+}
+
+const ipfs_ping = async function(_hash) {
+    // Ping main IPFS gateways with the new path
     // Allows for a faster loading later on.
-    url_ping('https://cloudflare-ipfs.com/ipfs/'+path);
-    url_ping('https://ipfs.io/ipfs/'+path);
+    for(const ipfs_gateway of _ipfs_gateways){
+        url_ping(ipfs_gateway+_hash);
+    }
 }
 
 const url_ping = async function(_url,_recurrence=0) {
@@ -714,7 +734,7 @@ const url_ping = async function(_url,_recurrence=0) {
     if(_recurrence>5){
         return;
     }
-    await sleep(100*_recurrence);
+    await sleep(20);
     var xhr = new XMLHttpRequest();
     xhr.open('GET', _url, true);
     xhr.onload = function() {
@@ -802,13 +822,6 @@ $(document).ready(async function() {
     web3_session = JS_COOKIES.get('web3_session');
     if(web3_session) {
         $("#web3_status").trigger('click');
-    }
-
-    if(window.location.href.includes('.github.io')) {
-        $('.intra_link').each(function(){
-            var href = '/dapp' + $(this).attr('href');
-            $(this).attr('href',href);
-        });
     }
     
     await load_contract_vars();

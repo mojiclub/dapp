@@ -58,7 +58,7 @@ $(document).ready(async function() {
 
 		if(!signer || signer==''){
 			$('#my_nft_container').hide();
-			_elem.before('<p id="claim_no_wallet">Connect your wallet to see your avatars</p>');
+			_elem.before('<p id="claim_no_wallet">Connect your wallet to see your PFPs</p>');
 			_elem.find('*').remove();
 			$('#claim_buttons_parent').hide();
 			return;
@@ -72,7 +72,7 @@ $(document).ready(async function() {
 		if(_tokensList.length==0) {
 			$('#nft_per_row').hide();
 			_elem.find('*').remove();
-			_elem.html('<h2></h2><h2 class="title">No avatars on this wallet</h2><h2></h2>');
+			_elem.html('<h2></h2><h2 class="title">No PFPs on this wallet</h2><h2></h2>');
 			return;
 		}
 		for(const _tkn of _tokensList) {
