@@ -729,6 +729,26 @@ const ipfs_ping = async function(_hash) {
     }
 }
 
+const ipfs_folder_ping = async function(_data='', pin=false) {
+    var _t = _data.split('\n');
+    if(_data==''){
+        console.log('``');
+        return;
+    }
+    for(const _str of _t){
+        for(const ipfs_gateway of _ipfs_gateways){
+            url_ping(ipfs_gateway+_str.split(' ')[1]);
+        }
+        await sleep(1005);
+    }
+    
+    if(pin){
+        for(const _str of _t){
+            ipfs_pin(_str.split(' ')[1]);
+        }
+    }
+}
+
 const url_ping = async function(_url,_recurrence=0) {
     // Too much tries
     if(_recurrence>5){
@@ -737,7 +757,7 @@ const url_ping = async function(_url,_recurrence=0) {
     await sleep(20);
     var xhr = new XMLHttpRequest();
     xhr.open('GET', _url, true);
-    xhr.onload = function() {
+    xhr.onload = async function() {
       if (xhr.status !== 200) {
         url_ping(_url, _recurrence=_recurrence+1);
       }

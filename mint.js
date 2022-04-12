@@ -359,12 +359,10 @@ $(document).ready(async function() {
 
     // Set height = width (square) 
     var _mob_img_overlay = $('.top_images .overlays_wrapper');
-    _mob_img_overlay.css('height',_mob_img_overlay.css('width'));
 
     const ChangeMobImage = async function() {
         // Set height = width (square) 
         var _mob_img_overlay = $('.top_images .overlays_wrapper');
-        _mob_img_overlay.css('height',_mob_img_overlay.css('width'));
         $('.top_images .overlays_wrapper > img').eq(rotate_imgs%proj_top_images.length).fadeOut(seconds_change*750);
         $('.top_images .overlays_wrapper > img').eq((rotate_imgs+1)%proj_top_images.length).fadeIn(seconds_change*750);
         rotate_imgs++;
@@ -374,7 +372,7 @@ $(document).ready(async function() {
     // Images marquee
     var html_marquee = '';
     for(const _image of proj_top_images){
-        html_marquee += '<div class="marquee-item"><img src="'+_image+'"></div>';
+        html_marquee += '<div class="marquee-item"><img class="rounded" src="'+_image+'"></div>';
     }
     $('.marquee-content').append(html_marquee);
     $('.marquee-content').append(html_marquee);

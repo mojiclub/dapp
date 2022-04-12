@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <link rel="stylesheet" href="style.css">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+        <title>Provable Fairness ~ Moji Club</title>
+        <link rel="icon" type="image/x-icon" href="favicon.ico">
+    </head>
+    <body class="hasHover darkmode">
+        <header></header>
+        <div class="container wallpaper_page">
+            <div class="subcontainer rounded">
+                <div class="title">
+                    <h2>FAIR MINTING</h2>
+                    <sep></sep>
+                </div>
+                <p>
+                    To make sure no funny business goes on during the minting period, a particular emphasis has been placed on <b>safety</b> and security regarding the PFPs traits scarcity.</p><br>
+                    Because the Ethereum blockchain is completely public, storing the traits scarcity on-chain was not an option. To solve this problem, we used <b>a centralized server that checks itself if a PFP can be minted, without revealing the traits scarcity</b>.
+                </p>
+                <h4 class="title">Checking a PFP availability</h4>
+                <p>
+                    <span class="accent-num">1</span> A base36 hash is generated from all traits selected.
+                </p>
+                <p>
+                    <span class="accent-num">2</span> The hash is sent to a centralized server to check the availability of all the selected traits.
+                </p>
+                <p>
+                    <span class="accent-num">3</span> If all traits are available, the server replies back with a ECDSA signature of the hash. Else, it replies with the list of sold out traits and disables the said traits from the Configuratooor.
+                </p>
+                <p>
+                    <span class="accent-num">4</span> If your PFP is available, the Mint button will become available, and your wallet will prompt you to sign the transaction.
+                </p>
+                <p>
+                    <span class="accent-num">5</span> The signature returned by the server is verified on-chain during the mint transaction.
+                </p>
+            </div>
+
+            <div class="subcontainer rounded">
+                <div class="title">
+                    <h2>DECENTRALIZATION</h2>
+                    <sep></sep>
+                </div>
+                <p>We the Moji Club founders have a <b>strong libertarian ideology</b>, with the conviction that <b>privacy, freedom from censorship and freedom of expression are fundamental rights</b> that must not be violated and are essential to the prosperity of an equitable world.</p>
+                <p>
+                    With The Moji Club, we are committed to bring a <b>truly decentralized</b> option for interacting online with other people, sharing news, information, <b>free from the control of any organization or government</b>.
+                </p>
+                <h4 class="title">Ethereum Name Service</h4>
+                <p>
+                    The <b>mojiclub.eth</b> domain has been registered on ENS and can be used to access the webapps. You can check the domain record <a class="underline" target="_blank" href="https://app.ens.domains/name/mojiclub.eth/details">here on ens.domains</a>. 
+                </p>
+                <h4 class="title">The website</h4>
+                <p>
+                    The <b>mojiclub.eth</b> website and the PFPs NFT metadata are hosted on the IPFS. You can access the official Moji Club website trough the following links : 
+                <br>
+                <a class="underline" href="https://mojiclub.eth.link">https://mojiclub.eth.link</a><br>
+                <a class="underline" href="https://mojiclub.eth.limo">https://mojiclub.eth.limo</a><br>
+                The Moji Club team recommends to use the .limo domain to avoid using Cloudflare centralized .link approach. If you wish, you can access the website using our IPNS hash, using a IPNS gateway like dweb.link :<br>
+                <a class="underline" href="https://k51qzi5uqu5dkdewgxh4cst4yuwg7r85plu8sxk32u2yctsrc66jsz1uadrdfb.ipns.dweb.link/">https://k51qzi5uqu5dkdewgxh4cst4yuwg7r85plu8sxk32u2yctsrc66jsz1uadrdfb.ipns.dweb.link/</a></p>
+                <h4 class="title">The social webapp</h4>
+                <p>The Moji Club Social app is also available on the IPFS trough the following link:<br>
+                <a target="_blank" class="underline" href="https://app.mojiclub.eth.link">https://app.mojiclub.eth.link</a><br>
+                If you wish, you can access the social webapp using our IPNS hash, using a IPNS gateway like dweb.link :<br>
+                <a target="_blank" class="underline" href="https://k51qzi5uqu5dl7du88l4ssj8gy7cgiho7tsfyd0zv2yvimq71phssu15m56let.ipns.dweb.link/">https://k51qzi5uqu5dl7du88l4ssj8gy7cgiho7tsfyd0zv2yvimq71phssu15m56let.ipns.dweb.link</a></p>
+            </div>
+            
+            <footer></footer>
+        </div>
+
+        <div id="notification" class="rounded"><p>TOAST MESSAGE</p></div>
+        
+        <script src="html_elements.js"></script>
+
+        <script src="project_constants.js"></script>
+        <script src="walletconnect.js"></script>
+        <script src="jquery-3.6.0.min.js"></script>
+        <script src="ethers-5.2.umd.min.js"></script>
+        <script src="js-cookie.js"></script>
+        <script src="keccak256.js"></script>
+        <script src="merkletreejs.js"></script>
+        <script src="ipfs-http-client_56.0.0.js"></script>
+        <script src="traits_lst.js"></script>
+        <script src="base.js"></script>
+        <script src="merkle_tree.js"></script>
+    </body>
+</html>

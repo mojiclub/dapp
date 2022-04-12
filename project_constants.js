@@ -145,9 +145,10 @@ const TeamAddrs = [
 const _ipfs_gateways = [
     'https://cloudflare-ipfs.com/ipfs/',
     'https://ipfs.io/ipfs/',
+    'https://cf-ipfs.com/ipfs/',
     'https://dweb.link/ipfs/',
+    'https://infura-ipfs.io/ipfs/',
     'https://ipfs.fleek.co/ipfs/',
-    'https://hardbin.com/ipfs/',
     'https://astyanax.io/ipfs/'
 ];
 

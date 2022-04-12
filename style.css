@@ -1,5 +1,5 @@
 :root {
-  --main-color: 101, 193, 240;
+  --main-color: 195, 177, 225;
   --main-fonts: Montserrat,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;
   --main-white: 255, 255, 255;
   --main-black: 0, 0, 0;
@@ -14,6 +14,11 @@
 
 html {
 	scroll-behavior: smooth;
+}
+
+.height-equals_width {
+	margin-bottom: calc(100% + 1px);
+  height: 0;
 }
 
 .flip-card {
@@ -117,6 +122,21 @@ body {
 	margin: 24px auto!important;
 }
 
+.accent-num {
+    color: white;
+    font-weight: bold;
+    background: rgb(var(--main-color));
+    padding: 4px;
+    display: inline-flex;
+    height: 1em;
+    width: 1em;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    margin-right: 4px;
+}
+
 .image_with_text hr, .accent-hr {
 		margin: 24px 48px;
     border: 1px solid rgb(var(--main-color));
@@ -136,7 +156,7 @@ body {
 
 .image_with_text img {
     width: 30%;
-    padding: 0 10%;
+    margin: 0 10%;
 }
 
 .image_with_text i {
@@ -561,6 +581,8 @@ body.hasHover #nb_mint_plus:hover, body.hasHover #nb_mint_minus:hover, body.hasH
 .marquee-item img {
 	display: block;
 	width: 100%;
+	border: 2px solid transparent;
+    box-sizing: border-box;
 }
 
 @keyframes scrolling {
@@ -591,16 +613,18 @@ div.title {
     flex-direction: column;
     align-items: center;
 }
+
 .title {
     padding: 16px 0;
     margin: 0;
+    font-weight: bolder;
     font-family: Moji, var(--main-fonts);
 }
 
 .title h2 {
 	padding: 16px 0;
-    margin: 0;
-    font-size: 32px;
+  margin: 0;
+  font-size: 32px;
 }
 
 #notification {
@@ -728,8 +752,9 @@ p.roadmap_num {
 }
 
 #composer_title, #showcase_title {
-	font-family: Moji, var(--main-fonts);
-    margin: 16px 0 8px 0;
+	font-family: Moji,var(--main-fonts);
+	font-weight: bolder;
+  margin: 16px 0 8px 0;
 }
 
 #showcase_panel h2 > span {
@@ -914,8 +939,9 @@ div[class^="div_trait_"], div[class*="div_trait_"] {
 }
 
 .btnn, #menu a {
-	font-family: Moji, var(--main-fonts);
-    letter-spacing: 1px;
+	font-family: Moji,var(--main-fonts);
+	font-weight: bolder;
+  letter-spacing: 1px;
 }
 
 .fakescrollbar {
@@ -929,7 +955,7 @@ div[class^="div_trait_"], div[class*="div_trait_"] {
 		text-align: center;
 	}
 	.image_with_text .btnn {
-		margin-left: 0;
+		margin: auto;
 	}
 	.image_with_text hr {
 		margin: 24px auto;
@@ -1068,6 +1094,9 @@ div[class^="div_trait_"], div[class*="div_trait_"] {
     	width: 49%;
     	box-sizing: border-box;
     }
+    .top_images.deskonly {
+    	padding: 12px;
+    }
     #menu, .full-width-pc {
 		width: 100%;
 	}
@@ -1096,6 +1125,7 @@ div[class^="div_trait_"], div[class*="div_trait_"] {
 @font-face {
 	font-family: "Moji";
 	src: url("Moji.otf") format("opentype");
+	unicode-range: U+0030-0039, U+0041-005A, U+0061-007A;
 }
 
 .loader_wrapper {
