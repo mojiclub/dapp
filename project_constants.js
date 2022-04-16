@@ -59,19 +59,19 @@ var _inputChangeTmpDisable = false;
 // POLYGON MUMBAI
 var CHAIN_NAME = "Mumbai"
 var CHAIN_SYMBOL = "MATIC"
-var RPC = "https://matic-mumbai.chainstacklabs.com"
+var RPC = "https://rpc-mumbai.matic.today"
 var CHAIN_ID = 80001;
 const RPC_SCAN_URL = "https://mumbai.polygonscan.com";
 
 
-const CONTRACT_ADDRESS = '0xbC175f056C832998EAA729E75e6D9f5d138a210b';
+const CONTRACT_ADDRESS = '0xE3683cFE48A51A80dEff763cc30F95C39Fd7afd2';
 
 // Tickets
-const CONTRACT_ADDRESS_TICKETS = '0xf3487D89E845520a64754Abee69DF34F3023B6f3';
+const CONTRACT_ADDRESS_TICKETS = '0xC163FE1Ed1351B0382707Bb1C0A8a19100c1ACF7';
 
 // Project URLs
-var twitter_url = 'https://twitter.com/i/user/2548559143'; // Get ID : https://tweeterid.com/
-var discord_url = 'https://discord.com/';
+var twitter_url = 'https://twitter.com/i/user/1513821382374797317'; // Get ID : https://tweeterid.com/
+var discord_url = 'https://discord.gg/7ha3hRVSHu'; // 0xDekefake invite, change later TODO
 var looksrare_url = 'https://looksrare.org/collections/'+CONTRACT_ADDRESS+'/';
 var opensea_url = 'https://opensea.io/collection/mutant-ape-yacht-club';
 var opensea_url_tickets = 'https://opensea.io/collection/mutant-ape-yacht-club';
@@ -104,6 +104,7 @@ const ABI = [
   "function WL_MINT_TIMESTAMP() public view returns (uint256)",
   "function MINT_TIMESTAMP() public view returns (uint256)",
   "function holderTokens(address _addr) public view returns (uint256[] memory)",
+  "function _hasFreeMint(bytes32[] calldata merkleProof, address _addr) public view returns(bool)",
 
   // Ticket NFT claiming
   "function EligibleToClaim(uint256 tokenId) public view returns(bool)",

@@ -1,0 +1,40 @@
+body {
+	padding: 0;
+	margin: 0;
+	height: 100vh;
+	width: 100vw;
+}
+
+body > div {
+	display: flex;
+	flex-direction: column;
+    align-items: center;
+    height: 40vh;
+    justify-content: space-around;
+}
+
+h2 {
+	font-size: 200%;
+}
+
+#sneak {
+	opacity: 0.1;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    margin: 0;
+    height: 60vh;
+    transform: translateX(-50%);
+}
+
+#footer {
+	height: 10vh;
+    position: absolute;
+    bottom: 0;
+    margin: 0;
+    background: transparent;
+}
+
+#footer_links_icons{
+    width: 120px;
+}

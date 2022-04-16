@@ -5,14 +5,59 @@ adf = 0;
 const getImagesFromTraits = function() {
     // Just so theres some preview. Remove later
     adf++;
+    
     return [proj_top_images[adf%proj_top_images.length]];
+    // TODO : Get image for each trait in _enabled_traits to generate real preview
 
     var traits_img_root = '/traits_components/';
     var traits_img_extension = '.png';
+    var _images = [];
 
     var _enabled_traits = _get_enabled_traits_ids();
+    // TODO : check if z-index sorting works
+    _enabled_traits.sort((a,b)=>traits_lst[a][2]-traits_lst[b][2]);
 
-    // TODO : Get image for each trait in _enabled_traits to generate real preview
+    traits_img_root += _gender_female()?"Female/":"Male/";
+    var wears_jacket = _wears_jacket();
+    var wears_chemise = _wears_chemise();
+    var bald = _bald();
+    var no_beard = _no_beard();
+
+    // Background
+    var _bg = _trait_from_category('Background');
+    var _cv = document.createElement('canvas');
+    var _size = document.getElementById("preview_canvas").height;
+    if (!_cv.getContext) G_vmlCanvasManager.initElement(_cv);
+    var _ctx = _cv.getContext('2d');
+    _cv.width = _size;
+    _cv.height = _size;
+    _ctx.fillStyle = traits_lst[_bg][1];
+    _ctx.fillRect(0,0,_size,_size);
+    var _img = _cv.toDataURL('image/png','');
+    _images.push(_img);
+    _cv.remove();
+
+    for(const _id of _enabled_traits) {
+        // Traits without z-index are ignored
+        if(!traits_lst[_id][2]){
+            continue;
+        }
+
+        if(_category_from_id(_id)=='Face'){
+            var _imgurl = traits_img_root + _trait_from_category('Eyes Color') + '_'+ _id +traits_img_extension;
+            _images.push(_imgurl);
+        }
+
+        if(_category_from_id(_id)=='Haircut'){
+            var _imgurl = traits_img_root+ _id + '_' + _trait_from_category('Hair Color') +traits_img_extension;
+            _images.push(_imgurl);
+        }
+
+        if(_category_from_id(_id)=='Beardcut'){
+            var _imgurl = traits_img_root+ _id + '_' + _trait_from_category('Beard Color') +traits_img_extension;
+            _images.push(_imgurl);
+        }        
+    }
 }
 
 // Triggered when new block has been mined.
@@ -48,7 +93,7 @@ async function showcase_nft(tokenId) {
     $('body, #web3_status, #web3_actions, #notification').addClass('fakescrollbar');
     const jsConfetti = new JSConfetti();
     jsConfetti.addConfetti({
-       emojis: ['🎊', '💯', '🎉'],confettiNumber: 80
+       emojis: ['🎊', '💯', '🎉'],confettiNumber: 40
     });
 }
 
@@ -58,16 +103,18 @@ $(document).ready(async function() {
     const balance_enough_to_mint = async function() {
         var eth_balance = await signer_balance_eth();
         var ticket_balance = await signer_balance_tickets();
+        var _addr = await signer.getAddress();
+        var _has_free_mint = await contract._hasFreeMint(merkle_proof(_addr), _addr);
         var nb_mint = parseInt($("#nb_mint").val());
         if(gen0_soldout) {
             // Gen1 needs tickets to mint NFTs
-            if(ticket_balance < nb_mint) {
+            if(ticket_balance < nb_mint && !_has_free_mint) {
                 return [false,"INSUFFICIENT MJCC"];
             }
         } else {
             // Gen0 needs ETH to mint NFTs
             var price_to_pay = MINT_PRICE*nb_mint;
-            if(eth_balance<price_to_pay) {
+            if(eth_balance<price_to_pay && _has_free_mint) {
                 price_to_pay = parseFloat(price_to_pay).toString(); // Remove potential floating point stuff
                 return [false,"INSUFFICIENT ETH"];
             }
@@ -92,7 +139,11 @@ $(document).ready(async function() {
             var nb_mint = 1; // parseInt($("#nb_mint").val()); // Version with multiple NFTs to mint
 
             if(!gen0_soldout) {
-                var price_to_pay = MINT_PRICE*nb_mint;
+                var _has_free_mint = await contract._hasFreeMint(merkle_proof(_addr), _addr);
+                var price_to_pay = 0;
+                if(!_has_free_mint){
+                    price_to_pay = MINT_PRICE;
+                }
                 price_to_pay = parseFloat(price_to_pay).toString(); // Remove potential floating point stuff
                 tx_options = {value: ethers.utils.parseEther(price_to_pay.toString())}
             }

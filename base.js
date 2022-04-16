@@ -439,16 +439,19 @@ const connect_wallet = async function() {
         setInterval(lastBlock,2000);  // Check if new block has been mined every 2 seconds
         JS_COOKIES.set('web3_session','metamask');
     } else {
-        wc_provider = new WalletConnectProvider.default(
-        {
-            infuraId: "9aa3d95b3bc440fa88ea12eaa4456161",
-            rpc: {CHAIN_ID: RPC},
-            chainId:CHAIN_ID
-        });
         var a = '';
         try {
+            wc_provider = new WalletConnectProvider.default(
+            {
+                infuraId: "9aa3d95b3bc440fa88ea12eaa4456161",
+                rpc: {CHAIN_ID: RPC},
+                chainId:CHAIN_ID
+            });
             a = await wc_provider.enable();
-        } catch(error) { }
+        } catch(error) {
+            notify(error.message);
+            await web3_init();
+        }
         
         if(a.length>0) {
             wc_provider.on("disconnect", (number, reason) => {
@@ -586,8 +589,8 @@ const loadEvents = function(_addr) {
     });
 }
 
-const populate_web3_actions = async function(past_blocks=12000, _force=false){
-    // Returns NFT transfers in the last 12 000 blocks (last 2 days)
+const populate_web3_actions = async function(past_blocks=3500, _force=false){
+    // Returns NFT transfers in the last 12 000 blocks (last 2 days) // TODO : get back to 12000 blocks
     if(signer==''){
         return;
     }
@@ -598,16 +601,16 @@ const populate_web3_actions = async function(past_blocks=12000, _force=false){
     var addr = await signer.getAddress();
     var filtrr = contract.filters.Transfer(null, addr);
     var blocknum = await provider.getBlockNumber();
-    var txs = await contract.queryFilter(filtrr, blocknum-past_blocks, blocknum);
+    var txs = await contract.queryFilter(filtrr, blocknum-past_blocks+1, blocknum);
 
     var filtrr2 = tickets_contract.filters.Transfer(null, addr);
-    var txs_tickets = await tickets_contract.queryFilter(filtrr2, blocknum-past_blocks, blocknum);
+    var txs_tickets = await tickets_contract.queryFilter(filtrr2, blocknum-past_blocks+1, blocknum);
     var all_txs = [...txs, ...txs_tickets]
     all_txs.sort((a,b) => a.blockNumber-b.blockNumber);
     var addedHashs = [];
     var _gwei = (await provider.getGasPrice()).toNumber();
     _gwei = Math.round(ethers.utils.formatUnits(_gwei, "gwei") * 100) / 100;
-    var _gas_ui = '<div class="gas_indicator"><img src="pumpgas.png"><p><span>'+_gwei+'</span> Gwei</p></div>';
+    var _gas_ui = '<a class="gas_indicator" href="'+RPC_SCAN_URL+'/gastracker" target="_blank"><img src="pumpgas.png"><p><span>'+_gwei+'</span> Gwei</p></a>';
     if(all_txs.length>0){
         var _html = _gas_ui+'<h2>Mints/Transfers/Claims (Last '+past_blocks+' blocks) :</h2>';
         for(const tx of all_txs.reverse()){
@@ -636,7 +639,7 @@ const transaction_experience = async function(_tx, notifyComplete=true) {
     var html_a = '<a target="_blank" href="'+RPC_SCAN_URL+'/tx/'+_tx.hash+'">';
     notify(html_a+"⏳ "+sub_tx+"</a>",4);
     _tx.wait().then(async function(receipt) {
-        await populate_web3_actions(past_blocks=12000, _force=true);
+        await populate_web3_actions(past_blocks=3500, _force=true); // TODO : 12000
         if(notifyComplete){
             notify(html_a+"✅ "+sub_tx+"</a>",4);
         }
@@ -843,6 +846,14 @@ $(document).ready(async function() {
     if(web3_session) {
         $("#web3_status").trigger('click');
     }
+
+    // Links
+    $('#footer_links_twitter, .twitter_link').attr('href',twitter_url);
+    $('#footer_links_discord, .discord_link').attr('href',discord_url);
+    $('#footer_links_looksrare').attr('href',looksrare_url);
+    $('#footer_links_opensea, .opensea_moji').attr('href',opensea_url);
+    $('.opensea_tickets').attr('href',opensea_url_tickets);
+    $('#footer_links_etherscan').attr('href',etherscan_url);
     
     await load_contract_vars();
     $('.mjc_contract').text(CONTRACT_ADDRESS);
@@ -853,25 +864,6 @@ $(document).ready(async function() {
     $('.GEN1_SUPPLY').text(GEN1_SUPPLY);
     $('.TOTAL_SUPPLY').text(GEN0_SUPPLY+GEN1_SUPPLY);
     $('.MINT_PRICE').text(MINT_PRICE);
-
-    // Links
-    $('#footer_links_twitter, .twitter_link').attr('href',twitter_url);
-    $('#footer_links_discord, .discord_link').attr('href',discord_url);
-    $('#footer_links_looksrare').attr('href',looksrare_url);
-    $('#footer_links_opensea, .opensea_moji').attr('href',opensea_url);
-    $('.opensea_tickets').attr('href',opensea_url_tickets);
-    $('#footer_links_etherscan').attr('href',etherscan_url);
-
-    // Invert 
-    $('.btnn').hover(function(e){
-        if(ui_mode=='dark') {
-            if(e.type == 'mouseleave') {
-                $(this).find('img').css('filter','none');
-            } else {
-                $(this).find('img').css('filter','invert(1)');
-            }
-        }
-    });
 
     // Gen0 / Gen1 UI changes
     await determineGen();

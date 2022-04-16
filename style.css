@@ -157,6 +157,7 @@ body {
 .image_with_text img {
     width: 30%;
     margin: 0 10%;
+	background: rgb(var(--main-color));
 }
 
 .image_with_text i {
@@ -257,7 +258,7 @@ footer {
 }
 
 /* Track */
-::-webkit-scrollbar-track {
+::-webkit-scrollbar-track, ::-webkit-scrollbar-corner {
   background: #00000000;
 }
  
@@ -486,7 +487,7 @@ input::-webkit-inner-spin-button {
 .gas_indicator p {
 	font-weight: bold;
 	margin-left: 4px!important;
-	color: rgb(var(--main-black));
+	color: white;
 }
 
 .gas_indicator img {
@@ -551,6 +552,10 @@ a:hover:not(.btnn), .underline {
 body.hasHover #nb_mint_plus:hover, body.hasHover #nb_mint_minus:hover, body.hasHover #menu a:hover, body.hasHover .btnn:hover {
   color: rgb(var(--main-black))!important;
   background: rgb(var(--main-white))!important;
+}
+
+body.darkmode .btnn:hover img {
+	filter: invert(1);
 }
 
 .disabled {
@@ -725,6 +730,12 @@ p.roadmap_num {
 #nft_composer_header > plc, #showcase_panel_header > plc {
 	width: 44px;
 	opacity: 0;
+}
+
+.bg_prev {
+	height: 1em;
+    width: 1em;
+    border-radius: 0.2em;
 }
 
 #nft_composer, #showcase_panel {

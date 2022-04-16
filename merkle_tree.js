@@ -8,7 +8,7 @@ keccak256 = require('keccak256')
 
 const wl_addrs = [
 '0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2',
-'0x2c3a0AB337d814dd7a83e3C8Ac0a127Fad7de241',
+'f',
 'c',
 'd',
 'e'
@@ -21,7 +21,7 @@ const wl_merkle_root = wl_merkle.getRoot().toString('hex');
 // Freemint addr
 
 const freemint_addrs = [
-'a',
+'0x2c3a0AB337d814dd7a83e3C8Ac0a127Fad7de241',
 'b',
 'c',
 'd',

@@ -1,7 +1,7 @@
 // NFT composer variables
-var nb_traits = 143;
+var nb_traits = 149;
 
-var default_traits = [3,8,12,15,39,43,10001,10002,10003,10004,10005,10006,10007,10008,10009,10010,10011,10012];
+var default_traits = [3,8,12,15,29,43,144,10001,10002,10003,10004,10005,10006,10007,10008,10009,10010,10011,10012];
 
 // Get an array containing all traits enabled in the configurator
 const _get_enabled_traits_ids = function() {
@@ -12,52 +12,66 @@ const _get_enabled_traits_ids = function() {
     return res;
 }
 
-// Returns true if user has selected any Jacket of Chemise
-const _wears_shirt = function() {
+const _category_from_id = function(_id){
+    return traits_lst[_id][0];
+}
+
+// Returns the selected trait from a category
+const _trait_from_category = function(_cat){
     var ids = _get_enabled_traits_ids();
     for(const id of ids) {
         var tr = traits_lst[id];
-        if(tr[0].includes('Top clothing') && tr[1].includes('Chemise')) {
-            return true;
+        if(tr[0].includes(_cat)) {
+            return id;
+        }
+    }
+}
+
+// Returns true if the '_attr' element of a category '_cat' is selected
+const _traits_category_is = function(_cat, _attr){
+    var ids = _get_enabled_traits_ids();
+    for(const id of ids) {
+        var tr = traits_lst[id];
+        if(tr[0].includes(_cat)) {
+            return tr[1] == _attr;
         }
     }
     return false;
 }
 
-// Returns true if user has selected any Jacket of Chemise
+// Returns true if the 'None' element of a category '_cat' is selected
+const _traits_category_none = function(_cat){
+    return _traits_category_is(_cat,'None');
+}
+
+// Returns true if pfp is bare chested
+const _traits_bare_chested = function() {
+    return _traits_category_none('Jacket') && _traits_category_none('Top clothing')
+}
+
+// Returns true if user has selected female gender
+const _gender_female = function(){
+    return _traits_category_is('Gender', 'Female')
+}
+
+// Returns true if user has selected any Jacket
 const _wears_jacket = function() {
-    var ids = _get_enabled_traits_ids();
-    for(const id of ids) {
-        var tr = traits_lst[id];
-        if(tr[0].includes('Top clothing') && tr[1].includes('Jacket')) {
-            return true;
-        }
-    }
-    return false;
+    return _traits_category_none('Jacket');
+}
+
+// Returns true if user has selected any Chemise
+const _wears_chemise = function() {
+    return _traits_category_none('Chemise');
 }
 
 // Returns true if user has not selected any haircut
 const _bald = function() {
-    var ids = _get_enabled_traits_ids();
-    for(const id of ids) {
-        var tr = traits_lst[id];
-        if(tr[0].includes('Haircut')) {
-            return tr[1]==('None');
-        }
-    }
-    return true;
+    return _traits_category_none('Haircut');
 }
 
 // Returns true if user has not selected any bearcut
 const _no_beard = function() {
-    var ids = _get_enabled_traits_ids();
-    for(const id of ids) {
-        var tr = traits_lst[id];
-        if(tr[0].includes('Beardcut')) {
-            return tr[1]==('None');
-        }
-    }
-    return true;
+    return _traits_category_none('Beardcut');
 }
 
 const _disable_categorie_by_condition = function(condition,categorie) {
@@ -110,6 +124,9 @@ const build_dialog_from_traits = function() {
             var radio_id = trait_categorie+'_'+trait_name;
             var radio = '<div class="div_trait_'+_trait[0]+' rounded"><input type="radio" name="'+trait_categorie+'" id="'+radio_id+'" data-trait="'+_trait[0]+'">';
             var label = '<label data-catname="'+_categories_titles[_idx]+'" for="'+radio_id+'" data-trait="'+_trait[0]+'">'+_trait[2]+'</label></div>';
+            if(_categories_titles[_idx]=="Background"){
+                label = '<span class="bg_prev" style="background:'+_trait[2]+'"></span><span>&nbsp;·&nbsp;</span>' + label;
+            }
             html_append += (radio+label);
         }
         html_append += '</div>';
@@ -257,8 +274,11 @@ const update_dependencies = function() {
     // No beard -> No beard color selection
     _disable_categorie_by_condition(_no_beard(),'Beard Color');
 
+    // Only enable beard for male characters
+    _disable_categorie_by_condition(_gender_female(),'Beardcut');
+
     // No shirt and not jacket -> No elements in pocket
-    _disable_categorie_by_condition(!_wears_jacket() && !_wears_shirt(),'On Pocket');
+    _disable_categorie_by_condition(!_wears_jacket(),'On Pocket');
 
     // No jacket -> No jacket elements
     _disable_categorie_by_condition(!_wears_jacket(),'Jacket Elements');
