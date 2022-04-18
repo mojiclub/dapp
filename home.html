@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <link rel="stylesheet" href="style.css">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+        <title>Home ~ Moji Club</title>
+        <link rel="icon" type="image/x-icon" href="favicon.ico">
+    </head>
+    <body class="hasHover darkmode">
+        <header></header>
+        
+        <div class="container">
+            <div class="top_images subcontainer deskonly rounded">
+                <!-- Change images here -->
+                <div class="flip-card">
+                    <div class="flip-card-inner">
+                        <img class="rounded flip-card-front" src="sneaks/sneak1.jpg">
+                        <img class="rounded flip-card-back" src="sneaks/sneak2.jpg">
+                    </div>
+                </div>
+                 <div class="flip-card">
+                    <div class="flip-card-inner">
+                        <img class="rounded flip-card-front" src="sneaks/sneak4.jpg">
+                        <img class="rounded flip-card-back" src="sneaks/sneak5.jpg">
+                    </div>
+                </div>
+                 <div class="flip-card">
+                    <div class="flip-card-inner">
+                        <img class="rounded flip-card-front" src="sneaks/sneak6.jpg">
+                        <img class="rounded flip-card-back" src="sneaks/sneak7.jpg">
+                    </div>
+                </div>
+                 <div class="flip-card">
+                    <div class="flip-card-inner">
+                        <img class="rounded flip-card-front" src="sneaks/sneak9.jpg">
+                        <img class="rounded flip-card-back" src="sneaks/sneak10.jpg">
+                    </div>
+                </div>
+            </div>
+            <div class="top_images subcontainer mobonly rounded">
+                <div class="overlays_wrapper height-equals_width">
+                    <img class="rounded"><img class="rounded"><img class="rounded"><img class="rounded"><img class="rounded"><img class="rounded"><img class="rounded"><img class="rounded">
+                </div>
+            </div>
+            <div class="mint_container subcontainer rounded">
+                <p id="p_description">
+                    NFTs that do not look like you are now part of the past. <b>Be part of the future today by minting your own PFP</b>
+                </p>
+                <div id="mint_dates" class="rounded border_accent">
+                    <h2 class="countdown_container">Public mint: <span class="countdown"></span></h2>
+                    <p id="wl_mint">Mint for WL users : <span>To be announced</span></p>
+                    <p id="public_mint">Public mint : <span>To be announced</span></p>
+                </div>
+                <div id="nb_minted" class="subcontainer smallbox rounded">
+                    <p>Minted (GEN<span class="generation_number">?</span>)</p>
+                    <p id="minted_totals"><span id="span_nb_minted">?</span> / <span id="span_total_supply">?</span></p>
+                </div>
+                <div id="mint_price" class="subcontainer smallbox rounded">
+                    <p>Price</p>
+                    <p id="p_mint_price">? Ξ</p>
+                </div>
+                <div id="mint_form">
+                    <div class="mint_amount_container">
+                    <p>Amount to mint</p>
+                        <div id="mint_form_input">
+                            <span id="nb_mint_minus" class="rounded"></span>
+                            <input type="number" id="nb_mint" name="nb_mint" value="1" min="1" class="rounded wallet_sensitive">
+                            <span id="nb_mint_plus" class="rounded"></span>
+                        </div>
+                    </div>
+                    <div id="nft_composer" class="rounded box-shadow-accent">
+                        <div id="nft_composer_header">
+                            <plc></plc>
+                            <h2 id="composer_title">THE CONFIGURATOOOR</h2>
+                            <div id="composer_close_div"><p id="composer_close">X</p></div>
+                        </div>
+                        <!--<p>Now create an avatar with your image using the features available below and mint the associated NFT to generate your proof of ownership on the Ethereum blockchain !</p>-->
+                        <div id="composer_preview">
+                            <div id="canvas_div" class="rounded overlays_wrapper">
+                                <canvas class="rounded" id="preview_canvas" height="1000" width="1000"></canvas>
+                                <canvas class="rounded" id="preview_canvas2" height="1000" width="1000"></canvas>
+                                <div class="loader_wrapper">
+                                    <div class="loader"></div>
+                                </div>
+                            </div>
+                            <div id="composer_left">
+                                <div class="rounded" id="composer_traits_selector"></div>
+                                <div id="composer_buttons">
+                                    <div id="avatar_hash_share" class="rounded btnn">
+                                        <img src="share.svg"><p>SHARE PFP</p>
+                                    </div>
+                                    <div id="composer_confirm" class="rounded btnn"><p>CONNECT WALLET</p></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button id="Main_btn" class="rounded btnn"><p>COMPOSE MY PFP</p></button>
+                    <div id="my_nft">
+                        <p id="my_avatars">My PFPs: <span></span></p>
+                        <p id="my_tickets">My Tickets: <span></span></p>
+                    </div>
+                    
+                    <!-- Here resides the hidden canvas we construct the NFT on. Adjust the size to the images size -->
+                </div>
+            </div>
+
+            <div class="nolatpadd subcontainer rounded">
+                <div class="title">
+                    <h2>THE PROJECT</h2>
+                    <sep></sep>
+                </div>
+                <div class="image_with_text image_on_right">
+                    <img class="rounded" src="sneaks/network_sneak.png">
+                    <div>
+                        <p>The Moji Club is a <b>decentralized, open source</b> social network, <b>without censorship</b>, and with <b>a fair, deactivatable and non-targeting advertising system.</b></p>
+                        <p><b>Accessing your profile</b> on The Moji Club is done through your <b>Ethereum wallet</b>, and your profile picture has to be defined according to one of your NFTs. <b>The Moji Club will NEVER require your phone number, email, or any other information infringing on your privacy.</b></p>
+                        <hr>
+                        <a class="btnn rounded" href="/litepaper.html"><p>READ THE LITEPAPER</p></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="nolatpadd subcontainer rounded">
+                <div class="title">
+                    <h2>THE TECH</h2>
+                    <sep></sep>
+                </div>
+                <div class="marquee">
+                    <div class="marquee-content" id="marquee1"></div>
+                    <div class="marquee-content" id="marquee2"></div>
+                </div>
+                <p>The Moji Club PFP system is the very first to allow <b>complete token personnalization</b>, thanks to <b>a unique custom mint system.</b>
+                    <br>
+                   Create your very own PFP using <a href="#p_description">The Configuratooor</a>, <b>choose from hundreds of customization traits</b>, and get <b>the certification</b> that your PFP belongs to you and you alone thanks to the <b>Ethereum blockchain</b>.
+                </p>
+            </div>
+
+            <div class="display_on_soldout dialog_info subcontainer rounded">
+                <h2 class="title">BUY A PFP</h2>
+                <p>The initial sale has sold out. To get your PFP, check out the collection on OpenSea.</p>
+                <a class="btnn rounded"><p>BUY ON OPENSEA</p></a>
+            </div>
+
+            <div class="nolatpadd subcontainer rounded">
+                <div class="title">
+                    <h2>THE SPECS</h2>
+                    <sep></sep>
+                </div>
+                <div class="image_with_text">
+                    <img class="rounded" src="sneaks/sneak8.jpg">
+                    <div>
+                        <p>Each Moji Club PFP is unique and configurable from 150+ traits including hair, clothes, accessories and more. All Moji Club PFPs are dope, but some are rarer than others.</p>
+                        <hr>
+                        <p>
+                        The PFPs are stored as ERC-721 tokens on the Ethereum blockchain, and their characteristics are stored on IPFS. Purchasing a Generation 0 PFP costs <span class="MINT_PRICE"></span> ETH each.
+                        </p>
+                        <div class="display_on_gen1">
+                            <hr>
+                            <p>Minting a Generation 1 requires owning at least one Moji Club Ticket. One ticket will be burned in the PFP minting process.</p>
+                            <a class="btnn rounded opensea_tickets"><p>Purchase a Ticket on Opensea</p></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="nolatpadd subcontainer rounded">
+                <div class="title">
+                    <h2 id="the_team_title" class="noselect">THE TEAM</h2>
+                    <sep></sep>
+                </div>
+                <div class="image_with_text image_on_right">
+                    <img class="rounded" src="sneaks/sneak2.jpg">
+                    <div>
+                        <p>The Moji Club was created by 2 brothers and a few other folks who had the vision of a safe and fair place to interact with each other.</p>
+                        <hr>
+                        <div id="the_team_showcase">
+                            <p><i><a href="https://twitter.com/thefirstmoji" target="_blank">@THEFIRSTMOJI</a>.</i> HUGE DUDE LOVING TECH, SCIENCE, NOISY CARS AND CHEATMEALS</p>
+                            <p><i>CRYPTO_MAXIME.</i> BEEFED-UP GUY OBSCESSED BY SMALL DOGGOS AND KENTUCKY FRIED CHICHEN</p>
+                            <p><i>OTHERS.</i> A BUNCH OF CRYPTO-ENTHUSIASTHS, ARTISTS, DEVELOPERS, IN FOR THE TECH AND TO BRING SOMETHING NEW</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <footer></footer>
+        </div>
+
+        <div id="notification" class="rounded"><p>TOAST MESSAGE</p></div>
+        <div id="showcase_panel" class="rounded box-shadow-accent">
+            <div id="showcase_panel_header">
+                <plc></plc>
+                <h2 id="showcase_title">YOUR NEW PFP IS HERE <span>!</span></h2>
+                <div id="showcase_close_div"><p id="showcase_close">X</p></div>
+            </div>
+            <div class="panel_flex_container">
+                <img id="showcase_avatar_image" class="rounded">
+                <div class="panel_b_align_vertically">
+                    <h2 class="title">YOUR NEW PFP IS NOW IN YOUR WALLET <span>!</span></h2>
+                    <p><b>Congrats !</b> You minted The Moji Club PFP #<span id="showcase_avatar_id">0</span>.</p>
+                    <div id="showcase_avatar_icons">
+                        <a target="_blank" class="btnn rounded" id="showcase_avatar_opensea">
+                            <img src="opensea.svg">
+                            <p>View on Opensea</p>
+                        </a>
+                        <a target="_blank" class="btnn rounded" id="showcase_avatar_looksrare">
+                            <img src="looksrare.svg">
+                            <p>View on Looksrare</p>
+                        </a>
+                        <a target="_blank" class="btnn rounded" id="showcase_avatar_twittershare">
+                            <img src="twitter.svg">
+                            <p>Share on Twitter</p>
+                        </a>
+                    </div>
+                    <div class="deskonly">
+                        <hr class="accent-hr center-hr">
+                        <h2 class="title">WHAT TO DO NEXT</h2>
+                        <p>
+                            <span id="showcase_avatar_gen0">You have minted a Generation 0 PFP, congrats ! As soon as GEN0 gets sold out, you'll be able to claim a ticket for your PFP. Use it to mint a GEN1 PFP for free, or sell the ticket on the secondary market to give someone else the chance to create his own PFP !</span>
+                            <span id="showcase_avatar_gen1">You have minted a Generation 1 PFP, congrats !</span>
+                            <br>
+                            <b>You can now use your PFP to access the Moji Club Beta.</b>
+                        </p>
+                        
+                        <a href="https://app.mojiclub.eth.link" target="_blank" class="btnn rounded"><p>ENTER THE BETA NOW</p></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="html_elements.js"></script>
+
+        <script src="project_constants.js"></script>
+        <script src="walletconnect.js"></script>
+        <script src="jquery-3.6.0.min.js"></script>
+        <script src="ethers-5.2.umd.min.js"></script>
+        <script src="js-cookie.js"></script>
+        <script src="keccak256.js"></script>
+        <script src="merkletreejs.js"></script>
+        <script src="ipfs-http-client_56.0.0.js"></script>
+        <script src="traits_lst.js"></script>
+        <script src="traits_definition.js"></script>
+        <script src="base.js"></script>
+        <script src="merkle_tree.js"></script>
+        <script src="mint.js"></script>
+        <script src="confetti.js"></script>
+    </body>
+</html>

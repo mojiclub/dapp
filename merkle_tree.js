@@ -45,8 +45,11 @@ const merkle_proof = function(addr) {
 	}
 }
 
-const merkle_verify = function(addr) {
-	var _proof = wl_merkle.getHexProof(keccak256(addr));
+const merkle_verify = async function(addr) {
+	HAS_FREE_MINT = await contract._hasFreeMint(merkle_proof(addr), addr);
+	HAS_WL = await contract._hasWhitelist(merkle_proof(addr), addr);
+
+	/*var _proof = wl_merkle.getHexProof(keccak256(addr));
 	if(_proof.length>0) {
 		HAS_WL = wl_merkle.verify(_proof,keccak256(addr),wl_merkle_root);
 	} else {
@@ -57,7 +60,7 @@ const merkle_verify = function(addr) {
 		} else {
 			HAS_FREE_MINT = false;
 		}
-	}
+	}*/
 }
 
 const _DEV_RootsPrint = function() {

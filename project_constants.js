@@ -63,11 +63,10 @@ var RPC = "https://rpc-mumbai.matic.today"
 var CHAIN_ID = 80001;
 const RPC_SCAN_URL = "https://mumbai.polygonscan.com";
 
-
-const CONTRACT_ADDRESS = '0xE3683cFE48A51A80dEff763cc30F95C39Fd7afd2';
+const CONTRACT_ADDRESS = '0xA6eC7C353309bDb6E15A0802ac7235fa667BA747';
 
 // Tickets
-const CONTRACT_ADDRESS_TICKETS = '0xC163FE1Ed1351B0382707Bb1C0A8a19100c1ACF7';
+const CONTRACT_ADDRESS_TICKETS = '0x02301f26eEF7089320af438EF11E4BE44C7377Ea';
 
 // Project URLs
 var twitter_url = 'https://twitter.com/i/user/1513821382374797317'; // Get ID : https://tweeterid.com/
@@ -105,6 +104,7 @@ const ABI = [
   "function MINT_TIMESTAMP() public view returns (uint256)",
   "function holderTokens(address _addr) public view returns (uint256[] memory)",
   "function _hasFreeMint(bytes32[] calldata merkleProof, address _addr) public view returns(bool)",
+  "function _hasWhitelist(bytes32[] calldata merkleProof, address _addr) public view returns(bool)",
 
   // Ticket NFT claiming
   "function EligibleToClaim(uint256 tokenId) public view returns(bool)",
@@ -146,12 +146,12 @@ const TeamAddrs = [
 const _ipfs_gateways = [
     'https://cloudflare-ipfs.com/ipfs/',
     'https://ipfs.io/ipfs/',
-    'https://cf-ipfs.com/ipfs/',
+    'https://storry.tv/ipfs/',
     'https://dweb.link/ipfs/',
-    'https://infura-ipfs.io/ipfs/',
-    'https://ipfs.fleek.co/ipfs/',
-    'https://astyanax.io/ipfs/'
+    'https://infura-ipfs.io/ipfs/'
 ];
+
+const SERVER_URL = 'https://www.dekefake.duckdns.org:62192';
 
 var CURRENT_BLOCK;
 

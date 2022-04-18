@@ -119,7 +119,7 @@ body {
 }
 
 .center-hr {
-	margin: 24px auto!important;
+	margin: 12px auto!important;
 }
 
 .accent-num {
@@ -834,10 +834,9 @@ body.hasHover #composer_close_div:hover, body.hasHover #showcase_close_div:hover
 	display: flex;
     flex-direction: column;
     max-height: 590px;
-    border: 1px solid #333333;
     text-align: left;
     margin-bottom: 12px;
-	background: rgba(var(--main-color),0.1);
+	background: rgba(var(--main-color),0.2);
 }
 
 input[type="radio"] {

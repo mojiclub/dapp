@@ -100,9 +100,6 @@ const web3_init = async function(){
 }
 
 function isMobile() {
-    if(navigator.userAgentData) {
-        return navigator.userAgentData.mobile;
-    }
     return window.outerWidth<=768;
 }
 
@@ -533,7 +530,6 @@ const load_wallet = async function() {
         }
         signer = provider.getSigner();
         addr = await signer.getAddress();
-        merkle_verify(addr);
     } catch (error) {
         web3_init();
         notify("Error connecting wallet. Please check your Web3 Wallet extension.");
@@ -548,6 +544,7 @@ const load_wallet = async function() {
     contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, provider);
     tickets_contract = new ethers.Contract(CONTRACT_ADDRESS_TICKETS, ABI, provider);
     loadEvents(addr);
+    await merkle_verify(addr);
     $(".wallet_sensitive").trigger('walletchanged');
     $("#web3_status p").text(ShortenBytes(addr));
     document.getElementById('logout').style.display = 'block';
@@ -752,7 +749,7 @@ const ipfs_folder_ping = async function(_data='', pin=false) {
     }
 }
 
-const url_ping = async function(_url,_recurrence=0) {
+const url_ping = async function(_url,_recurrence=0, _print=false) {
     // Too much tries
     if(_recurrence>5){
         return;

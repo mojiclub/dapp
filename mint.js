@@ -86,8 +86,10 @@ async function showcase_nft(tokenId) {
 
     if(_tknGen==0){
         $('#showcase_avatar_gen0').show();
+        $('#showcase_avatar_gen1').hide();
     } else {
         $('#showcase_avatar_gen0').hide();
+        $('#showcase_avatar_gen1').show();
     }
     $('#showcase_panel').fadeIn(250);
     $('body, #web3_status, #web3_actions, #notification').addClass('fakescrollbar');
@@ -167,7 +169,7 @@ $(document).ready(async function() {
         // Get the token Json file from API
         var _token_data;
         var xhr = new XMLHttpRequest();
-        xhr.open("GET", 'https://www.dekefake.duckdns.org:62192/get_mint_json/'+traits_enabled_hash()+';'+gen_number+'_'+ipfs_img, false);
+        xhr.open("GET", SERVER_URL+'/get_mint_json/'+traits_enabled_hash()+';'+gen_number+'_'+ipfs_img, false);
         xhr.setRequestHeader('Accept', 'application/json');
         xhr.send();
 
@@ -177,9 +179,8 @@ $(document).ready(async function() {
                 var base36_specs = _verify_traits['base36'];
                 var token_specs = _token_data['token_json'];
                 ipfs_pin(token_specs[0]);
-                
+                var tx;
                 try {
-                    var tx;
                     if(IAMTEAM){
                         tx = await contract_signer.TeamMint(token_specs[0], base36_specs[0]);
                     } else {
@@ -191,7 +192,11 @@ $(document).ready(async function() {
                     $('#composer_close_div').click();
                     transaction_experience(tx, notifyComplete=false);
                 } catch (error) {
-                    notify('Error code '+error.code+' ~ '+error.message);
+                    if(error.data.message){
+                        notify('⚠️ '+error.data.message);
+                    } else {
+                        notify(error.message);
+                    }
                 }
             } else {
                 notify(_token_data['problem']);

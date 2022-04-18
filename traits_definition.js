@@ -174,7 +174,7 @@ const HideSoldOutTraits = function(reset=false) {
     if(reload || _soldout_traits.length==0) {
         _last_update = new Date();
         var xhr = new XMLHttpRequest();
-        xhr.open("GET", 'https://www.dekefake.duckdns.org:62192/soldout_traits', false);
+        xhr.open("GET", SERVER_URL+'/soldout_traits', false);
         xhr.setRequestHeader('Accept', 'application/json');
         try {
             xhr.send();
@@ -224,7 +224,7 @@ const verifyTraits = async function(RetryIfError=true) {
     if(gen_number==-1) {
         await _NB_MINTED();
     }
-    xhr.open("GET", 'https://www.dekefake.duckdns.org:62192/verify/'+_tkn_hash+';'+gen_number, false);
+    xhr.open("GET", SERVER_URL+'/verify/'+_tkn_hash+';'+gen_number, false);
     xhr.setRequestHeader('Accept', 'application/json');
     xhr.send();
     if(xhr.status ===  200) {
