@@ -409,6 +409,45 @@ const _DEV_IAMTeam = async function() {
     IAMTEAM = !IAMTEAM;
 }
 
+const _DEV_ipfs_folder_ping = async function(_data='', pin=false) {
+    var _t = _data.split('\n');
+    if(_data==''){
+        console.log('``');
+        return;
+    }
+    for(const _str of _t){
+        for(const ipfs_gateway of _ipfs_gateways){
+            await url_ping(ipfs_gateway+_str.split(' ')[1]);
+        }
+        await sleep(1005);
+    }
+    
+    if(pin){
+        for(const _str of _t){
+            await ipfs_pin(_str.split(' ')[1]);
+            console.log(_str+ ' pin has been done.')
+            await sleep(1005);
+        }
+    }
+}
+
+const _DEV_mojiclublimo_ping = async function(_data='') {
+    var _t = _data.split('\n');
+    if(_data==''){
+        console.log('``');
+        return;
+    }
+    while(true){
+        for(const _str of _t){
+            for(var i = 0; i < 2; i++){
+                url_ping('https://mojiclub.eth.limo'+_str.split('website_ipfs')[1]);
+                await sleep(250);
+            }
+        }
+        console.log('PING EVERYTHING DONE');
+    }
+}
+
 const sleep = function(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -697,7 +736,7 @@ const ipfs_node = IpfsHttpClient.create({
     port: 5001,
     protocol: 'https',
     headers: {
-        authorization: 'Basic 24kOFkosIbE65Qv2Grj4Ickzox9:7f1a90ec73a4048aea077449b7228df3'
+        authorization: 'Basic MjRrT0Zrb3NJYkU2NVF2MkdyajRJY2t6b3g5OjdmMWE5MGVjNzNhNDA0OGFlYTA3NzQ0OWI3MjI4ZGYz'
     }
 });
 
@@ -714,6 +753,7 @@ const ipfs_pin = async function(path,_recurrence=0) {
     try {
         await ipfs_node.pin.add(path);
     } catch(e) {
+        await sleep(2000);
         await ipfs_pin(path,_recurrence=_recurrence+1);
         return;
     }
@@ -726,26 +766,6 @@ const ipfs_ping = async function(_hash) {
     // Allows for a faster loading later on.
     for(const ipfs_gateway of _ipfs_gateways){
         url_ping(ipfs_gateway+_hash);
-    }
-}
-
-const ipfs_folder_ping = async function(_data='', pin=false) {
-    var _t = _data.split('\n');
-    if(_data==''){
-        console.log('``');
-        return;
-    }
-    for(const _str of _t){
-        for(const ipfs_gateway of _ipfs_gateways){
-            url_ping(ipfs_gateway+_str.split(' ')[1]);
-        }
-        await sleep(1005);
-    }
-    
-    if(pin){
-        for(const _str of _t){
-            ipfs_pin(_str.split(' ')[1]);
-        }
     }
 }
 

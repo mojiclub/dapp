@@ -19,6 +19,9 @@ const _category_from_id = function(_id){
 // Returns the selected trait from a category
 const _trait_from_category = function(_cat){
     var ids = _get_enabled_traits_ids();
+    if(ids.length!=default_traits.length){
+        ids = default_traits;
+    }
     for(const id of ids) {
         var tr = traits_lst[id];
         if(tr[0].includes(_cat)) {
@@ -46,22 +49,30 @@ const _traits_category_none = function(_cat){
 
 // Returns true if pfp is bare chested
 const _traits_bare_chested = function() {
-    return _traits_category_none('Jacket') && _traits_category_none('Top clothing')
+    return _traits_category_none('Jacket') && _traits_category_none('Top clothing');
 }
 
 // Returns true if user has selected female gender
 const _gender_female = function(){
-    return _traits_category_is('Gender', 'Female')
+    return _traits_category_is('Gender', 'Female');
 }
 
 // Returns true if user has selected any Jacket
-const _wears_jacket = function() {
-    return _traits_category_none('Jacket');
+const _wears_blazer = function() {
+    var _tc = traits_lst[_trait_from_category('Jacket')];
+    if(_tc){
+        return _tc[1].includes('Blazer');
+    }
+    return false;
 }
 
 // Returns true if user has selected any Chemise
 const _wears_chemise = function() {
-    return _traits_category_none('Chemise');
+    var _tc = traits_lst[_trait_from_category('Top clothing')];
+    if(_tc){
+        return _tc[1].includes('Chemise');
+    }
+    return false;
 }
 
 // Returns true if user has not selected any haircut
@@ -74,6 +85,25 @@ const _no_beard = function() {
     return _traits_category_none('Beardcut');
 }
 
+// Returns true if user has not selected any bearcut
+const _no_hat = function() {
+    return _traits_category_none('Hat');
+}
+
+// Disable all traits whose name contains _name
+const disableTraitsByName = async function(_name){
+    var _items_list = new Map(Object.entries(traits_lst));
+    for(const _trait of _items_list) {
+        if(_trait[1][1].includes(_name)) {
+            if($('.div_trait_'+_trait[0]+' input').is(':checked')){
+                var _cat = _category_from_id(_trait[0]);
+                $('#'+_cat.replace(' ','-')+'_None').click();
+            }
+            $('.div_trait_'+_trait[0]).addClass('disabled');
+        }
+    }
+}
+
 const _disable_categorie_by_condition = function(condition,categorie) {
     var _titles = $('.composer_categorie_title');
     if(condition){
@@ -81,6 +111,9 @@ const _disable_categorie_by_condition = function(condition,categorie) {
             if($(this).text().includes(categorie)){
                 if($(this).attr('class').split(' ').includes('active')){
                     $(this).trigger('click');
+                }
+                if(!_traits_category_none(categorie)){
+                    $('#'+categorie.replace(' ','-')+'_None').click();
                 }
                 $(this).addClass('disabled');
                 return;
@@ -189,7 +222,7 @@ const HideSoldOutTraits = function(reset=false) {
                 $('.div_trait_'+_trait).addClass('disabled soldout');
             }
         } else {
-            console.log("soldout_traits : ", xhr.statusText);
+            console.log("soldout_traits : ", xhr.responseText);
         }
     } else {
         for(const _trait of _soldout_traits){
@@ -267,7 +300,10 @@ const traits_enabled_hash = function() {
 
 // Temporary disables traits that cannot be selected without using another
 // Example : Disable hair color if no haircut is selected
-const update_dependencies = function() {    
+const update_dependencies = function() {
+    // By default all traits should be enabled
+    $('[class^="div_trait_"]').removeClass('disabled');
+
     // Bald -> No hair color selection
     _disable_categorie_by_condition(_bald(),'Hair Color');
 
@@ -278,10 +314,17 @@ const update_dependencies = function() {
     _disable_categorie_by_condition(_gender_female(),'Beardcut');
 
     // No shirt and not jacket -> No elements in pocket
-    _disable_categorie_by_condition(!_wears_jacket(),'On Pocket');
+    _disable_categorie_by_condition(!_wears_blazer(),'On Pocket');
 
-    // No jacket -> No jacket elements
-    _disable_categorie_by_condition(!_wears_jacket(),'Jacket Elements');
+    // Disable Ties if no chemise
+    _disable_categorie_by_condition(!_wears_chemise(),'Tie');
+
+    // Disable women haircuts for men and vice-versa
+    if(_gender_female()){
+        disableTraitsByName('Men haircut');
+    } else {
+        disableTraitsByName('Women haircut');
+    }
 }
 
 const loadImage = src =>

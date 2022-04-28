@@ -59,7 +59,7 @@ var _inputChangeTmpDisable = false;
 // POLYGON MUMBAI
 var CHAIN_NAME = "Mumbai"
 var CHAIN_SYMBOL = "MATIC"
-var RPC = "https://rpc-mumbai.matic.today"
+var RPC = "https://matic-mumbai.chainstacklabs.com"
 var CHAIN_ID = 80001;
 const RPC_SCAN_URL = "https://mumbai.polygonscan.com";
 

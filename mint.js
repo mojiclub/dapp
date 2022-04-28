@@ -6,7 +6,7 @@ const getImagesFromTraits = function() {
     // Just so theres some preview. Remove later
     adf++;
     
-    return [proj_top_images[adf%proj_top_images.length]];
+    //return [proj_top_images[adf%proj_top_images.length]];
     // TODO : Get image for each trait in _enabled_traits to generate real preview
 
     var traits_img_root = '/traits_components/';
@@ -15,13 +15,26 @@ const getImagesFromTraits = function() {
 
     var _enabled_traits = _get_enabled_traits_ids();
     // TODO : check if z-index sorting works
-    _enabled_traits.sort((a,b)=>traits_lst[a][2]-traits_lst[b][2]);
+    _enabled_traits.sort(function(a,b){
+        var aa,bb;
+        if(traits_lst[a][2]){
+            aa = traits_lst[a][2];
+        } else {
+            aa = 1;
+        }
+        if(traits_lst[b][2]){
+            bb = traits_lst[b][2];
+        } else {
+            bb = 1;
+        }
+        return aa-bb;
+    });
 
-    traits_img_root += _gender_female()?"Female/":"Male/";
-    var wears_jacket = _wears_jacket();
+    traits_img_root += (_gender_female()?"female":"male") + '_traits/';
     var wears_chemise = _wears_chemise();
     var bald = _bald();
     var no_beard = _no_beard();
+    var no_hat = _no_hat();
 
     // Background
     var _bg = _trait_from_category('Background');
@@ -43,21 +56,34 @@ const getImagesFromTraits = function() {
             continue;
         }
 
+        // Managed already
+        if(_category_from_id(_id)=='Background'){
+            continue;
+        }
+
         if(_category_from_id(_id)=='Face'){
-            var _imgurl = traits_img_root + _trait_from_category('Eyes Color') + '_'+ _id +traits_img_extension;
+            var _imgurl = traits_img_root + _id + '_'+ _trait_from_category('Eyes Color') + traits_img_extension;
             _images.push(_imgurl);
+            continue;
         }
 
         if(_category_from_id(_id)=='Haircut'){
-            var _imgurl = traits_img_root+ _id + '_' + _trait_from_category('Hair Color') +traits_img_extension;
+            var _imgurl = traits_img_root+ _id + '_' + _trait_from_category('Hair Color') + (!no_hat?'_'+10007:'') + traits_img_extension;
             _images.push(_imgurl);
+            continue;
         }
 
         if(_category_from_id(_id)=='Beardcut'){
-            var _imgurl = traits_img_root+ _id + '_' + _trait_from_category('Beard Color') +traits_img_extension;
+            var _imgurl = traits_img_root+ _id + '_' + _trait_from_category('Beard Color') + traits_img_extension;
             _images.push(_imgurl);
-        }        
+            continue;
+        }
+
+        // Default image
+        var _imgurl = traits_img_root+ _id + traits_img_extension;
+        _images.push(_imgurl);
     }
+    return _images;
 }
 
 // Triggered when new block has been mined.
